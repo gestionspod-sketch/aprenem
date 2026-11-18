@@ -28,12 +28,12 @@ Més endavant: la resta de Primària i l'ESO.
 
 ## 3. Disseny
 
-**v4 (branca `v4-disseny`, pendent d'aprovar):** la v3 es va trobar freda i «d'oficina». La v4 és **per a nens de Primària**: colors vius i plens (no pàl·lids), lletra gruixuda, botons grans que «es pitgen» (ombra inferior), dibuixos a les assignatures i l'òliba a la franja. **Botons i targetes rectangulars** (petició expressa del propietari).
+**v4 (l'actual, publicada a `main`):** estil inspirat en Smartick (franja blau cel amb símbols blancs suaus i vora en ona, un únic botó d'acció taronja, maneres de practicar en targetes blanques amb icona de color, fons blanc-blau clar). La v3 es va trobar freda i «d'oficina». La v4 és **per a nens de Primària**: colors vius i plens (no pàl·lids), lletra gruixuda, botons grans que «es pitgen» (ombra inferior), dibuixos a les assignatures i l'òliba a la franja. **Botons i targetes rectangulars** (petició expressa del propietari).
 - Inici: franja blava (òliba, salutació, objectiu del dia, ratxa, «Famílies») → **«Com vols practicar?» just davall la franja** (6 rajoles de colors) → missió d'avui → continua → assignatures (rajoles grans de color amb dibuix).
 - **Les làmines i el material d'estudi van dins cada assignatura**, mai a l'inici.
 - Assignatura: capçalera del color de l'assignatura amb dibuix i % après → làmines/material → unitats (número, temes amb Aprendre / Practicar, prova de la unitat).
 
-**v3 (publicada a `main`):**
+**v3 (substituïda per la v4; queda a l'historial, commit `f64e445`):**
 
 **v3 = barreja triada pel propietari:** base **acadèmica i estructurada** (unitats com el llibre, barra de domini per temes, prova de la unitat), **targetes il·lustrades** (franja de color amb icona gran) per a «Continua on ho deixares», assignatures i làmines, i **només un element de joc**: objectiu del dia (anell de minuts) i ratxa de dies seguits. Sense punts ni nivells.
 - Inici: franja blau marí amb salutació + objectiu del dia + ratxa + botó discret «Famílies»; «Continua on ho deixares»; «Missió d'avui»; assignatures amb domini; làmines i material; altres modes.
