@@ -458,6 +458,10 @@ header{background:rgba(255,255,255,.95)}
 .h4-st{box-shadow:0 4px 0 var(--skyd);border:0}
 .hero4 h2,.shead4 h2{letter-spacing:-.03em}
 .cta4{--c:var(--orange)}
+:root{--s-musica:#8B5CF6}
+.subjs4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:1000px){.subjs4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.subjs4{grid-template-columns:1fr}}
 .mis4 .btn4.cta4{min-width:220px}
 /* maneres de practicar: targetes blanques amb icona de color, com les targetes de Smartick */
 .mode4{background:#fff;color:var(--ink);border:2px solid #E2ECF8;box-shadow:0 5px 0 #D5E4F5!important}

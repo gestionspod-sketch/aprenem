@@ -46,7 +46,7 @@ SK.ci_respiratori={mat:'ciencies',nom:'L\'aparell respiratori',ic:'Rs',fig:()=>r
   return{text:`Quina part de l'aparell respiratori ${q}?`,fields:[{label:'Part',txt:r.a.split('|'),loose:true,wide:true}],vis:null,
    hints:['Recorda el camí de l\'aire: nas, faringe, laringe, tràquea, bronquis, bronquíols, alvèols.',`Comença per «${r.nom[0]}».`],steps:[`És ${/s$/.test(r.nom)?'els':'la'} <b>${r.nom}</b>.`,r.f],err:err(id)}}};
 function lamina(){endSession();let mode='labels',hi=null;
- app(`<div class="row ph" style="justify-content:space-between;align-items:flex-end"><div><div class="eyebrow" style="color:var(--s-ciencies)">Làmina · Ciències naturals</div><h2>L'aparell respiratori</h2><p class="muted">Toca cada part del dibuix per saber què fa.</p></div><button class="ghost" onclick="subject('ciencies')">← Tornar</button></div>
+ app(`<div class="row ph" style="justify-content:space-between;align-items:flex-end"><div><div class="eyebrow" style="color:var(--s-ciencies)">Làmina · Medi</div><h2>L'aparell respiratori</h2><p class="muted">Toca cada part del dibuix per saber què fa.</p></div><button class="ghost" onclick="subject('ciencies')">← Tornar</button></div>
  <div class="lam"><div class="card lam-fig"><div class="tabs" style="margin:0 0 12px"><button id="lm1" class="on">Amb noms</button><button id="lm2">Sense noms (posa't a prova)</button></div><div id="lsvg"></div></div>
  <div><div class="card" id="linfo"></div>
  <div class="card"><h3>Com respiram?</h3><div class="grid" style="grid-template-columns:1fr 1fr"><div class="stat"><b style="font-size:16px;color:var(--s-ciencies)">Inspiració</b><span>El diafragma es contreu i <b>baixa</b>. Els pulmons s'eixamplen i l'aire <b>entra</b>.</span></div><div class="stat"><b style="font-size:16px;color:var(--s-ciencies)">Espiració</b><span>El diafragma es relaxa i <b>puja</b>. Els pulmons es fan petits i l'aire <b>surt</b>.</span></div></div>
@@ -59,4 +59,6 @@ function lamina(){endSession();let mode='labels',hi=null;
  $('#lm1').onclick=()=>{mode='labels';$('#lm1').className='on';$('#lm2').className='';draw()};
  $('#lm2').onclick=()=>{mode='numbers';$('#lm2').className='on';$('#lm1').className='';draw()};
  $('#la').onclick=()=>start('professor',['ci_respiratori'],15);$('#lp').onclick=()=>start('exercicis',['ci_respiratori'],15);draw()}
+// Es registra a la pàgina de Medi
+(LAMINES.ciencies=LAMINES.ciencies||[]).push({obre:'lamina()',nom:'L\'aparell respiratori',desc:'Les parts i com respiram',ic:'lungs'});
 

@@ -1,6 +1,15 @@
 /* Aprenem - assignatures, modes d estudi, errors tipics, aventura i dictats
    Part de l'app d'estudi. Vegeu CLAUDE.md per a l'estructura i les normes. */
-const SUBJ={mates:{nom:'Matemàtiques',ic:'📐'},angles:{nom:'Anglès',ic:'🗣️'},ciencies:{nom:'Ciències naturals',ic:'🔬'}};
+// Assignatures. La clau interna de Medi continua sent 'ciencies' perquè no es perdi el progrés guardat.
+const SUBJ={mates:{nom:'Matemàtiques',ic:'📐'},angles:{nom:'Anglès',ic:'🗣️'},ciencies:{nom:'Medi',llarg:'Coneixement del medi natural, social i cultural',ic:'🔬'},musica:{nom:'Música',llarg:'Llenguatge musical',ic:'🎵'}};
+// Registres que omple cada arxiu de contingut (així cada assignatura és independent):
+//   UNITS[assignatura]    = [[nom de la unitat, [ids de temes], (opcional) [cursos]], ...]
+//   LAMINES[assignatura]  = [{obre:'funcio()', nom, desc, ic}]  (làmines interactives)
+//   MATERIAL[assignatura] = [{obre:'funcio()', nom, desc, ic}]  (taules, temaris...)
+//   ERR                   = errors típics: Object.assign(ERR,{codi:{kid:'...',par:'...'}})
+const UNITS={},LAMINES={},MATERIAL={};
+// SK = tots els temes; cada arxiu de contingut hi afegeix els seus amb Object.assign(SK,{...})
+const SK={};
 const matOf=k=>SK[k].mat||'mates';
 const ansStr=f=>f.txt?f.txt[0]:fmtR(f.ans);
 const ERR={

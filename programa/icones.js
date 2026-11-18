@@ -20,10 +20,13 @@ const IC={
 };
 Object.assign(MODES.combinada,{ic:IC.layers});Object.assign(MODES.professor,{ic:IC.cap});Object.assign(MODES.aventura,{ic:IC.map});
 Object.assign(MODES.exercicis,{ic:IC.grid});Object.assign(MODES.escriptura,{ic:IC.pen});Object.assign(MODES.comprovacio,{ic:IC.target});
-SUBJ.mates.ic=IC.calc;SUBJ.angles.ic=IC.globe;SUBJ.ciencies.ic=IC.flask;
+IC.leaf=ICO('<path d="M5 19c0-9 6-15 15-15 0 9-6 15-15 15Z"/><path d="M5 19 13 11"/>');
+IC.music=ICO('<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>');
+SUBJ.mates.ic=IC.calc;SUBJ.angles.ic=IC.globe;SUBJ.ciencies.ic=IC.leaf;SUBJ.musica.ic=IC.music;
 const AB={frac_equiv:'Fe',frac_suma_igual:'F+',frac_suma_dif:'F±',frac_de_nombre:'Fn',decimals:'Dc',divisions:'Dv',percentatges:'%',
  en_present:'Ps',en_cont:'Pc',en_be:'Be',en_was:'Ww',en_reg_past:'Rg',en_irr_past:'Ir',en_irr_pp:'Pp',en_irr_inf:'If',en_verb_sig:'Tr',en_past:'Sp',en_past_neg:'Ng',en_plural:'Pl',en_compar:'Cm',en_vocab:'Vc',en_listen:'Ls',
  ci_cos:'Ch',ci_plantes:'Pt',ci_ecosis:'Ec',ci_materia:'Mt',ci_classif:'Cl',ci_energia:'En',ci_univers:'Un',ci_llibre:'Lb',ci_respiratori:'Rs'};
 IC.lungs=ICO('<path d="M12 3v8M12 11c-1.5 1.2-3 1.8-4.5 1.8M12 11c1.5 1.2 3 1.8 4.5 1.8"/><path d="M8.5 6.5C5.5 7 3.5 11 3.5 16c0 2.5 1.5 4 4 4 2 0 3-1 3-3V8.5c0-1.2-.8-2.2-2-2Z"/><path d="M15.5 6.5c3 .5 5 4.5 5 9.5 0 2.5-1.5 4-4 4-2 0-3-1-3-3V8.5c0-1.2.8-2.2 2-2Z"/>');
-for(const k in SK)SK[k].ic=`<span class="ab">${AB[k]||SK[k].nom.slice(0,2)}</span>`;
+// Codi de 2 lletres: la propietat ab del tema (preferida) o la taula AB
+for(const k in SK)SK[k].ic=`<span class="ab">${SK[k].ab||AB[k]||SK[k].nom.slice(0,2)}</span>`;
 

@@ -191,3 +191,11 @@ const TEMARI={angles:{5:[
   ['Vocabulari i comprensió oral',['en_vocab','en_listen']],
   ['Going to: plans de futur',[]],['Will: prediccions',[]],['Must / mustn\'t: normes',[]],['Some / any: comptables i incomptables',[]],['Preguntes amb wh- (what, where, when, who...)',[]]]}};
 
+/* Unitats d'ANGLÈS: [nom, [temes], (opcional) [cursos]] */
+UNITS.angles=[
+ ['Verbs i temps verbals',['en_present','en_cont','en_be','en_was','en_reg_past','en_irr_past','en_irr_pp','en_irr_inf','en_verb_sig','en_past','en_past_neg']],
+ ['Gramàtica',['en_plural','en_compar']],
+ ['Vocabulari i comprensió',['en_vocab','en_listen']]];
+// Material propi d'Anglès (es mostra a la pàgina de l'assignatura)
+MATERIAL.angles=[{obre:"verbTable('irr','angles')",ic:'book',nom:'Taula de verbs',desc:'Infinitiu, passat, participi i traducció'},{obre:'temariAngles()',ic:'list',nom:'Temari de 5è i 6è',desc:'Què s\'aprèn a cada curs'}];
+

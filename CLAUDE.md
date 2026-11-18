@@ -65,8 +65,8 @@ contingut/matematiques.js       temes de matemàtiques
 contingut/angles.js             temes d'anglès + taula de verbs (IRR, REG) + TEMARI
 contingut/ciencies.js           temes de ciències + utilitats de text (norm, fold...)
 contingut/lamines/*.js          una làmina per arxiu (p. ex. aparell-respiratori.js)
-contingut/unitats.js            unitats de cada assignatura (UNITS) i llista de làmines (LAMINES)
-programa/inici.js               pantalles v3: inici i pàgina d'assignatura
+contingut/musica.js             contingut de MÚSICA (llenguatge musical)
+programa/inici.js               pantalles: inici i pàgina d'assignatura (unitats, làmines, material)
 eines/construir.ps1             genera la versió d'un sol arxiu (publicar + còpia de seguretat)
 publica/                        arxius generats per publicar a Claude (no editar a mà)
 versions/                       còpies antigues i còpies automàtiques (no editar)
@@ -123,7 +123,30 @@ Pendent (per ordre):
 4. **Activar la IA** (un altre dia, quan el contingut estigui fet).
 5. Més endavant: comptes d'usuari i progrés compartit entre aparells; altres cursos; altres idiomes.
 
-## 8. Normes de treball
+## 8. Assignatures i registres
+
+- Assignatures (`SUBJ`, a `programa/dades-app.js`): `mates` Matemàtiques · `angles` Anglès · `ciencies` **Medi** (Coneixement del medi natural, social i cultural; la clau continua sent `ciencies` per no perdre el progrés) · `musica` **Música** (llenguatge musical).
+- Cada arxiu de contingut **només afegeix** coses als registres (definits a `dades-app.js`, que es carrega abans):
+  - `Object.assign(SK,{ id:{mat:'...', ab:'Xx', curs:[6], ...} })` — temes. `ab` = codi de 2 lletres; `curs` = cursos on surt (sense `curs` = tots).
+  - `UNITS.<assig> = [[nom, [ids], (opcional) [cursos]], ...]` — unitats en l'ordre del llibre.
+  - `(LAMINES.<assig>=LAMINES.<assig>||[]).push({obre:'funcio()', nom, desc, ic})` — des de l'arxiu de la làmina.
+  - `MATERIAL.<assig> = [{obre:'funcio()', nom, desc, ic}]` — taules, temaris...
+  - `Object.assign(ERR,{codi:{kid:'missatge a l\'infant', par:'descripció per als pares'}})` — errors típics.
+- `index.html` té un **bloc per assignatura** (`<!-- ===== MEDI ===== -->` ... `<!-- fi medi -->`): els `<script>` nous d'una assignatura van només dins el seu bloc.
+
+## 9. Desenvolupar el temari d'un curs (una sessió per assignatura)
+
+Objectiu: el temari **complet de 6è** (i després 5è) de cada assignatura, segons el **currículum oficial de les Illes Balears** (LOMLOE, Decret 32/2022, sabers bàsics del 3r cicle de Primària), contrastat amb l'estructura habitual dels llibres de 6è. Anotar les fonts a la capçalera de l'arxiu.
+
+Cada sessió:
+1. Treballa en una **branca pròpia**: `temari-6e-<assignatura>`, sortint de `main`.
+2. **Només toca els arxius de la seva assignatura**: `contingut/<assignatura>*.js` (pot crear-ne de nous, p. ex. `contingut/medi-social.js`), `contingut/lamines/*.js` de la seva assignatura i el seu bloc d'`index.html`. **No toca** `programa/`, `estil/` ni els arxius d'altres assignatures. Si necessita un component nou (un tipus d'exercici que no existeix), el fa dins el seu propi arxiu de contingut o ho explica al PR.
+3. Per a cada unitat: temes amb teoria clara (11-12 anys, català correcte), exemples, exercicis **verificables** generats per codi (variats, amb nivells `lv`), pistes que no donen la resposta, explicació pas a pas (`steps`) i errors típics (`ERR`). Respostes escrites (res d'opcions per endevinar). Làmines interactives (SVG) on ajudin a entendre: sobretot a Medi.
+4. Marca els temes nous de 6è amb `curs:[6]` (els que ja hi ha serveixen per a 5è i 6è).
+5. Prova-ho al navegador (`.claude/serve.ps1`, p. ex. port 8772 per no xocar) amb el curs posat a 6è, a mida d'ordinador i de mòbil, i comprova que **cap generador falla ni dona l'error típic amb la resposta correcta**.
+6. Fa commits petits, puja la branca i obre un **PR cap a `main`**. El propietari decideix quan s'ajunta.
+
+## 10. Normes de treball
 
 - Treballar per **tasques petites**: una sessió per tema o per làmina.
 - Abans de canviar res gros, **generar una còpia** (`eines\construir.ps1`).

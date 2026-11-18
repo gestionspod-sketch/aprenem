@@ -1,7 +1,7 @@
 /* Aprenem - contingut de MATEMATIQUES (temes i generadors d exercicis)
    Part de l'app d'estudi. Vegeu CLAUDE.md per a l'estructura i les normes. */
 /* ===================== habilitats (exercicis verificables) ===================== */
-const SK={
+Object.assign(SK,{
  frac_equiv:{nom:'Fraccions equivalents',ic:'🍕',
   teoria:['Dues fraccions són <b>equivalents</b> si representen la mateixa quantitat, encara que s\'escriguin amb nombres diferents.',
    `Per exemple, ${F(1,2)} i ${F(2,4)}: si parteixes una pizza en 2 trossos i en menges 1, menges el mateix que si la parteixes en 4 i en menges 2.`,
@@ -78,5 +78,10 @@ const SK={
     steps:[`${p}% = ${F(p,100)}.`,`${N} × ${p} = ${N*p}.`,`${N*p} : 100 = ${ans}.`],
     err:v=>p!==10&&N%p===0&&v[0].d===1&&v[0].n===N/p?'divideix_percent':null};
   }}
-};
+});
 
+/* Unitats de MATEMÀTIQUES: [nom, [temes], (opcional) [cursos]] */
+UNITS.mates=[
+ ['Fraccions',['frac_equiv','frac_suma_igual','frac_suma_dif','frac_de_nombre']],
+ ['Decimals i percentatges',['decimals','percentatges']],
+ ['Operacions',['divisions']]];
