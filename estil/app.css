@@ -281,3 +281,74 @@ label.chk:has(input:checked){box-shadow:inset 3px 0 0 var(--pri)}
 .stat span b{display:inline;font-size:inherit;color:inherit;font-weight:700}
 .lam{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;align-items:start}
 @media (max-width:820px){.lam{grid-template-columns:1fr}}
+
+/* ================= v3: base acadèmica (unitats i domini) + targetes il·lustrades + objectiu del dia ================= */
+:root{--lv0:#E6E9EF;--lv1:#F3C98B;--lv2:#8FA2F0;--lv3:#2F9E6E}
+main{max-width:1080px}
+.grid3{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(215px,1fr))}
+.sec3{margin:34px 0 14px;font-size:20px}
+.eyebrow3{display:block;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+/* franja: salutació + objectiu + ratxa */
+.hero3{padding:28px 30px}
+.hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px 24px;flex-wrap:wrap}
+.hero3 .hero-t{flex:1 1 300px;min-width:0}
+.hero3 h2{font-size:32px;margin:12px 0 6px}.hero3 p{margin:0}
+.hstats{display:flex;gap:12px;flex-wrap:wrap}
+.hst{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);padding:10px 16px 10px 10px;color:#C5CCEA;font-size:13px;line-height:1.3}
+.ring3 .rg-b{fill:none;stroke:rgba(255,255,255,.14);stroke-width:7}.ring3 .rg-f{fill:none;stroke:#7FE0B3;stroke-width:7;stroke-linecap:butt}
+.ring3 .rg-t{fill:#fff;font-size:15px;font-weight:700;font-family:var(--font)}
+.streak{display:flex;align-items:center;gap:4px;font-size:30px;font-weight:700;color:#FCD34D;min-width:64px;justify-content:center}.streak .ic{font-size:26px}
+/* targetes amb il·lustració */
+.c3{padding:0;overflow:hidden;display:flex;flex-direction:column;text-align:left;color:var(--ink);background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh);min-height:0}
+button.c3{font:inherit;font-weight:400;min-height:0;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+button.c3:hover{background:var(--surface);border-color:color-mix(in srgb,var(--c,var(--pri)) 45%,var(--line));box-shadow:inset 0 -3px 0 var(--c,var(--pri))}
+.c3b{padding:18px 20px 20px;display:flex;flex-direction:column;gap:4px;flex:1}
+.c3 h3{margin:2px 0 0;font-size:21px}
+.t3{font-size:18px;font-weight:650}
+.illo{position:relative;height:104px;background:color-mix(in srgb,var(--c) 9%,#fff);border-bottom:1px solid color-mix(in srgb,var(--c) 18%,transparent);overflow:hidden;color:var(--c)}
+.illo-ic{position:absolute;left:20px;bottom:16px;font-size:44px;line-height:0;z-index:1}
+.illo-a,.illo-b{position:absolute;border:1.5px solid color-mix(in srgb,var(--c) 28%,transparent)}
+.illo-a{width:150px;height:150px;right:-40px;top:-60px;transform:rotate(18deg)}
+.illo-b{width:90px;height:90px;right:70px;bottom:-50px;background:color-mix(in srgb,var(--c) 7%,transparent)}
+.top3 .c3 .illo{height:120px}
+.pbar{flex:1;height:6px;background:var(--lv0);min-width:80px}.pbar i{display:block;height:100%}
+.mis .c3b{gap:8px}.mis h3 .ic{color:var(--pri);margin-right:4px}
+.mlist{list-style:none;margin:6px 0 10px;padding:0;display:flex;flex-direction:column;gap:6px}
+.mlist li{display:flex;align-items:center;gap:10px;font-weight:500}.mlist .tile{width:30px;height:30px;font-size:15px}
+.mis .big{margin-top:auto}
+.subj3 small,.mat3 small{color:var(--muted)}
+.mpct{font-size:13px;font-weight:600;color:var(--ink2);margin-top:2px}
+/* barra de domini per temes */
+.seg{display:flex;gap:3px;margin:10px 0 4px}
+.seg span{flex:1;height:8px;background:var(--lv0)}
+.seg .l0{background:var(--lv0)}.seg .l1{background:var(--lv1)}.seg .l2{background:var(--lv2)}.seg .l3{background:var(--lv3)}
+.legend3{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+.legend3 i{display:inline-block;width:12px;height:8px;margin-right:6px;vertical-align:1px}
+.legend3 .l0{background:var(--lv0)}.legend3 .l1{background:var(--lv1)}.legend3 .l2{background:var(--lv2)}.legend3 .l3{background:var(--lv3)}
+.lvt{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.03em;padding:2px 8px;text-transform:uppercase;white-space:nowrap}
+.lvt.l0{background:#F1F3F6;color:var(--muted)}.lvt.l1{background:#FDF3E3;color:#9A5B06}.lvt.l2{background:#EEF1FC;color:var(--pri)}.lvt.l3{background:#E8F6EF;color:#1F7A52}
+/* pàgina d'assignatura */
+.tile.big3{width:60px;height:60px;font-size:30px}
+.dom3{border-top:3px solid var(--c)}.dom3 .seg span{height:12px}.dpct{font-size:26px;color:var(--c)}
+.unit3{padding:0;border-top:3px solid var(--c)}
+.uh{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding:18px 22px 12px;border-bottom:1px solid var(--line)}
+.uh h3{margin:0;font-size:20px}
+.ust{text-align:right}.ust b{display:block;font-size:22px;color:var(--c);line-height:1.1}.ust small{color:var(--muted)}
+.trow{display:flex;align-items:center;gap:14px;padding:12px 22px;border-bottom:1px solid var(--line)}
+.trow .tn{flex:1;min-width:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.trow .tn b{font-weight:600}
+.trow .tb{display:flex;gap:8px}.trow .tb button{min-height:40px;padding:8px 14px;font-size:15px}
+.uf{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 22px;background:var(--bg);flex-wrap:wrap}
+.uf button{min-height:42px;padding:8px 16px;font-size:15px}
+/* altres modes */
+.modes3{display:flex;gap:10px;flex-wrap:wrap}
+.m3{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--ink2);background:var(--surface)}
+.m3 .ic{font-size:18px;color:var(--pri)}
+@media (max-width:640px){
+ .hero3{padding:22px 18px}.hero3 h2{font-size:28px}
+ .hstats{width:100%;flex-wrap:nowrap}.hst{flex:1 1 0;min-width:0;padding:8px 10px 8px 8px;gap:8px}.ring3{width:60px;height:60px}.streak{font-size:26px;min-width:0}
+ .illo{height:84px}.top3 .c3 .illo{height:96px}.illo-ic{font-size:36px}
+ .lockbtn{top:12px;right:12px}
+ .trow{flex-wrap:wrap;padding:12px 16px}.trow .tb{width:100%}.trow .tb button{flex:1}
+ .uh,.uf{padding-left:16px;padding-right:16px}
+ .c3 h3{font-size:19px}
+}

@@ -15,6 +15,8 @@ const IC={
  book:ICO('<path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3Z"/><path d="M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7Z"/>'),
  list:ICO('<path d="M9 6h12M9 12h12M9 18h12M4 6h1M4 12h1M4 18h1"/>'),
  check:ICO('<path d="m5 12.5 4.5 4.5L19 7.5"/>'),
+ lock:ICO('<rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),
+ flame:ICO('<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.2 1-3.6 2.2-4.8.2 1.6 1 2.6 2.3 3 .2-3.3-.7-5.8.5-8.2Z"/>'),
 };
 Object.assign(MODES.combinada,{ic:IC.layers});Object.assign(MODES.professor,{ic:IC.cap});Object.assign(MODES.aventura,{ic:IC.map});
 Object.assign(MODES.exercicis,{ic:IC.grid});Object.assign(MODES.escriptura,{ic:IC.pen});Object.assign(MODES.comprovacio,{ic:IC.target});

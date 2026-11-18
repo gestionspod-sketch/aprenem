@@ -26,9 +26,14 @@ Més endavant: la resta de Primària i l'ESO.
 5. **Errors típics detectats** (p. ex. sumar denominadors, «goed», «didn't went») → missatge específic a l'infant i resum per als pares.
 6. Els errors serveixen per aprendre, no per castigar. To amable, frases curtes.
 
-## 3. Disseny (versió v2 — l'actual)
+## 3. Disseny (v3 a la branca `v3-disseny`; v2 a `main`)
 
-Públic: 11-12 anys → **sobri, no infantil**.
+**v3 = barreja triada pel propietari:** base **acadèmica i estructurada** (unitats com el llibre, barra de domini per temes, prova de la unitat), **targetes il·lustrades** (franja de color amb icona gran) per a «Continua on ho deixares», assignatures i làmines, i **només un element de joc**: objectiu del dia (anell de minuts) i ratxa de dies seguits. Sense punts ni nivells.
+- Inici: franja blau marí amb salutació + objectiu del dia + ratxa + botó discret «Famílies»; «Continua on ho deixares»; «Missió d'avui»; assignatures amb domini; làmines i material; altres modes.
+- Assignatura: domini de l'assignatura (segments per tema: no començat / en procés / comprèn / domina), material, i una targeta per unitat amb els temes (Aprendre / Practicar) i «Fer la prova».
+- Les unitats es defineixen a `contingut/unitats.js`; les pantalles, a `programa/inici.js`.
+
+Base comuna (v2 i v3). Públic: 11-12 anys → **sobri, no infantil**.
 - **Tipografia del sistema** (San Francisco a l'iPhone, Segoe UI a Windows). Sense Google Fonts.
 - **Botons i targetes rectangulars, sense cantons arrodonits.** Sense ombres «inflades».
 - **Icones de línia** (SVG, `programa/icones.js`) per a assignatures i modes. Cada tema té un **codi de 2 lletres** (Fe, Ir, Pp, Rs...) en lloc d'emoticones.
@@ -53,6 +58,8 @@ contingut/matematiques.js       temes de matemàtiques
 contingut/angles.js             temes d'anglès + taula de verbs (IRR, REG) + TEMARI
 contingut/ciencies.js           temes de ciències + utilitats de text (norm, fold...)
 contingut/lamines/*.js          una làmina per arxiu (p. ex. aparell-respiratori.js)
+contingut/unitats.js            unitats de cada assignatura (UNITS) i llista de làmines (LAMINES)
+programa/inici.js               pantalles v3: inici i pàgina d'assignatura
 eines/construir.ps1             genera la versió d'un sol arxiu (publicar + còpia de seguretat)
 publica/                        arxius generats per publicar a Claude (no editar a mà)
 versions/                       còpies antigues i còpies automàtiques (no editar)
@@ -86,6 +93,8 @@ Copiar `contingut/lamines/aparell-respiratori.js`: un objecte amb les parts (nú
 
 ## 6. Provar i publicar
 
+- **GitHub:** https://github.com/gestionspod-sketch/aprenem (públic). La branca `main` es publica sola a **GitHub Pages**: https://gestionspod-sketch.github.io/aprenem/ (aquí la IA sí pot funcionar). Cada tasca gran es fa en una branca pròpia i s'ajunta a `main` quan el propietari la dona per bona.
+- Git i GitHub CLI estan instal·lats a `C:\Program Files\Git\cmd` i `C:\Program Files\GitHub CLI` (si no són al PATH, cal posar-hi aquestes carpetes). Commits amb l'adreça privada `338169047+gestionspod-sketch@users.noreply.github.com`.
 - **Provar a l'ordinador:** doble clic a `index.html` (Chrome o Edge).
 - **Generar la versió d'un sol arxiu:** `powershell -ExecutionPolicy Bypass -File eines\construir.ps1`
   → `publica\aprenem.html` (per publicar) i una còpia datada a `versions\`.
@@ -101,7 +110,7 @@ taula de 68 verbs irregulars i 40 regulars (infinitiu, passat, participi, traduc
 làmina de l'aparell respiratori, rellotge amb avisos i pas automàtic de fase, disseny v2.
 
 Pendent (per ordre):
-1. **GitHub:** historial de versions i **GitHub Pages** (adreça web gratuïta on la IA sí funcionaria a l'iPhone).
+1. **Decidir si la v3 passa a `main`** (substitueix la v2 a l'adreça de GitHub Pages).
 2. **Desenvolupar el temari complet** de cada assignatura per a 5è i 6è (el propietari indicarà per on començar).
 3. **Més làmines** (ciències sobretot: aparell digestiu, circulatori, la planta, la cèl·lula, el sistema solar...).
 4. **Activar la IA** (un altre dia, quan el contingut estigui fet).

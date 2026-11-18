@@ -4,20 +4,7 @@
 const OWL=(s=56)=>`<svg width="${s}" height="${s}" viewBox="0 0 64 64" aria-hidden="true"><path d="M14 18 L19 5 L26 13 Q32 10 38 13 L45 5 L50 18 Q57 28 54 41 Q51 59 32 59 Q13 59 10 41 Q7 28 14 18Z" fill="#4338CA"/><path d="M14 18 L19 5 L26 13 Q32 10 38 13 L45 5 L50 18" fill="none" stroke="#312E81" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="32" cy="45" rx="13" ry="11" fill="#C7D2FE"/><path d="M23 47q3 2.2 6 0M31 51q3 2.2 6 0M35 45q3 2.2 6 0" stroke="#818CF8" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="23" cy="28" r="9.5" fill="#fff"/><circle cx="41" cy="28" r="9.5" fill="#fff"/><circle cx="24" cy="29" r="4.5" fill="#17203A"/><circle cx="40" cy="29" r="4.5" fill="#17203A"/><circle cx="25.6" cy="27.4" r="1.5" fill="#fff"/><circle cx="41.6" cy="27.4" r="1.5" fill="#fff"/><path d="M28.5 36 L35.5 36 L32 41Z" fill="#F59E0B"/><path d="M20 58 l3-3 3 3M38 58 l3-3 3 3" stroke="#F59E0B" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const sc=k=>`--c:var(--s-${matOf(k)})`;
 const modeBtn=(k,m,extra='')=>`<button type="button" class="mode${extra}" data-m="${k}"><span class="tile">${m.ic}</span><span><b>${m.nom}</b><small>${m.desc}</small></span></button>`;
-function home(){endSession();const nm=S.perfil.nom?esc(S.perfil.nom):'';
- PARENT_OK=false;const s=S.sessio,m=MODES[s.mode];
- app(`<section class="hero"><button class="lockbtn" onclick="askPin()" aria-label="Zona famílies (amb PIN)"><svg class="ic" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Famílies</button><div class="hero-t"><span class="pill light">${ORD[S.perfil.curs]} de Primària</span><h2>${nm?`Hola, ${nm}!`:'Hola!'}<br>Què aprendrem avui?</h2><p>Estudia amb el teu professor particular, supera aventures i demostra el que saps.</p></div></section>
- <h3 style="margin:0 0 12px">La teva missió d'avui</h3>
- <div class="card mission"><div class="mission-l"><div class="row" style="gap:8px;margin-bottom:10px"><span class="chip">${m.ic} ${m.nom}</span><span class="chip" style="--c:var(--acc-d)">${s.minuts} minuts</span></div>
- ${s.mode==='escriptura'?`<div class="sk"><span class="tile">${IC.pen}</span><span><b>Escriptura al quadern</b><small>Dictat o còpia amb foto</small></span></div>`:s.skills.map(k=>`<div class="sk"><span class="tile" style="${sc(k)}">${SK[k].ic}</span><span><b>${SK[k].nom}</b><small>${SUBJ[matOf(k)].nom}</small></span>${badge(k)}</div>`).join('')}</div>
- <div class="mission-r"><button class="big" onclick="start('${s.mode}')">Comença &rarr;</button><small style="text-align:center">L'han preparada els teus pares</small></div></div>
- <h3 style="margin:30px 0 12px">Assignatures</h3><div class="grid">${Object.entries(SUBJ).map(([m,s])=>`<button class="role subjcard" style="--c:var(--s-${m})" onclick="subject('${m}')"><span class="tile">${s.ic}</span><span><b>${s.nom}</b><small>${skillsOf(m).length} temes${m==='angles'?' · taula de verbs':''}</small></span><span class="arr">→</span></button>`).join('')}</div>
- <h3 style="margin:30px 0 12px">Altres maneres de practicar</h3><div class="grid" id="om">${Object.entries(MODES).filter(([k])=>k!=='combinada').map(([k,m])=>modeBtn(k,m)).join('')}</div>
- <h3 style="margin:30px 0 12px">Material d'estudi</h3><div class="grid2">
- <button class="role" onclick="verbTable()"><span class="tile" style="--c:var(--s-angles)">${IC.book}</span><span><b>Taula de verbs anglesos</b><small>Infinitiu, passat, participi i traducció</small></span><span class="arr">→</span></button>
- <button class="role" onclick="temari(false)"><span class="tile" style="--c:var(--s-angles)">${IC.list}</span><span><b>Temari d'anglès</b><small>Què s'aprèn a ${ORD[S.perfil.curs]} i com practicar-ho</small></span><span class="arr">→</span></button></div>`);
- document.querySelectorAll('#om .mode').forEach(b=>b.onclick=()=>start(b.dataset.m))}
-const kid=home;
+const kid=()=>home();
 
 /* ---------- Accés de les famílies amb PIN ---------- */
 let PARENT_OK=false;
@@ -45,17 +32,6 @@ function askPin(){
 }
 
 /* ---------- Pàgina d'assignatura ---------- */
-function subject(m){endSession();const sb=SUBJ[m],ks=skillsOf(m);
- app(`<div class="row ph" style="justify-content:space-between;align-items:center"><div class="row" style="align-items:center;gap:14px;flex-wrap:nowrap"><span class="tile" style="--c:var(--s-${m});width:60px;height:60px;font-size:30px;border-radius:18px">${sb.ic}</span><div><h2 style="margin:0">${sb.nom}</h2><p class="muted" style="margin:0">${ks.length} temes · ${ORD[S.perfil.curs]} de Primària</p></div></div><button class="ghost" onclick="home()">← Inici</button></div>
- ${m==='ciencies'?`<h3 style="margin:0 0 12px">Làmines</h3><div class="grid2" style="margin-bottom:18px"><button class="role" onclick="lamina()"><span class="tile" style="--c:var(--s-ciencies)">${IC.lungs}</span><span><b>L'aparell respiratori</b><small>Làmina interactiva amb les parts del cos</small></span><span class="arr">→</span></button></div>`:''}
- ${m==='angles'?`<div class="grid2" style="margin-bottom:18px"><button class="role" onclick="verbTable('irr','angles')"><span class="tile" style="--c:var(--s-angles)">${IC.book}</span><span><b>Taula de verbs</b><small>Infinitiu, passat, participi i traducció</small></span><span class="arr">→</span></button>
- <button class="role" id="tm"><span class="tile" style="--c:var(--s-angles)">${IC.list}</span><span><b>Temari de 5è i 6è</b><small>Què s'aprèn a cada curs</small></span><span class="arr">→</span></button></div>`:''}
- <div class="card subj" style="--c:var(--s-${m})"><h3 style="margin-top:0">Temes</h3><p class="muted" style="margin-top:-6px"><b>Aprendre</b>: explicació, exemple i pràctica guiada. <b>Practicar</b>: exercicis nous.</p>
- ${ks.map((k,i,a)=>{const v=SK[k];return(v.bloc&&v.bloc!==SK[a[i-1]]?.bloc?`<div class="bloch">${v.bloc}</div>`:'')+`<div class="sk topic"><span class="tile" style="${sc(k)}">${v.ic}</span><span class="tn"><b>${v.nom}</b><small>${badge(k)}</small></span><span class="tb"><button class="sec" data-l="${k}">Aprendre</button><button data-p="${k}">Practicar</button></span></div>`}).join('')}</div>`);
- if($('#tm'))$('#tm').onclick=()=>{temari(false);const b=document.querySelector('.ph .ghost');if(b)b.onclick=()=>subject('angles')};
- document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>start('professor',[b.dataset.l],15));
- document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>start('exercicis',[b.dataset.p],15));
-}
 
 
 /* ---------- Taula de verbs ---------- */

@@ -19,7 +19,7 @@ $w = $w -replace '<meta name="viewport"[^>]*>\s*', ''
 $w = $w -replace '(?s)</head>\s*<body>', ''
 $w = $w -replace '(?s)</body>\s*</html>\s*$', ''
 $w = $w -replace '<button class="ghost" onclick="window.print\(\)">[^<]*</button>', ''
-$w = $w -replace '<title>[^<]*</title>', "<title>Aprenem v2</title>`n<script>window.APRENEM_WEB=true</script>"
+$w = $w -replace '<title>[^<]*</title>', "<title>Aprenem</title>`n<script>window.APRENEM_WEB=true</script>"
 $w = $w -replace ':root\{--bg:', ':root{color-scheme:light;--bg:'
 New-Item -ItemType Directory -Force (Join-Path $root 'publica') | Out-Null
 [IO.File]::WriteAllText((Join-Path $root 'publica\aprenem.html'), $w, $utf8)
