@@ -26,7 +26,7 @@ Més endavant: la resta de Primària i l'ESO.
 5. **Errors típics detectats** (p. ex. sumar denominadors, «goed», «didn't went») → missatge específic a l'infant i resum per als pares.
 6. Els errors serveixen per aprendre, no per castigar. To amable, frases curtes.
 
-## 3. Disseny (v3 a la branca `v3-disseny`; v2 a `main`)
+## 3. Disseny (v3 — l'actual, publicada a `main`)
 
 **v3 = barreja triada pel propietari:** base **acadèmica i estructurada** (unitats com el llibre, barra de domini per temes, prova de la unitat), **targetes il·lustrades** (franja de color amb icona gran) per a «Continua on ho deixares», assignatures i làmines, i **només un element de joc**: objectiu del dia (anell de minuts) i ratxa de dies seguits. Sense punts ni nivells.
 - Inici: franja blau marí amb salutació + objectiu del dia + ratxa + botó discret «Famílies»; «Continua on ho deixares»; «Missió d'avui»; assignatures amb domini; làmines i material; altres modes.
@@ -110,7 +110,7 @@ taula de 68 verbs irregulars i 40 regulars (infinitiu, passat, participi, traduc
 làmina de l'aparell respiratori, rellotge amb avisos i pas automàtic de fase, disseny v2.
 
 Pendent (per ordre):
-1. **Decidir si la v3 passa a `main`** (substitueix la v2 a l'adreça de GitHub Pages).
+1. ~~Decidir si la v3 passa a `main`~~ Fet: la v3 és l'actual. (La v2 queda al commit `8ffe380` i a `versions/aprenem-v2-un-sol-arxiu.html`.)
 2. **Desenvolupar el temari complet** de cada assignatura per a 5è i 6è (el propietari indicarà per on començar).
 3. **Més làmines** (ciències sobretot: aparell digestiu, circulatori, la planta, la cèl·lula, el sistema solar...).
 4. **Activar la IA** (un altre dia, quan el contingut estigui fet).
