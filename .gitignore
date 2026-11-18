@@ -1,0 +1,5 @@
+# Arxius generats (es tornen a crear amb eines\construir.ps1)
+publica/
+versions/aprenem-2*.html
+# Configuració local de Claude
+.claude/settings.local.json

@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Aprenem">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff">
+<meta name="format-detection" content="telephone=no">
+<title>Aprenem · beta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F5FB;--surface:#fff;--ink:#17203A;--ink2:#3B4560;--muted:#6B7491;--line:#E3E7F1;
+ --pri:#4338CA;--pri-h:#4F46E5;--pri-d:#312E81;--pri-l:#EEF0FF;--acc:#F59E0B;--acc-d:#B45309;
+ --ok:#059669;--okbg:#E8F8F1;--ko:#E11D48;--kobg:#FFF1F4;--warn:#B45309;--warnbg:#FFF6E5;
+ --s-mates:#2563EB;--s-angles:#E11D48;--s-ciencies:#059669;
+ --r:20px;--sh:0 1px 2px rgba(23,32,58,.05),0 10px 30px rgba(23,32,58,.07);--sh2:0 2px 4px rgba(23,32,58,.06),0 18px 40px rgba(23,32,58,.12)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:'Nunito',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:18px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-weight:900;letter-spacing:-.015em;line-height:1.2;color:var(--ink)}
+h2{font-size:28px}h3{font-size:20px;font-weight:800}
+b,strong{font-weight:800}
+a{color:var(--pri);font-weight:700}
+/* capçalera */
+header{display:flex;align-items:center;gap:12px;padding:10px max(16px,calc((100vw - 1000px)/2));background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;flex:1;cursor:pointer;user-select:none}
+.brand b{font-size:22px;font-weight:900;letter-spacing:-.02em}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--pri-l);color:var(--pri);font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.pill.light{background:rgba(255,255,255,.18);color:#fff}
+#timer:not(:empty){font-variant-numeric:tabular-nums;font-weight:800;color:var(--pri);font-size:15px;background:var(--pri-l);padding:7px 14px;border-radius:999px}
+main{max-width:1000px;margin:0 auto;padding:24px 16px 48px}
+/* elements base */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:18px;box-shadow:var(--sh)}
+.card>h3:first-child{margin-top:0}
+button{font:inherit;font-weight:800;border:0;border-radius:14px;padding:12px 22px;background:var(--pri);color:#fff;cursor:pointer;min-height:50px;box-shadow:0 3px 0 var(--pri-d);transition:transform .08s,box-shadow .08s,background .15s;-webkit-tap-highlight-color:transparent}
+button:hover{background:var(--pri-h)}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--pri-d)}
+button.sec{background:var(--pri-l);color:var(--pri);box-shadow:0 3px 0 #D3D8FB}
+button.sec:hover{background:#E3E7FF}
+button.ghost{background:#fff;color:var(--ink2);border:1.5px solid var(--line);box-shadow:none}
+button.ghost:hover{background:#F7F8FC}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.big{font-size:21px;padding:18px 28px;width:100%;border-radius:18px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.grid2{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+input,select,textarea{font:inherit;font-weight:600;padding:12px 14px;border:1.5px solid #D5DAE7;border-radius:14px;background:#fff;color:var(--ink);width:100%;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 4px rgba(67,56,202,.15)}
+input[type=file]{padding:10px;background:var(--bg);border-style:dashed}
+input.ans{width:160px;height:66px;font-size:28px;font-weight:900;text-align:center;border-width:2px;border-radius:16px}
+label{display:block;margin:14px 0 6px;font-weight:800;font-size:15px;color:var(--ink2)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.muted{color:var(--muted)}
+small{display:block;color:var(--muted);font-weight:600;font-size:14px}
+/* fitxes i xips */
+.tile{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:25px;flex:none;background:color-mix(in srgb,var(--c,var(--pri)) 13%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c,var(--pri)) 18%,transparent)}
+.chip{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border-radius:999px;background:color-mix(in srgb,var(--c,var(--pri)) 11%,#fff);color:var(--c,var(--pri));font-weight:800;font-size:14px;white-space:nowrap}
+.chip.light{background:rgba(255,255,255,.16);color:#fff}
+.badge{display:inline-block;padding:3px 11px;border-radius:999px;font-size:13px;font-weight:800;white-space:nowrap}
+.b0{background:var(--warnbg);color:var(--warn)}.b1{background:var(--pri-l);color:var(--pri)}.b2{background:var(--okbg);color:var(--ok)}.bn{background:#EEF0F5;color:var(--muted)}
+/* portada */
+.hero{position:relative;overflow:hidden;display:flex;align-items:center;gap:24px;background:linear-gradient(135deg,#3730A3 0%,#4338CA 45%,#7C3AED 100%);color:#fff;border-radius:28px;padding:36px;margin-bottom:22px;box-shadow:var(--sh2)}
+.hero::before,.hero::after{content:'';position:absolute;border-radius:50%;background:rgba(255,255,255,.08)}
+.hero::before{width:320px;height:320px;right:-80px;top:-120px}.hero::after{width:180px;height:180px;right:180px;bottom:-110px}
+.hero h2{color:#fff;font-size:38px;margin:14px 0 10px}
+.hero p{margin:0 0 18px;color:#E0E3FF;font-size:19px;max-width:520px}
+.hero-t{flex:1;position:relative;z-index:1}.hero-owl{position:relative;z-index:1;flex:none;filter:drop-shadow(0 12px 20px rgba(0,0,0,.25))}
+.role,.mode{display:flex;align-items:center;gap:16px;width:100%;text-align:left;background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--sh);transition:transform .15s,box-shadow .15s,border-color .15s}
+.role:hover,.mode:hover{background:#fff;transform:translateY(-2px);box-shadow:var(--sh2);border-color:#CFD5F5}
+.role:active,.mode:active{transform:translateY(0)}
+.role b,.mode b{display:block;font-size:19px;line-height:1.25}
+.role .tile{width:60px;height:60px;font-size:30px;border-radius:18px}
+.role .arr{margin-left:auto;font-size:22px;color:var(--muted)}
+.mode{padding:16px;box-shadow:none}
+.mode.sel{border:2px solid var(--pri);background:var(--pri-l);box-shadow:0 0 0 4px rgba(67,56,202,.1)}
+.ph{margin:4px 0 20px}.ph h2{margin:0 0 4px}.ph p{margin:0}
+/* missió */
+.mission{display:flex;gap:28px;align-items:center;padding:28px}
+.mission-l{flex:1}.mission-r{display:flex;flex-direction:column;align-items:center;gap:14px;width:240px}
+.sk{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.sk:last-child{border-bottom:0}.sk .badge{margin-left:auto}
+/* fases */
+.stepper{display:flex;align-items:center;flex-wrap:wrap;gap:6px 0;margin-bottom:20px}
+.stp{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:var(--muted)}
+.stp i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#E3E7F1;font-style:normal;font-size:14px}
+.stp.on{color:var(--ink)}.stp.on i{background:var(--pri);color:#fff;box-shadow:0 0 0 4px rgba(67,56,202,.15)}
+.stp.done i{background:var(--ok);color:#fff}
+.stp+.stp::before{content:'';width:28px;height:2px;background:#D5DAE7;margin:0 10px 0 4px;border-radius:2px}
+/* exercicis */
+.card.subj{border-top:6px solid var(--c,var(--pri))}
+.exhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.prob{font-size:28px;font-weight:700;line-height:1.45;margin:10px 0 18px}
+.fb{display:block;padding:14px 18px;border-radius:16px;margin-top:14px;font-weight:600;border:1px solid transparent}
+.fb.ok{background:var(--okbg);color:#065F46;border-color:#BDEBD8}.fb.ko{background:var(--kobg);color:#9F1239;border-color:#FCCFD9}.fb.warn{background:var(--warnbg);color:#7C2D12;border-color:#FBE0B0}.fb.info{background:var(--pri-l);color:#312E81;border-color:#D8DCFC}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 5px;font-weight:900;line-height:1.15}
+.fr>span:first-child{border-bottom:3px solid currentColor;padding:0 5px}
+.bar{display:flex;height:52px;border:2px solid #2B3557;border-radius:12px;overflow:hidden;margin:12px 0;max-width:620px;background:#fff}
+.bar div{flex:1;border-right:1.5px solid #2B3557;background:#fff;transition:background .12s}
+.bar div:last-child{border-right:0}
+.bar div.on{background:linear-gradient(180deg,#818CF8,#6366F1)}
+.bar.click div{cursor:pointer}.bar.click div:hover{background:#EEF0FF}.bar.click div.on:hover{background:#6366F1}
+.dots{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.grp{display:flex;flex-wrap:wrap;gap:4px;padding:8px;border:2px dashed #C9D0E2;border-radius:12px;max-width:116px;background:#fff;transition:all .12s}
+.grp.on{background:#EEF0FF;border:2px solid var(--pri)}
+.dot{width:12px;height:12px;border-radius:50%;background:#A3AECB;display:inline-block}
+.grp.on .dot{background:var(--pri)}
+/* aventura */
+.adv{position:relative;overflow:hidden;background:radial-gradient(circle at 20% 10%,rgba(255,255,255,.12) 0 2px,transparent 3px),radial-gradient(circle at 80% 30%,rgba(255,255,255,.1) 0 2px,transparent 3px),radial-gradient(circle at 60% 80%,rgba(255,255,255,.08) 0 2px,transparent 3px),linear-gradient(160deg,#1E1B4B 0%,#3730A3 55%,#6D28D9 100%);background-size:180px 180px,220px 220px,160px 160px,100% 100%;color:#fff;border:0}
+.adv h3{color:#fff}.adv .muted{color:#C7D2FE}
+.advtop{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:800;color:#C7D2FE;font-size:15px;margin-bottom:14px}
+.gems{background:rgba(255,255,255,.14);padding:5px 12px;border-radius:999px;color:#FDE68A}
+.path{position:relative;display:flex;justify-content:space-between;margin:6px 0 20px}
+.path::before{content:'';position:absolute;left:28px;right:28px;top:50%;border-top:3px dashed rgba(255,255,255,.3)}
+.st{position:relative;z-index:1;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:#2E2A6B;border:2px solid rgba(255,255,255,.2);filter:grayscale(1);opacity:.6}
+.st.done{filter:none;opacity:1;background:#FEF3C7;border-color:#FCD34D}
+.advbox .muted{color:var(--muted)}
+.st.cur{filter:none;opacity:1;background:#fff;border-color:#FDE68A;box-shadow:0 0 0 6px rgba(253,230,138,.3);animation:pulse 1.8s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 12px rgba(253,230,138,.08)}}
+.advbox{background:#fff;color:var(--ink);border-radius:18px;padding:22px;margin-top:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+/* mascota */
+.owl{display:flex;gap:14px;align-items:flex-start}
+.owl .ic{flex:none;line-height:0}
+.bub{flex:1;background:var(--pri-l);border-radius:4px 20px 20px 20px;padding:16px 20px}
+.bub p:first-child,.bub h3:first-child{margin-top:0}.bub p:last-child{margin-bottom:0}
+.steps{padding-left:22px}.steps li{margin:8px 0;padding-left:4px}.steps li::marker{font-weight:900;color:var(--pri)}
+/* final */
+.ring{--p:0;width:150px;height:150px;border-radius:50%;margin:8px auto 14px;background:conic-gradient(var(--ok) calc(var(--p)*1%),#E3E7F1 0);display:grid;place-items:center}
+.ring>div{width:118px;height:118px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:30px;font-weight:900}
+/* zona famílies */
+.tabs{display:inline-flex;background:#E6E9F4;padding:5px;border-radius:16px;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+.tabs button{background:transparent;color:var(--ink2);box-shadow:none;min-height:42px;padding:8px 18px;border-radius:12px}
+.tabs button:hover{background:rgba(255,255,255,.6)}
+.tabs button.on{background:#fff;color:var(--pri);box-shadow:0 1px 3px rgba(23,32,58,.12)}
+.subjh{display:flex;align-items:center;gap:10px;margin:18px 0 6px;font-weight:900}
+label.chk{display:flex;gap:12px;align-items:center;padding:11px 14px;border:1.5px solid var(--line);border-radius:14px;margin:6px 0;font-weight:700;font-size:16px;color:var(--ink);cursor:pointer;background:#fff;transition:all .12s}
+label.chk:hover{border-color:#CFD5F5}
+label.chk:has(input:checked){border-color:var(--pri);background:var(--pri-l)}
+.chk input{width:20px;height:20px;accent-color:var(--pri);flex:none}
+label.chk .badge{margin-left:auto}
+.stat{background:var(--bg);border-radius:16px;padding:18px 20px}
+.stat b{display:block;font-size:32px;font-weight:900;color:var(--pri);line-height:1.1}
+table{width:100%;border-collapse:collapse;font-size:16px}
+th{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800}
+td,th{padding:11px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+tr.grp-h th{background:var(--bg);color:var(--ink);font-size:15px;text-transform:none;letter-spacing:0}
+.tablewrap{overflow-x:auto}
+/* xat */
+.chat{max-height:340px;overflow:auto;display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.msg{padding:11px 15px;border-radius:18px;max-width:85%;white-space:pre-wrap;font-weight:600}
+.msg.u{align-self:flex-end;background:var(--pri);color:#fff;border-bottom-right-radius:4px}.msg.m{align-self:flex-start;background:var(--pri-l);border-bottom-left-radius:4px}
+.err-dub{color:var(--warn)}.err-ok{color:var(--ok)}
+details summary{cursor:pointer}
+table.mini{width:auto;min-width:280px;margin:6px 0;background:#fff;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--line)}
+table.mini th,table.mini td{padding:7px 14px;font-size:16px}
+table.mini th{background:var(--bg)}
+.bloch{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 4px}
+.sk.topic .tn{flex:1;min-width:160px}.sk.topic .tb{display:flex;gap:8px;flex-wrap:wrap}.sk.topic .tb button{min-height:44px;padding:8px 14px;font-size:16px}
+.subjcard{border-top:5px solid var(--c)}
+.lockbtn{position:absolute;top:16px;right:16px;z-index:2;min-height:36px;padding:6px 14px;font-size:14px;font-weight:800;border-radius:999px;background:rgba(255,255,255,.14);color:#E0E3FF;border:1px solid rgba(255,255,255,.25);box-shadow:none}
+.lockbtn:hover{background:rgba(255,255,255,.24)}
+.modal-bg{position:fixed;inset:0;z-index:50;background:rgba(23,32,58,.55);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.modal{background:var(--surface);border-radius:24px;padding:26px;width:100%;max-width:420px;box-shadow:var(--sh2)}
+.steps-ai{padding-left:22px;margin:8px 0}.steps-ai li{margin:6px 0}
+code.k{background:var(--bg);padding:2px 8px;border-radius:8px;font-weight:800}
+table.vt td{font-size:17px}table.vt tr[data-s]{cursor:pointer}table.vt tr:hover td{background:#FAFBFE}table.vt tr.spk td{background:var(--pri-l)}
+header{padding-top:max(10px,env(safe-area-inset-top))}
+main{padding-bottom:max(48px,env(safe-area-inset-bottom))}
+@media (max-width:640px){
+ .sk.topic{flex-wrap:wrap}.sk.topic .tb{width:100%}.sk.topic .tb button{flex:1}
+ table.vt td,table.vt th{padding:9px 5px;font-size:15px}table.vt th{font-size:11px}
+ table.vt .sp,table.vt .rg{display:none}
+ .ph .row .ghost{min-height:42px;padding:8px 14px}
+}
+@media print{header,.noprint,.tabs{display:none!important}body{background:#fff;font-size:13px}main{padding:0;max-width:none}.card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}table.vt td{font-size:13px;padding:4px 8px}h2{font-size:20px}}
+@media (max-width:640px){
+ body{font-size:17px}main{padding:16px 16px 40px}h2{font-size:24px}
+ .hero{padding:26px;flex-direction:column-reverse;align-items:flex-start}.hero h2{font-size:30px}.hero-owl svg{width:96px;height:96px}
+ .mission{flex-direction:column;align-items:stretch;padding:22px}.mission-r{width:auto}.mission-r svg{display:none}
+ .prob{font-size:23px}.card{padding:18px}.st{width:44px;height:44px;font-size:21px}
+ .stp span{display:none}.stp+.stp::before{width:18px}
+}
+</style>
+</head>
+<body>
+<header><div class="brand" onclick="home()"><svg width="38" height="38" viewBox="0 0 64 64" aria-hidden="true"><path d="M14 18 L19 5 L26 13 Q32 10 38 13 L45 5 L50 18 Q57 28 54 41 Q51 59 32 59 Q13 59 10 41 Q7 28 14 18Z" fill="#4338CA"/><ellipse cx="32" cy="45" rx="13" ry="11" fill="#C7D2FE"/><circle cx="23" cy="28" r="9.5" fill="#fff"/><circle cx="41" cy="28" r="9.5" fill="#fff"/><circle cx="24" cy="29" r="4.5" fill="#17203A"/><circle cx="40" cy="29" r="4.5" fill="#17203A"/><path d="M28.5 36 L35.5 36 L32 41Z" fill="#F59E0B"/></svg><b>Aprenem</b><span class="pill">beta</span></div><span id="timer"></span></header>
+<main id="app"></main>
+<script>
+/* ===================== utilitats ===================== */
+const $=s=>document.querySelector(s);
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const lcm=(a,b)=>a/gcd(a,b)*b;
+const R=(n,d=1)=>{if(d<0){n=-n;d=-d}const g=gcd(Math.abs(n),d)||1;return{n:n/g,d:d/g}};
+const req=(a,b)=>a.n*b.d===b.n*a.d;
+const F=(n,d)=>`<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+const fmtR=r=>r.d===1?`${r.n}`:`${r.n}/${r.d}`;
+const dec=h=>(h/100).toFixed(2).replace('.',',').replace(/,?0+$/,'');
+const dec2=h=>(h/100).toFixed(2).replace('.',',');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const once=f=>{let c=false;return(...a)=>{if(!c){c=true;f(...a)}}};
+const ORD={1:'1r',2:'2n',3:'3r',4:'4t',5:'5è',6:'6è'};
+const mmss=ms=>`${Math.floor(ms/60000)}:${String(Math.floor(ms/1000)%60).padStart(2,'0')}`;
+function parseVal(s){
+  s=(s||'').trim().replace(/\s+/g,' ');let m;
+  if(m=s.match(/^(\d+) (\d+)\s*\/\s*(\d+)$/)){const d=+m[3];return d?R(+m[1]*d+ +m[2],d):null}
+  if(m=s.match(/^(-?\d+)\s*\/\s*(\d+)$/))return +m[2]?R(+m[1],+m[2]):null;
+  if(m=s.match(/^(-?\d+)(?:[.,](\d+))?$/)){const f=m[2]||'';return R(parseInt(m[1]+f,10),10**f.length)}
+  return null;
+}
+const barHTML=(parts,on,click)=>`<div class="bar${click?' click':''}">${Array.from({length:parts},(_,i)=>`<div class="${i<on?'on':''}" data-i="${i}"></div>`).join('')}</div>`;
+const groupsHTML=(d,k,on,click)=>`<div class="dots">${Array.from({length:d},(_,i)=>`<div class="grp${i<on?' on':''}" data-i="${i}" style="${click?'cursor:pointer':''}">${'<span class="dot"></span>'.repeat(k)}</div>`).join('')}</div>`;
+
+/* ===================== habilitats (exercicis verificables) ===================== */
+const SK={
+ frac_equiv:{nom:'Fraccions equivalents',ic:'🍕',
+  teoria:['Dues fraccions són <b>equivalents</b> si representen la mateixa quantitat, encara que s\'escriguin amb nombres diferents.',
+   `Per exemple, ${F(1,2)} i ${F(2,4)}: si parteixes una pizza en 2 trossos i en menges 1, menges el mateix que si la parteixes en 4 i en menges 2.`,
+   'Per trobar una fracció equivalent <b>multipliquem (o dividim) el numerador i el denominador pel mateix nombre</b>. Mai no sumem!'],
+  gen(lv){const b=rnd(2,lv?9:6),a=rnd(1,b-1),k=rnd(2,lv>1?9:5);
+   return{text:`Completa la fracció equivalent:<br>${F(a,b)} = ${F('?',b*k)}`,fields:[{label:'Numerador',ans:R(a*k)}],
+    vis:barHTML(b,a),
+    hints:[`Fixa't en els denominadors: ${b} i ${b*k}. Per quin nombre s'ha multiplicat ${b}?`,`${b} × ${k} = ${b*k}. Ara has de fer el mateix amb el numerador.`],
+    steps:[`El denominador ${b} s'ha convertit en ${b*k}, perquè ${b} × ${k} = ${b*k}.`,`Per mantenir la mateixa quantitat, el numerador també es multiplica per ${k}: ${a} × ${k} = ${a*k}.`,`Per tant, ${F(a,b)} = ${F(a*k,b*k)}.`],
+    err:v=>v[0].d===1&&v[0].n===a+b*k-b?'suma_no_multiplica':null,
+    paint:b*k<=24?{kind:'bar',parts:b*k,target:a*k,label:`Pinta ${F(a,b)} d'aquesta barra. Està dividida en ${b*k} parts iguals.`,
+      follow:{q:`Quina fracció de la barra has pintat? Escriu-la amb denominador ${b*k}.`,ans:R(a*k,b*k),raw:`${a*k}/${b*k}`}}:null};
+  }},
+ frac_suma_igual:{nom:'Sumar i restar fraccions (mateix denominador)',ic:'➕',
+  teoria:['Quan les fraccions tenen el <b>mateix denominador</b>, les parts són de la mateixa mida.',
+   `Per això només sumem (o restem) els <b>numeradors</b> i deixem el mateix denominador: ${F(2,7)} + ${F(3,7)} = ${F(5,7)}.`,
+   'El denominador no se suma: diu en quantes parts està dividida la unitat, i això no canvia.'],
+  gen(lv){const den=rnd(3,lv?12:8);let a=rnd(1,den-1),b=rnd(1,den-1);const resta=lv>0&&Math.random()<.5;
+   if(resta){if(a===b){if(a===1)a=2;else b--}if(a<b)[a,b]=[b,a]}
+   const r=resta?a-b:a+b,op=resta?'−':'+',s=R(r,den);
+   return{text:`Calcula:<br>${F(a,den)} ${op} ${F(b,den)}`,fields:[{label:'Resultat (ex. 3/4)',ans:s}],
+    vis:barHTML(den,a)+barHTML(den,b),
+    hints:['Els denominadors són iguals. Què passa amb el denominador quan sumes o restes?',`El denominador continua sent ${den}. Ara ${resta?'resta':'suma'} només els numeradors.`],
+    steps:[`Els dos denominadors són ${den}: el resultat també tindrà denominador ${den}.`,`${resta?'Restem':'Sumem'} els numeradors: ${a} ${op} ${b} = ${r}.`,`Resultat: ${F(r,den)}${s.d!==den&&s.n?` = ${F(s.n,s.d)} (simplificat)`:''}.`],
+    err:v=>!resta&&req(v[0],R(a+b,2*den))?'suma_denominadors':null};
+  }},
+ frac_suma_dif:{nom:'Sumar fraccions (denominador diferent)',ic:'🧮',
+  teoria:['Si els denominadors són <b>diferents</b>, les parts tenen mides diferents i no es poden sumar directament.',
+   'Primer busquem un <b>denominador comú</b> (el mínim comú múltiple dels denominadors) i convertim cada fracció en una d\'equivalent.',
+   `Exemple: ${F(1,2)} + ${F(1,3)} → ${F(3,6)} + ${F(2,6)} = ${F(5,6)}.`],
+  gen(lv){const pool=lv?[2,3,4,5,6,8,9,10,12]:[2,3,4,6,8];const b=pick(pool);let e;do{e=pick(pool)}while(e===b);
+   const a=rnd(1,b-1),c=rnd(1,e-1),L=lcm(b,e),na=a*L/b,nc=c*L/e,s=R(na+nc,L);
+   return{text:`Calcula:<br>${F(a,b)} + ${F(c,e)}`,fields:[{label:'Resultat (ex. 5/6)',ans:s}],
+    vis:barHTML(b,a)+barHTML(e,c),
+    hints:[`Els denominadors (${b} i ${e}) són diferents. Busca un nombre que sigui múltiple de tots dos.`,`El mínim comú múltiple de ${b} i ${e} és ${L}. Converteix les dues fraccions a denominador ${L}.`],
+    steps:[`Busquem el denominador comú: m.c.m.(${b}, ${e}) = ${L}.`,`${F(a,b)} = ${F(na,L)} (multipliquem per ${L/b}) i ${F(c,e)} = ${F(nc,L)} (multipliquem per ${L/e}).`,`${F(na,L)} + ${F(nc,L)} = ${F(na+nc,L)}${s.d!==L?` = ${F(s.n,s.d)} (simplificat)`:''}.`],
+    err:v=>req(v[0],R(a+c,b+e))?'suma_denominadors':null};
+  }},
+ frac_de_nombre:{nom:'Fracció d\'un nombre',ic:'🍬',
+  teoria:['Per calcular la fracció d\'un nombre fem dues passes:','1️⃣ <b>Dividim</b> el nombre pel denominador (així sabem quant val cada part).','2️⃣ <b>Multipliquem</b> el resultat pel numerador (agafem les parts que ens diuen).',`Exemple: ${F(3,4)} de 20 → 20 : 4 = 5 → 5 × 3 = 15.`],
+  gen(lv){const d=rnd(2,lv?10:6),n=rnd(1,d-1),k=rnd(2,lv?15:8),N=d*k;
+   const text=pick([`Una classe té ${N} alumnes. ${F(n,d)} dels alumnes van d'excursió. Quants alumnes hi van?`,`En Pau té ${N} cromos i en regala ${F(n,d)}. Quants cromos regala?`,`Un dipòsit té ${N} litres d'aigua. Se n'han gastat ${F(n,d)}. Quants litres s'han gastat?`,`Quant és ${F(n,d)} de ${N}?`]);
+   return{text,fields:[{label:'Resposta',ans:R(n*k)}],
+    vis:N<=80?groupsHTML(d,k,0):null,
+    hints:[`En quantes parts iguals has de repartir ${N}? Mira el denominador.`,`${N} : ${d} = ${k}. Cada part val ${k}. Quantes parts has d'agafar?`],
+    steps:[`Dividim pel denominador: ${N} : ${d} = ${k}. Cada part val ${k}.`,`Multipliquem pel numerador: ${k} × ${n} = ${n*k}.`,`Resposta: ${n*k}.`],
+    err:v=>v[0].d!==1?null:(n!==1&&v[0].n===k?'nomes_divideix':(v[0].n===N*n?'nomes_multiplica':null)),
+    paint:N<=60?{kind:'groups',parts:d,k,target:n,label:`Hi ha ${N} punts repartits en ${d} grups iguals. Toca els grups que formen ${F(n,d)} del total.`,
+      follow:{q:`Quants punts hi ha als grups que has triat? (és ${F(n,d)} de ${N})`,ans:R(n*k)}}:null};
+  }},
+ decimals:{nom:'Sumar i restar decimals',ic:'🔢',
+  teoria:['En els nombres decimals, la <b>coma</b> separa la part entera de la part decimal.','Per sumar o restar decimals, col·loquem els nombres de manera que les <b>comes quedin alineades</b>: unitats davall unitats, dècimes davall dècimes, centèsimes davall centèsimes.','Si cal, afegim zeros a la dreta: 1,4 = 1,40.'],
+  gen(lv){let a=rnd(101,lv?2999:999);if(a%10===0)a++;const bt=rnd(11,lv?199:99),bh=bt*10;let resta=Math.random()<.5;if(resta&&a<=bh)resta=false;
+   const r=resta?a-bh:a+bh,op=resta?'−':'+';
+   return{text:`Calcula:<br><b>${dec(a)} ${op} ${dec(bh)}</b>`,fields:[{label:'Resultat',ans:R(r,100)}],vis:null,
+    hints:['Imagina els nombres un davall l\'altre amb les comes alineades. Quantes xifres decimals té cada un?',`Escriu ${dec(bh)} com ${dec2(bh)} i ${resta?'resta':'suma'} columna per columna.`],
+    steps:[`Escrivim ${dec(bh)} com ${dec2(bh)} perquè tots dos tinguin dues xifres decimals.`,`Alineem les comes i ${resta?'restem':'sumem'}: ${dec2(a)} ${op} ${dec2(bh)}.`,`Resultat: ${dec(r)}.`],
+    err:v=>req(v[0],R(resta?a-bt:a+bt,100))?'comes_no_alineades':null};
+  }},
+ divisions:{nom:'Divisions',ic:'➗',
+  teoria:['En una divisió hi ha: <b>dividend</b> (el que repartim), <b>divisor</b> (entre quants), <b>quocient</b> (quant toca a cadascú) i <b>residu</b> (el que sobra).','El residu sempre ha de ser <b>més petit que el divisor</b>. Si no, encara en podríem repartir més!','Comprovació: divisor × quocient + residu = dividend.'],
+  gen(lv,curs){const dv=curs>=6&&lv>0?rnd(11,29):rnd(3,9),D=rnd(lv?1000:100,lv?9999:999),q=Math.floor(D/dv),r=D%dv;
+   return{text:`Fes la divisió:<br><b>${D} : ${dv}</b>`,fields:[{label:'Quocient',ans:R(q)},{label:'Residu',ans:R(r)}],vis:null,
+    hints:[`Comença per les primeres xifres de ${D}: quantes vegades hi cap ${dv}?`,`Pots comprovar el resultat: ${dv} × quocient + residu ha de donar ${D}.`],
+    steps:[`${dv} × ${q} = ${dv*q}, que és el múltiple de ${dv} més gran que no passa de ${D}.`,`Residu: ${D} − ${dv*q} = ${r} (és més petit que ${dv} ✔).`,`Comprovació: ${dv} × ${q} + ${r} = ${D}.`],
+    err:v=>v[1].d===1&&v[1].n>=dv?'residu_gran':null};
+  }},
+ percentatges:{nom:'Percentatges',ic:'💯',
+  teoria:['El <b>percentatge</b> (%) vol dir «de cada 100». El 25% vol dir 25 de cada 100.',`Un percentatge és una fracció amb denominador 100: 25% = ${F(25,100)} = ${F(1,4)}.`,'Per calcular el p% d\'un nombre: <b>multipliquem pel percentatge i dividim entre 100</b>. Exemple: 20% de 50 → 50 × 20 : 100 = 10.'],
+  gen(lv){const p=pick(lv?[5,15,30,40,60,75]:[10,20,25,50]),step=100/gcd(p,100),lo=Math.ceil(20/step),N=step*rnd(lo,lo+(lv?15:8)),ans=p*N/100;
+   const text=pick([`Una bicicleta costa ${N} €. Està rebaixada un ${p}%. Quants euros et descompten?`,`En una escola hi ha ${N} alumnes i el ${p}% hi va en bicicleta. Quants alumnes hi van en bicicleta?`,`Calcula el ${p}% de ${N}.`]);
+   return{text,fields:[{label:'Resposta',ans:R(ans)}],vis:null,
+    hints:[`${p}% vol dir ${p} de cada 100. Com ho escriuries en forma de fracció?`,`Multiplica ${N} × ${p} i després divideix entre 100.`],
+    steps:[`${p}% = ${F(p,100)}.`,`${N} × ${p} = ${N*p}.`,`${N*p} : 100 = ${ans}.`],
+    err:v=>p!==10&&N%p===0&&v[0].d===1&&v[0].n===N/p?'divideix_percent':null};
+  }}
+};
+
+/* ===================== ANGLÈS ===================== */
+const norm=s=>String(s||'').toLowerCase().replace(/[’`´]/g,"'").replace(/[.,!?;:"«»¿¡]/g,'').replace(/\s+/g,' ').trim();
+function lev(a,b){const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;
+ for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length]}
+const VOCAB=`cat;gat;🐱|dog;gos;🐶|horse;cavall;🐴|cow;vaca;🐮|pig;porc;🐷|sheep;ovella;🐑|rabbit;conill;🐰|bird;ocell;🐦|fish;peix;🐟|mouse;ratolí;🐭|elephant;elefant;🐘|monkey;mona;🐒|lion;lleó;🦁|bear;ós;🐻|frog;granota;🐸|snake;serp;🐍|butterfly;papallona;🦋;1|giraffe;girafa;🦒;1|dolphin;dofí;🐬;1|apple;poma;🍎|banana;plàtan;🍌|bread;pa;🍞|cheese;formatge;🧀|egg;ou;🥚|milk;llet;🥛|orange;taronja;🍊|strawberry;maduixa;🍓;1|carrot;pastanaga;🥕;1|water;aigua;💧|cake;pastís;🍰|tomato;tomàquet;🍅|potato;patata;🥔|book;llibre;📖|pencil;llapis;✏️|ruler;regle;📏;1|scissors;tisores;✂️;1|backpack/rucksack/schoolbag;motxilla;🎒;1|computer;ordinador;💻;1|clock;rellotge;🕐|sun;sol;☀️|rain;pluja;🌧️|snow;neu;❄️|cloud;núvol;☁️;1|tree;arbre;🌳|flower;flor;🌸|beach;platja;🏖️|mountain;muntanya;⛰️;1|moon;lluna;🌙|t-shirt/tshirt;camiseta;👕|dress;vestit;👗|socks;calcetins;🧦;1|trousers/pants;pantalons;👖;1|glasses;ulleres;👓;1|umbrella;paraigua;☂️;1|house;casa;🏠|bed;llit;🛏️|chair;cadira;🪑|door;porta;🚪|key;clau;🔑|car;cotxe;🚗|bus;autobús;🚌|train;tren;🚆|plane/aeroplane/airplane;avió;✈️|bike/bicycle;bicicleta;🚲|boat;vaixell;⛵`
+ .split('|').map(s=>{const[en,ca,em,h]=s.split(';'),alts=en.split('/');return{en:alts[0],alts,ca,em,h:+(h||0)}});
+function pickVocab(lv){const sv=(S.sessio.vocab||[]).filter(w=>w.en&&w.ca);
+ if(sv.length>=3){const w=pick(sv);return{en:w.en,alts:[w.en],ca:w.ca,em:w.em||'📘'}}return pick(VOCAB.filter(w=>lv>0||!w.h))}
+const EN_SENT=[['I like apples','M\'agraden les pomes'],['She has got a cat','Ella té un gat'],['We go to school by bus','Anem a l\'escola amb autobús'],['The dog is very big','El gos és molt gros'],['It is sunny today','Avui fa sol'],['My brother plays football','El meu germà juga a futbol'],['They are in the park','Són al parc'],['Can you help me','Em pots ajudar?'],['I have got two sisters','Tinc dues germanes'],['What is your name','Com et dius?']];
+const PRES=[['play','plays','football every Saturday'],['watch','watches','TV after dinner'],['go','goes','to school by bus'],['study','studies','English on Mondays'],['have','has','breakfast at eight o\'clock'],['wash','washes','the dishes after lunch'],['fly','flies','a kite in the park'],['read','reads','comics at night'],['eat','eats','fruit every day'],['swim','swims','in the sea in summer'],['like','likes','chocolate ice cream'],['ride','rides','a bike to school'],['live','lives','in Palma'],['do','does','homework in the afternoon'],['catch','catches','the bus at eight']];
+const BE_S=[['I',0],['You',2],['He',1],['She',1],['We',2],['They',2],['My parents',2],['Anna',1],['My cat',1]];
+const BE_R=[['be','eleven years old'],['be','in the classroom'],['be','very happy today'],['be','from Mallorca'],['be','at the beach'],['have','got a new bike'],['have','got blue eyes'],['have','got two brothers']];
+const PAST=[['play','played','tennis',0],['watch','watched','a film',0],['visit','visited','my cousins',0],['cook','cooked','dinner',0],['walk','walked','to school',0],['study','studied','for the exam',0],['go','went','to the beach',1],['eat','ate','a big pizza',1],['see','saw','a dolphin',1],['have','had','a party',1],['buy','bought','a new book',1],['swim','swam','in the pool',1],['write','wrote','a letter to my grandma',1],['drink','drank','orange juice',1],['make','made','a cake',1],['come','came','home late',1],['take','took','a lot of photos',1],['run','ran','in the park',1]];
+const PLUR=[['cat','cats','🐱'],['dog','dogs','🐶'],['box','boxes','📦'],['bus','buses','🚌'],['watch','watches','⌚'],['baby','babies','👶'],['strawberry','strawberries','🍓'],['dress','dresses','👗'],['toy','toys','🧸'],['key','keys','🔑'],['potato','potatoes','🥔'],['child','children','🧒',1],['man','men','👨',1],['woman','women','👩',1],['mouse','mice','🐭',1],['tooth','teeth','🦷',1],['foot','feet','🦶',1],['sheep','sheep','🐑',1],['fish','fish','🐟',1],['knife','knives','🔪',1],['leaf','leaves','🍃',1]];
+const COMP=[['tall','taller','My dad is ___ than me'],['small','smaller','A mouse is ___ than a cat'],['fast','faster','A car is ___ than a bike'],['old','older','My grandma is ___ than my mum'],['big','bigger','An elephant is ___ than a dog'],['hot','hotter','Summer is ___ than winter'],['happy','happier','Today I am ___ than yesterday'],['funny','funnier','This film is ___ than the book'],['easy','easier','This exercise is ___ than the last one'],['beautiful','more beautiful','This beach is ___ than the other one'],['expensive','more expensive','A car is ___ than a bike'],['interesting','more interesting','This book is ___ than that one'],['dangerous','more dangerous','A lion is ___ than a cat'],['good','better','My new bike is ___ than my old one'],['bad','worse','The weather today is ___ than yesterday']];
+Object.assign(SK,{
+ en_vocab:{mat:'angles',nom:'Vocabulari',ic:'🔤',
+  teoria:['Aprendre vocabulari és com omplir una motxilla de paraules: com més en tens, més coses pots dir.','Truc: <b>mira el dibuix, digues la paraula en veu alta i escriu-la</b>. Fixa\'t en les lletres que no sonen com en català.','Exemple: 🐱 gat → <b>cat</b>. 🍎 poma → <b>apple</b> (amb dues p!).'],
+  gen(lv){const w=pickVocab(lv),en=w.en;
+   return{text:`<div style="font-size:64px;line-height:1.2">${w.em}</div>Com es diu en anglès «<b>${esc(w.ca)}</b>»?`,fields:[{label:'En anglès',txt:w.alts.map(norm)}],vis:null,pron:en,
+    hints:[`Comença per «${en[0]}» i té ${en.length} lletres.`,`${en[0]} ${'_ '.repeat(Math.max(0,en.length-2))}${en.length>1?en.slice(-1):''}`],
+    steps:[`«${esc(w.ca)}» en anglès és <b>${esc(en)}</b>.`,`S'escriu així: ${esc(en.toUpperCase().split('').join(' - '))}.`,'Digues-la en veu alta tres vegades i escriu-la una vegada al quadern.'],
+    err:v=>{const d=lev(v[0],norm(en));return d>0&&d<=2?'en_lletrejat':null}};
+  }},
+ en_listen:{mat:'angles',nom:'Comprensió oral (listening)',ic:'🎧',
+  teoria:['Per entendre l\'anglès parlat cal <b>escoltar molt</b>. Al principi sembla molt ràpid, però l\'orella s\'hi acostuma.','Truc: escolta-ho una vegada sencer, després paraula per paraula, i escriu el que sents.','Recorda que en anglès moltes paraules no s\'escriuen com sonen: «<b>two</b>» sona «tu».'],
+  gen(lv){let t,ca;if(lv>0&&Math.random()<.7)[t,ca]=pick(EN_SENT);else{const w=pickVocab(lv);t=w.en;ca=w.ca}
+   const words=t.split(' ').length;
+   return{text:`🎧 Escolta i escriu ${words>1?'la frase':'la paraula'} en anglès.<br><span class="muted" style="font-size:18px">Pitja 🔊 per escoltar-ho tantes vegades com vulguis.</span>`,fields:[{label:'Escriu el que sents',txt:[norm(t)],wide:words>1}],vis:null,listen:t,
+    hints:[`Comença per «${t[0]}»${words>1?` i té ${words} paraules`:''}.`,`Vol dir «${esc(ca)}» en català.`],
+    steps:[`Has sentit: <b>${esc(t)}</b>.`,`Vol dir: «${esc(ca)}».`,'Escolta-ho una altra vegada mentre ho llegeixes.'],
+    err:v=>{const d=lev(v[0],norm(t));return d>0&&d<=Math.max(2,Math.floor(t.length/8))?'en_lletrejat':null}};
+  }},
+ en_present:{mat:'angles',nom:'Present simple (he/she/it + -s)',ic:'⏰',
+  teoria:['El <b>present simple</b> serveix per parlar de coses que fem habitualment: <i>I play football every Saturday</i>.','Amb <b>he, she, it</b> (o un nom com <i>Tom</i> o <i>my sister</i>) el verb porta <b>-s</b>: <i>She play<b>s</b></i>.','Compte amb les terminacions: -o, -sh, -ch, -ss, -x → <b>-es</b> (goes, watches); consonant + y → <b>-ies</b> (studies). <i>Have</i> → <b>has</b>.'],
+  gen(lv){const[b,s3,rest]=pick(lv?PRES:PRES.slice(0,10)),third=Math.random()<.65,subj=pick(third?['He','She','My sister','Tom','Our teacher']:['I','You','We','They','My friends']),ans=third?s3:b;
+   const rule=b==='have'?'«Have» és irregular: amb he/she/it és <b>has</b>.':s3.endsWith('ies')?'Acaba en consonant + y: canviem la y per <b>-ies</b>.':s3.endsWith('es')?'Acaba en -o, -sh, -ch, -ss o -x: afegim <b>-es</b>.':'Afegim <b>-s</b>.';
+   return{text:`Completa amb el verb en present:<br><b>${subj} ___ ${rest}.</b> <span class="muted">(${b})</span>`,fields:[{label:'Verb',txt:[ans]}],vis:null,
+    hints:[`Qui és el subjecte? «${subj}» és com ${third?'he, she o it':'I, you, we o they'}.`,third?`Amb he/she/it el verb porta -s. Com acaba «${b}»?`:'Amb I, you, we i they el verb no canvia.'],
+    steps:[`El subjecte és «${subj}» → ${third?'tercera persona del singular (he/she/it)':'no és he, she ni it'}.`,third?rule:`El verb es queda igual: <b>${b}</b>.`,`Resposta: ${subj} <b>${ans}</b> ${rest}.`],
+    err:v=>(third&&v[0]===b)||(!third&&v[0]===s3)?'en_tercera_persona':(third&&v[0]===b+'s'&&s3!==b+'s'?'en_terminacio':null)};
+  }},
+ en_be:{mat:'angles',nom:'To be i have got',ic:'🙋',
+  teoria:['<b>To be</b> (ser / estar): I <b>am</b> · he, she, it <b>is</b> · we, you, they <b>are</b>.','<b>Have got</b> (tenir): I, you, we, they <b>have got</b> · he, she, it <b>has got</b>.','Exemple: <i>She <b>is</b> my friend. She <b>has</b> got a dog.</i>'],
+  gen(){const[verb,rest]=pick(BE_R),[subj,pers]=pick(BE_S),ans=verb==='be'?['am','is','are'][pers]:(pers===1?'has':'have'),pr=['I','he/she/it','we/you/they'][pers];
+   return{text:`Completa amb ${verb==='be'?'<b>am</b>, <b>is</b> o <b>are</b>':'<b>have</b> o <b>has</b>'}:<br><b>${subj} ___ ${rest}.</b>`,fields:[{label:'Forma',txt:[ans]}],vis:null,
+    hints:[`Quin pronom correspon a «${subj}»? (I, he/she/it, we/you/they)`,verb==='be'?'I → am · he/she/it → is · we/you/they → are':'he/she/it → has · la resta → have'],
+    steps:[`«${subj}» és ${pr}.`,`Amb ${pr} fem servir <b>${ans}</b>.`,`Resposta: ${subj} <b>${ans}</b> ${rest}.`],
+    err:v=>v[0]!==ans&&['am','is','are','have','has'].includes(v[0])?'en_be':null};
+  }},
+ en_past:{mat:'angles',nom:'Past simple',ic:'⌛',
+  teoria:['El <b>past simple</b> serveix per parlar del passat: <i>Yesterday I play<b>ed</b> tennis</i>.','Els verbs <b>regulars</b> afegeixen <b>-ed</b>: play → played, study → stud<b>ied</b>.','Els verbs <b>irregulars</b> s\'han d\'aprendre de memòria: go → <b>went</b>, eat → <b>ate</b>, see → <b>saw</b>, have → <b>had</b>. Mai «goed»!','El passat és igual per a totes les persones: I went, she went, they went.'],
+  gen(lv){const pool=lv?PAST:PAST.slice(0,12),[b,pa,rest,irr]=pick(pool),time=pick(['Yesterday','Last weekend','Last summer','Two days ago']),subj=pick(['I','we','my brother','they','she']),reg=b.endsWith('e')?b+'d':b+'ed';
+   return{text:`Completa amb el verb en passat:<br><b>${time} ${subj} ___ ${rest}.</b> <span class="muted">(${b})</span>`,fields:[{label:'Verb en passat',txt:[pa]}],vis:null,
+    hints:[`Mira «${time}»: l'acció ja ha passat.`,irr?`«${b}» és un verb irregular: no acaba en -ed. Te'n recordes?`:`«${b}» és regular: afegeix -ed${b.endsWith('y')?' (compte: consonant + y → -ied)':''}.`],
+    steps:[`«${time}» indica passat.`,irr?`«${b}» és irregular: el passat és <b>${pa}</b>.`:`«${b}» és regular: ${b} + ed → <b>${pa}</b>.`,`Resposta: ${time} ${subj} <b>${pa}</b> ${rest}.`],
+    err:v=>[b,b+'s',b+'es'].includes(v[0])?'en_passat_no':(irr&&(v[0]===reg||v[0]===b+'ed')?'en_irregular':null)};
+  }},
+ en_plural:{mat:'angles',nom:'Plurals',ic:'👯',
+  teoria:['La majoria de paraules fan el plural amb <b>-s</b>: cat → cats.','-s, -sh, -ch, -x, -o → <b>-es</b> (box → boxes) · consonant + y → <b>-ies</b> (baby → babies) · -f/-fe → <b>-ves</b> (knife → knives).','Alguns plurals són <b>irregulars</b>: child → children, man → men, mouse → mice, tooth → teeth, foot → feet, sheep → sheep.'],
+  gen(lv){const pool=lv?PLUR:PLUR.filter(x=>!x[3]||['child','man','woman'].includes(x[0])),[s,pl,em,irr]=pick(pool);
+   const rule=irr?'és un plural irregular':pl.endsWith('ies')?'consonant + y → -ies':pl.endsWith('es')?'afegim -es':'afegim -s';
+   return{text:`Escriu el plural:<br>${em} one <b>${s}</b> → ${em}${em} two ___`,fields:[{label:'Plural',txt:[pl]}],vis:null,
+    hints:[`Com acaba «${s}»? Recorda les regles de la teoria.`,irr?'És un plural irregular: no segueix la regla de la -s.':`Regla: ${rule}.`],
+    steps:[`«${s}»: ${rule}.`,`one ${s} → two <b>${pl}</b>.`,'Escriu-ne tres frases al quadern: «I have got two ...».'],
+    err:v=>v[0]===s+'s'&&pl!==s+'s'?'en_plural_regla':null};
+  }},
+ en_compar:{mat:'angles',nom:'Comparatius',ic:'⚖️',
+  teoria:['Per comparar dues coses fem servir el <b>comparatiu + than</b>: <i>A dog is bigger <b>than</b> a cat</i>.','Adjectius curts → <b>-er</b>: tall → taller. Si acaben en vocal + consonant, la doblam: big → bi<b>gg</b>er. Si acaben en y → <b>-ier</b>: happy → happier.','Adjectius llargs → <b>more</b> + adjectiu: more beautiful. Irregulars: good → <b>better</b>, bad → <b>worse</b>.'],
+  gen(lv){const[a,c,sent]=pick(lv?COMP:COMP.slice(0,10));
+   const why=a==='good'||a==='bad'?'és irregular':c.startsWith('more')?'és un adjectiu llarg → more + adjectiu':c.endsWith('ier')?'acaba en y → -ier':(/(.)\1er$/.test(c)&&!/(.)\1$/.test(a))?'acaba en vocal + consonant → doblam la consonant i afegim -er':'és curt → afegim -er';
+   return{text:`Completa amb el comparatiu:<br><b>${sent}.</b> <span class="muted">(${a})</span>`,fields:[{label:'Comparatiu',txt:[c],wide:c.includes(' ')}],vis:null,
+    hints:[`«${a}» és un adjectiu curt o llarg? És irregular?`,`«${a}» ${why}.`],
+    steps:[`«${a}» ${why}.`,`${a} → <b>${c}</b>.`,`Resposta: ${sent.replace('___','<b>'+c+'</b>')}.`],
+    err:v=>v[0]!==c&&[`more ${a}`,a+'er',a+'r',`more ${c}`].includes(v[0])?'en_comparatiu':null};
+  }}
+});
+/* ===================== ANGLÈS: VERBS I TEMPS VERBALS ===================== */
+// infinitiu;passat;participi;significat;nivell (0 = bàsic 5è, 1 = ampliació 6è)
+const IRR=`be;was/were;been;ser/estar;0|become;became;become;convertir-se/tornar-se;1|begin;began;begun;començar;1|bite;bit;bitten;mossegar;1|blow;blew;blown;bufar;1|break;broke;broken;trencar;0|bring;brought;brought;portar/dur;0|build;built;built;construir;1|buy;bought;bought;comprar;0|catch;caught;caught;agafar/atrapar;1|choose;chose;chosen;triar/escollir;1|come;came;come;venir;0|cost;cost;cost;costar;1|cut;cut;cut;tallar;0|do;did;done;fer;0|draw;drew;drawn;dibuixar;0|drink;drank;drunk;beure;0|drive;drove;driven;conduir;1|eat;ate;eaten;menjar;0|fall;fell;fallen;caure;0|feel;felt;felt;sentir-se/sentir;1|fight;fought;fought;lluitar/barallar-se;1|find;found;found;trobar;0|fly;flew;flown;volar;0|forget;forgot;forgotten;oblidar;1|get;got;got;aconseguir/obtenir/rebre;0|give;gave;given;donar;0|go;went;gone;anar;0|grow;grew;grown;créixer;1|have;had;had;tenir;0|hear;heard;heard;sentir/escoltar;1|hide;hid;hidden;amagar/amagar-se;1|hit;hit;hit;colpejar/pegar;1|hold;held;held;aguantar/sostenir;1|hurt;hurt;hurt;fer mal;1|keep;kept;kept;guardar/mantenir;1|know;knew;known;saber/conèixer;0|learn;learnt/learned;learnt/learned;aprendre;1|leave;left;left;marxar/deixar/sortir;1|lend;lent;lent;deixar/prestar;1|lose;lost;lost;perdre;0|make;made;made;fer/fabricar;0|meet;met;met;conèixer/trobar-se;1|pay;paid;paid;pagar;1|put;put;put;posar;0|read;read;read;llegir;0|ride;rode;ridden;muntar/anar en;0|ring;rang;rung;sonar/trucar;1|run;ran;run;córrer;0|say;said;said;dir;0|see;saw;seen;veure;0|sell;sold;sold;vendre;1|send;sent;sent;enviar;1|sing;sang;sung;cantar;0|sit;sat;sat;seure/asseure's;0|sleep;slept;slept;dormir;0|speak;spoke;spoken;parlar;1|spend;spent;spent;gastar/passar;1|stand;stood;stood;estar dret/aixecar-se;1|steal;stole;stolen;robar;1|swim;swam;swum;nedar;0|take;took;taken;agafar/prendre/dur;0|teach;taught;taught;ensenyar;1|tell;told;told;dir/explicar/contar;0|think;thought;thought;pensar/creure;0|throw;threw;thrown;tirar/llançar;1|understand;understood;understood;entendre;1|wake;woke;woken;despertar-se/despertar;1|wear;wore;worn;portar/dur;1|win;won;won;guanyar;0|write;wrote;written;escriure;0`
+ .split('|').map(s=>{const[b,p,pp,ca,h]=s.split(';');return{b,p:p.split('/'),pp:pp.split('/'),ca:ca.split('/'),h:+h,irr:1}});
+const DOUBLE=['stop','plan','travel','drop','chat','jog','clap'];
+const regPast=b=>DOUBLE.includes(b)?b+b.slice(-1)+'ed':/e$/.test(b)?b+'d':/[^aeiou]y$/.test(b)?b.slice(0,-1)+'ied':b+'ed';
+const regRule=b=>DOUBLE.includes(b)?'vocal curta + consonant → doblam la consonant i + -ed':/e$/.test(b)?'acaba en -e → només + -d':/[^aeiou]y$/.test(b)?'consonant + y → canviem la y per -ied':'afegim -ed';
+const REG=`play;jugar|watch;mirar/veure|visit;visitar|cook;cuinar|walk;caminar|talk;parlar|listen;escoltar|help;ajudar|clean;netejar|open;obrir|close;tancar|jump;botar/saltar|dance;ballar|like;agradar|love;estimar/encantar|live;viure|arrive;arribar|use;fer servir/usar/utilitzar|study;estudiar|try;provar/intentar|cry;plorar|carry;dur/portar;1|stop;aturar/aturar-se/parar|plan;planificar/planejar;1|travel;viatjar;1|want;voler|need;necessitar|start;començar|finish;acabar|paint;pintar|climb;escalar/enfilar-se;1|wash;rentar|brush;raspallar|enjoy;gaudir;1|stay;quedar-se|drop;deixar caure;1|chat;xerrar;1|jog;córrer/fer fúting;1|clap;aplaudir;1|tidy;ordenar;1|hurry;afanyar-se;1`
+ .split('|').map(s=>{const[b,ca,h]=s.split(';'),p=regPast(b);return{b,p:b==='travel'?[p,'traveled']:[p],pp:[p],ca:ca.split('/'),h:+(h||0),irr:0}});
+const ALLV=[...IRR,...REG];
+const caList=v=>v.ca.join(' / ');
+const enFor=ca=>ALLV.filter(v=>v.ca.some(c=>fold(c)===fold(ca))).map(v=>v.b);
+const vpool=(a,lv)=>a.filter(v=>lv>0||!v.h);
+const FAM=[{n:'acaben en -ought / -aught',v:['bring','buy','fight','think','catch','teach']},{n:'canvien la i per a',v:['begin','drink','ring','sing','swim']},{n:'acaben en -ew',v:['blow','draw','fly','grow','know','throw']},{n:'les tres formes iguals',v:['cost','cut','hit','hurt','put','read']},{n:'acaben en -t',v:['feel','keep','leave','lend','sleep','spend','send','build','lose','meet']}];
+const famHint=b=>{const f=FAM.find(f=>f.v.includes(b));if(!f)return'';return` És de la família dels verbs que ${f.n}, com ${f.v.filter(x=>x!==b).slice(0,2).map(x=>`${x} → ${IRR.find(i=>i.b===x).p[0]}`).join(' i ')}.`};
+const EV='Verbs i temps verbals';
+const SUBJ_PRON=[['I',0],['He',1],['She',1],['My sister',1],['We',2],['They',2],['You',2],['My friends',2]];
+const CONT=[['play','playing','football in the park'],['read','reading','a comic'],['watch','watching','a film'],['eat','eating','a sandwich'],['run','running','in the park'],['swim','swimming','in the pool'],['make','making','a cake'],['write','writing','an email'],['dance','dancing','in the living room'],['sit','sitting','on the sofa'],['ride','riding','a bike'],['sleep','sleeping','on the bed'],['drink','drinking','orange juice'],['paint','painting','a picture'],['cook','cooking','dinner'],['study','studying','for the exam']];
+const WAS_R=['at home yesterday','very tired last night','in Menorca last summer','at the cinema on Saturday','happy at the party','late for school this morning','in the garden two hours ago'];
+Object.assign(SK,{
+ en_cont:{mat:'angles',bloc:EV,nom:'Present continuous (-ing)',ic:'▶️',
+  teoria:['El <b>present continuous</b> serveix per dir el que està passant <b>ara mateix</b>: <i>Look! It is raining.</i>','Es forma amb <b>am / is / are</b> + verb acabat en <b>-ing</b>: I <b>am</b> read<b>ing</b> · she <b>is</b> play<b>ing</b> · they <b>are</b> swimm<b>ing</b>.',`<table class="mini"><tr><th>Regla</th><th>Exemple</th></tr><tr><td>Normalment: + <b>-ing</b></td><td>play → playing</td></tr><tr><td>Acaba en -e: treim la e</td><td>make → making</td></tr><tr><td>Vocal curta + consonant: doble</td><td>run → running, swim → swimming</td></tr></table>`],
+  gen(){const[b,ing,rest]=pick(CONT),[subj,pers]=pick(SUBJ_PRON),be=['am','is','are'][pers],ans=`${be} ${ing}`,wrongIng=b+'ing';
+   return{text:`${pick(['Look!','Now','At the moment','Listen!'])} ${subj} ___ ${rest}. <span class="muted">(${b})</span>`,fields:[{label:'am / is / are + -ing',txt:[ans],wide:true}],vis:null,
+    hints:[`Primer: quina forma de <b>to be</b> va amb «${subj}»? (am, is, are)`,ing===wrongIng?'Després afegeix -ing al verb.':`Compte amb l'ortografia de l'-ing: ${b.endsWith('e')?'treu la e final':'dobla la consonant final'}.`],
+    steps:[`«${subj}» → <b>${be}</b>.`,`${b} + ing → <b>${ing}</b>${ing!==wrongIng?` (${b.endsWith('e')?'treim la e':'doblam la consonant'})`:''}.`,`Resposta: ${subj} <b>${ans}</b> ${rest}.`],
+    err:v=>v[0]===`${be} ${b}`?'en_cont_ing':(ing!==wrongIng&&v[0]===`${be} ${wrongIng}`?'en_cont_spell':(['am','is','are'].some(x=>x!==be&&v[0]===`${x} ${ing}`)?'en_be':null))}}},
+ en_was:{mat:'angles',bloc:EV,nom:'Was / were (passat de to be)',ic:'🕰️',
+  teoria:['El passat de <b>to be</b> té dues formes: <b>was</b> i <b>were</b>.','I, he, she, it → <b>was</b> · you, we, they → <b>were</b>. Exemple: <i>I <b>was</b> at home. They <b>were</b> at school.</i>','Negativa: <b>wasn\'t</b> / <b>weren\'t</b>. Pregunta: <i><b>Were</b> you happy?</i>'],
+  gen(lv){const[subj,pers]=pick([['I',0],['He',0],['She',0],['It',0],['My dog',0],['You',1],['We',1],['They',1],['My parents',1]]),rest=pick(WAS_R),neg=lv>0&&Math.random()<.4,
+   ans=neg?(pers?["weren't",'were not']:["wasn't",'was not']):[pers?'were':'was'];
+   return{text:`Completa amb <b>${neg?'wasn\'t o weren\'t':'was o were'}</b>:<br><b>${subj} ___ ${rest}.</b>`,fields:[{label:'Forma',txt:ans,wide:neg}],vis:null,
+    hints:[`«${subj}» és com ${pers?'you, we o they':'I, he, she o it'}.`,pers?'you / we / they → were':'I / he / she / it → was'],
+    steps:[`«${subj}» → ${pers?'you/we/they':'I/he/she/it'}.`,`Per tant: <b>${ans[0]}</b>.`,`${subj} <b>${ans[0]}</b> ${rest}.`],
+    err:v=>['was','were',"wasn't","weren't",'was not','were not'].includes(v[0])&&!ans.includes(v[0])?'en_was':null}}},
+ en_reg_past:{mat:'angles',bloc:EV,nom:'Passat dels verbs regulars (-ed)',ic:'✏️',
+  teoria:['Els verbs <b>regulars</b> fan el passat afegint <b>-ed</b>: play → play<b>ed</b>, watch → watch<b>ed</b>.',`<table class="mini"><tr><th>Regla</th><th>Exemple</th></tr><tr><td>Normalment: + <b>-ed</b></td><td>walk → walked</td></tr><tr><td>Acaba en -e: només + <b>-d</b></td><td>dance → danced</td></tr><tr><td>Consonant + y: <b>-ied</b></td><td>study → studied</td></tr><tr><td>Vocal + y: + -ed</td><td>play → played</td></tr><tr><td>Vocal curta + consonant: <b>doble</b></td><td>stop → stopped</td></tr></table>`,'El passat és igual per a totes les persones: I played, she played, they played.'],
+  gen(lv){const x=pick(vpool(REG,lv));
+   return{text:`Escriu el <b>passat simple</b> de «<b>${x.b}</b>»<br><span class="muted" style="font-size:18px">(${caList(x)})</span>`,fields:[{label:'Passat',txt:x.p}],vis:null,pron:`${x.b}, ${x.p[0]}`,
+    hints:[`És un verb regular. Com acaba «${x.b}»? Repassa les regles de la taula.`,`Regla: ${regRule(x.b)}.`],
+    steps:[`«${x.b}» és regular: ${regRule(x.b)}.`,`${x.b} → <b>${x.p[0]}</b>.`],
+    err:v=>!x.p.includes(v[0])&&[x.b+'ed',x.b+'d',x.b+x.b.slice(-1)+'ed',x.b.slice(0,-1)+'ied',x.b+'eed'].includes(v[0])?'en_reg_regla':(v[0]===x.b?'en_passat_no':null)}}},
+ en_irr_past:{mat:'angles',bloc:EV,nom:'Passat dels verbs irregulars',ic:'🔀',
+  teoria:['Els verbs <b>irregulars</b> no fan el passat amb -ed: cada un té una forma pròpia que cal aprendre.',`<table class="mini"><tr><th>Infinitiu</th><th>Passat</th><th>Significat</th></tr><tr><td>go</td><td><b>went</b></td><td>anar</td></tr><tr><td>eat</td><td><b>ate</b></td><td>menjar</td></tr><tr><td>see</td><td><b>saw</b></td><td>veure</td></tr><tr><td>have</td><td><b>had</b></td><td>tenir</td></tr><tr><td>buy</td><td><b>bought</b></td><td>comprar</td></tr></table>`,'Truc: aprèn-los per <b>famílies</b>: bought, brought, thought (acaben en -ought); sang, drank, swam (canvien la i per a). Els tens tots a la <b>📚 Taula de verbs</b>.'],
+  gen(lv){const x=pick(vpool(IRR,lv));
+   return{text:`Quin és el <b>passat simple</b> de «<b>${x.b}</b>»?<br><span class="muted" style="font-size:18px">(${caList(x)})</span>`,fields:[{label:'Passat',txt:x.b==='be'?['was','were','was/were','was were','was or were']:x.p}],vis:null,pron:`${x.b}, ${x.p.join(', ')}`,
+    hints:[`És un verb irregular: no acaba en -ed.${famHint(x.b)}`,`Comença per «${x.p[0][0]}» i té ${x.p[0].length} lletres.`],
+    steps:[`«${x.b}» (${caList(x)}) és un verb irregular.`,`El seu passat és <b>${x.p.join(' / ')}</b>.`,`Repeteix-ho en veu alta: ${x.b} – ${x.p[0]} – ${x.pp[0]}.`],
+    err:v=>x.p.includes(v[0])?null:(v[0]===x.b+'ed'||v[0]===regPast(x.b)?'en_irregular':(v[0]===x.b?'en_passat_no':null))}}},
+ en_irr_pp:{mat:'angles',bloc:EV,nom:'Participi dels verbs irregulars',ic:'🧩',
+  teoria:['Cada verb té <b>tres formes</b>: infinitiu, passat simple i <b>participi</b>: <i>go – went – <b>gone</b></i>, <i>eat – ate – <b>eaten</b></i>.','El participi es fa servir en temps com el <b>present perfect</b> (<i>I have <b>eaten</b></i>), que treballareu més a l\'ESO. Per això convé aprendre\'l ja ara, juntament amb el passat.','En els verbs regulars, el participi és igual que el passat: <i>play – played – played</i>. En molts irregulars també: <i>buy – bought – bought</i>.'],
+  gen(lv){const x=pick(vpool(IRR,lv));
+   return{text:`Quin és el <b>participi</b> de «<b>${x.b}</b>»?<br><span class="muted" style="font-size:18px">(${caList(x)} · passat: ${x.p.join(' / ')})</span>`,fields:[{label:'Participi',txt:x.pp}],vis:null,pron:`${x.b}, ${x.p[0]}, ${x.pp[0]}`,
+    hints:[x.pp[0]===x.p[0]?'En aquest verb, el participi i el passat s\'assemblen molt.':'En aquest verb, el participi és diferent del passat.',`Comença per «${x.pp[0][0]}» i té ${x.pp[0].length} lletres.`],
+    steps:[`Les tres formes de «${x.b}» són: ${x.b} – ${x.p[0]} – <b>${x.pp[0]}</b>.`,`Exemple: I have <b>${x.pp[0]}</b>... (present perfect).`],
+    err:v=>x.pp.includes(v[0])?null:(x.p.includes(v[0])?'en_pp_passat':(v[0]===x.b+'ed'?'en_irregular':null))}}},
+ en_irr_inf:{mat:'angles',bloc:EV,nom:'De quin verb ve? (passat → infinitiu)',ic:'↩️',
+  teoria:['Quan llegim un text en passat, hem de saber <b>de quin verb ve</b> cada forma per entendre\'l i per trobar-lo al diccionari.','Exemple: «Yesterday I <b>bought</b> a book» → <i>bought</i> ve de <b>buy</b> (comprar).','Al diccionari i a la taula de verbs, els verbs sempre apareixen en <b>infinitiu</b>.'],
+  gen(lv){const x=pick(vpool(IRR,lv).filter(v=>v.b!=='be'&&v.p[0]!==v.b)),p=pick(x.p);
+   return{text:`«<b>${p}</b>» és el passat de quin verb?<br><span class="muted" style="font-size:18px">Escriu l'infinitiu</span>`,fields:[{label:'Infinitiu',txt:IRR.filter(v=>v.p.includes(p)).map(v=>v.b)}],vis:null,pron:`${x.b}, ${p}`,
+    hints:[`Vol dir «${x.ca[0]}».`,`Comença per «${x.b[0]}» i té ${x.b.length} lletres.`],
+    steps:[`«${p}» és el passat de <b>${x.b}</b>.`,`«${x.b}» vol dir «${caList(x)}».`,`${x.b} – ${p} – ${x.pp[0]}.`]}}},
+ en_verb_sig:{mat:'angles',bloc:EV,nom:'Significat dels verbs',ic:'💬',
+  teoria:['Per parlar i escriure en anglès necessites conèixer el <b>significat</b> dels verbs més freqüents.','Alguns verbs anglesos tenen <b>més d\'un significat</b>: <i>get</i> = aconseguir, rebre...; <i>take</i> = agafar, prendre, dur.','I alguns verbs catalans es diuen de dues maneres en anglès: <b>parlar</b> = speak / talk; <b>dir</b> = say / tell.'],
+  gen(lv){const x=pick(vpool(ALLV,lv)),toCa=Math.random()<.55;
+   if(toCa)return{text:`Què vol dir el verb «<b>${x.b}</b>»?`,fields:[{label:'En català',txt:x.ca,loose:true,wide:true}],vis:null,pron:x.b,
+    hints:[`Comença per «${x.ca[0][0].toUpperCase()}».`,`Té ${[...x.ca[0]].length} lletres${x.ca.length>1?' (hi ha més d\'una resposta correcta)':''}.`],
+    steps:[`«${x.b}» vol dir <b>${caList(x)}</b>.`,`El seu passat és «${x.p[0]}» (${x.irr?'irregular':'regular'}).`]};
+   const c=x.ca[0],en=enFor(c);
+   return{text:`Com es diu «<b>${c}</b>» en anglès?<br><span class="muted" style="font-size:18px">Escriu l'infinitiu</span>`,fields:[{label:'En anglès',txt:en}],vis:null,pron:x.b,
+    hints:[`El seu passat és «${x.p[0]}».`,`Comença per «${x.b[0]}» i té ${x.b.length} lletres.`],
+    steps:[`«${c}» en anglès és <b>${en.join(' / ')}</b>.`,`Passat: ${x.p[0]} (${x.irr?'irregular':'regular'}).`],
+    err:v=>{const d=lev(v[0],x.b);return d>0&&d<=1?'en_lletrejat':null}}}},
+ en_past_neg:{mat:'angles',bloc:EV,nom:'Past simple: negatives i preguntes',ic:'❓',
+  teoria:['En <b>negativa</b>, el past simple fa servir <b>didn\'t</b> + verb en <b>infinitiu</b>: <i>I <b>didn\'t go</b> to school.</i> (mai «didn\'t went»!)','A les <b>preguntes</b>, posam <b>Did</b> al principi i el verb en <b>infinitiu</b>: <i><b>Did</b> you <b>see</b> the film?</i>','Respostes curtes: <i>Yes, I did. / No, I didn\'t.</i> Compte: <b>did</b> ja indica el passat, per això el verb queda en infinitiu.'],
+  gen(lv){const[b,pa,rest]=pick(lv?PAST:PAST.slice(0,12)),time=pick(['yesterday','last weekend','last summer','two days ago']);
+   if(lv>0&&Math.random()<.5){const qs=pick(['you','she','they','your brother']);
+    return{text:`Completa la <b>pregunta</b> en passat:<br><b>___ ${qs} ___ ${rest} ${time}?</b> <span class="muted">(${b})</span>`,fields:[{label:'1a paraula',txt:['did']},{label:'2a paraula',txt:[b]}],vis:null,
+     hints:['Les preguntes en passat comencen amb un verb auxiliar de tres lletres.','Després de «Did» el verb va en infinitiu.'],
+     steps:['Pregunta en passat: <b>Did</b> + subjecte + verb en <b>infinitiu</b>.',`El verb queda en infinitiu: <b>${b}</b> (no «${pa}»).`,`<b>Did</b> ${qs} <b>${b}</b> ${rest} ${time}?`],
+     err:v=>v[1]===pa&&pa!==b?'en_did_inf':(['do','does'].includes(v[0])?'en_did_temps':null)}}
+   const subj=pick(['I','You','We','They','She','He','My brother']);
+   return{text:`Transforma en <b>negativa</b>:<br><i>${subj} ${pa} ${rest} ${time}.</i><br><b>${subj} ___ ${rest} ${time}.</b>`,fields:[{label:'Verb en negativa (2 paraules)',txt:[`didn't ${b}`,`did not ${b}`,`didnt ${b}`],wide:true}],vis:null,
+    hints:['En negativa, el past simple fa servir un auxiliar: didn\'t.',`Després de didn't, el verb va en infinitiu. Quin és l'infinitiu de «${pa}»?`],
+    steps:['Negativa del past simple: subjecte + <b>didn\'t</b> + verb en <b>infinitiu</b>.',`L'infinitiu de «${pa}» és <b>${b}</b>.`,`${subj} <b>didn't ${b}</b> ${rest} ${time}.`],
+    err:v=>pa!==b&&[`didn't ${pa}`,`did not ${pa}`,`didnt ${pa}`].includes(v[0])?'en_did_inf':([`don't ${b}`,`doesn't ${b}`].includes(v[0])?'en_did_temps':null)}}}
+});
+['en_present','en_be','en_past'].forEach(k=>SK[k].bloc=EV);
+['en_plural','en_compar'].forEach(k=>SK[k].bloc='Gramàtica');
+['en_vocab','en_listen'].forEach(k=>SK[k].bloc='Vocabulari i comprensió');
+SK.en_past.nom='Past simple en frases';
+const SK_ORDER=['en_present','en_cont','en_be','en_was','en_reg_past','en_irr_past','en_irr_pp','en_irr_inf','en_verb_sig','en_past','en_past_neg','en_plural','en_compar','en_vocab','en_listen'];
+const skillsOf=m=>Object.keys(SK).filter(k=>matOf(k)===m).sort((a,b)=>{const ia=SK_ORDER.indexOf(a),ib=SK_ORDER.indexOf(b);return(ia<0?99:ia)-(ib<0?99:ib)});
+const TEMARI={angles:{5:[
+  ['Vocabulari: família, escola, roba, menjar, animals, casa, temps',['en_vocab','en_listen']],
+  ['To be i have got',['en_be']],
+  ['Present simple: rutines i hàbits (he/she/it + -s)',['en_present']],
+  ['Present continuous: el que passa ara (am/is/are + -ing)',['en_cont']],
+  ['Was / were: el passat de to be',['en_was']],
+  ['Past simple dels verbs regulars (-ed)',['en_reg_past']],
+  ['Primers verbs irregulars: go, eat, have, see, buy...',['en_irr_past','en_verb_sig']],
+  ['Plurals regulars i irregulars',['en_plural']],
+  ['Can / can\'t: habilitats',[]],['There is / there are',[]],['Preposicions de lloc (in, on, under, next to...)',[]]],
+ 6:[
+  ['Past simple: verbs regulars i irregulars',['en_reg_past','en_irr_past','en_irr_inf']],
+  ['Significat dels verbs més freqüents',['en_verb_sig']],
+  ['Les tres formes dels irregulars: infinitiu, passat i participi',['en_irr_pp']],
+  ['Past simple en frases',['en_past']],
+  ['Past simple: frases negatives i preguntes (did / didn\'t)',['en_past_neg']],
+  ['Present simple i present continuous',['en_present','en_cont']],
+  ['Comparatius',['en_compar']],
+  ['Vocabulari i comprensió oral',['en_vocab','en_listen']],
+  ['Going to: plans de futur',[]],['Will: prediccions',[]],['Must / mustn\'t: normes',[]],['Some / any: comptables i incomptables',[]],['Preguntes amb wh- (what, where, when, who...)',[]]]}};
+
+/* ===================== CIÈNCIES NATURALS ===================== */
+const art=s=>s.replace(/^(el|la|els|les|un|una|uns|unes) /,'').replace(/^l'/,'');
+const fold=s=>art(norm(s)).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/·/g,'').replace(/\s*(°\s*c?|graus( centigrads)?)$/,'').trim();
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+// banc: [pregunta, respostes 'a|b', pista, explicació, confusions típiques 'x|y', nivell]
+const mkBank=a=>a.map(([q,ans,h,ex,c,lv])=>({q,a:ans.split('|'),h,ex,c:(c||'').split('|').filter(Boolean),lv:lv||0}));
+function qProb(it,errT){const a=it.a[0],w=a.split(' ').length;
+ return{text:esc(it.q),fields:[{label:'Resposta',txt:it.a,loose:true,wide:true}],vis:null,
+  hints:[it.h||'Rellegeix la teoria del tema.',/^\d/.test(a)?`És un nombre ${a.length===1?'d\'una xifra':`de ${a.length} xifres`}.`:`Comença per «${a[0].toUpperCase()}»${w>1?` i té ${w} paraules`:` i té ${[...a.replace(/·/g,'')].length} lletres`}.`],
+  steps:[it.ex||it.h||'Repassa la teoria.',`Resposta: <b>${esc(a)}</b>.`],
+  err:v=>errT&&it.c.map(fold).includes(fold(v[0]))?errT:null}}
+const bankSkill=(nom,ic,errT,teoria,bank)=>({mat:'ciencies',nom,ic,teoria,bank,gen(lv){return qProb(pick(bank.filter(q=>lv>0||!q.lv)),errT)}});
+const CHAINS=[['herba','conill','guilla','àguila'],['algues','peix petit','tonyina','tauró'],['blat','ratolí','serp','àguila'],['fulles','eruga','pardal','falcó'],['plàncton','gamba','peix','gavina'],['herba','saltamartí','granota','serp'],['pi','processionària','mallerenga']];
+const ROLES=[['productor','productors'],['consumidor primari','herbívor','primari'],['consumidor secundari','secundari'],['consumidor terciari','terciari']];
+const TRANS=[['sòlid','líquid','fusió',[],'Un glaçó de gel es fon dins el got'],['líquid','sòlid','solidificació',[],'Posam aigua al congelador i es converteix en gel'],['líquid','gas','vaporització',['evaporació','ebullició'],'L\'aigua d\'un bassal desapareix amb la calor del sol'],['gas','líquid','condensació',[],'Després de la dutxa, el mirall del bany s\'omple de gotetes'],['sòlid','gas','sublimació',[],'Les boles de naftalina de l\'armari van desapareixent sense fer-se líquides',1]];
+const ESTATS=[['una pedra','sòlid'],['l\'oli','líquid'],['l\'aire','gas'],['el vapor d\'aigua','gas'],['el gel','sòlid'],['la llet','líquid'],['la fusta','sòlid'],['l\'aigua de la mar','líquid']];
+const VERT=[['el gat','mamífer','té pèl i les cries mamen llet'],['el dofí','mamífer','encara que viu a la mar, respira amb pulmons i alleta les cries',1],['el ratpenat','mamífer','encara que vola, té pèl i alleta les cries',1],['la balena','mamífer','respira amb pulmons i alleta les cries',1],['l\'àguila','au','té plomes i bec i pon ous'],['el pingüí','au','encara que no vola, té plomes i bec i pon ous',1],['la gallina','au','té plomes i bec i pon ous'],['la sargantana','rèptil','té escates i respira amb pulmons'],['la tortuga','rèptil','té escates i closca i respira amb pulmons'],['la serp','rèptil','té escates i respira amb pulmons'],['el cocodril','rèptil','té escates dures i respira amb pulmons'],['la granota','amfibi','té la pell nua i humida, i de petita (capgròs) viu dins l\'aigua'],['la salamandra','amfibi','té la pell nua i humida',1],['el ferreret','amfibi','només viu a Mallorca i té la pell nua i humida',1],['la tonyina','peix','té aletes i escates i respira amb brànquies'],['el tauró','peix','té aletes i respira amb brànquies',1],['el cavall de mar','peix','té aletes i respira amb brànquies',1]];
+const GRP={'mamífer':['mamífer','mamífers'],'au':['au','aus','ocell','ocells'],'rèptil':['rèptil','rèptils'],'amfibi':['amfibi','amfibis'],'peix':['peix','peixos']};
+const INV=[['la papallona','insecte','té sis potes i el cos dividit en cap, tòrax i abdomen'],['la formiga','insecte','té sis potes i el cos dividit en cap, tòrax i abdomen'],['l\'abella','insecte','té sis potes i ales'],['l\'aranya','aràcnid','té vuit potes'],['l\'escorpí','aràcnid','té vuit potes'],['el pop','mol·lusc','té el cos tou'],['el caragol','mol·lusc','té el cos tou i una closca'],['el cranc','crustaci','té una closca dura i deu potes'],['la gamba','crustaci','té una closca prima i deu potes'],['l\'estrella de mar','equinoderm','té forma d\'estrella i la pell amb espines']];
+const IGRP={'insecte':['insecte','insectes'],'aràcnid':['aràcnid','aràcnids'],'mol·lusc':['mol·lusc','mol·luscs'],'crustaci':['crustaci','crustacis'],'equinoderm':['equinoderm','equinoderms']};
+const otherGroup=(G,g,x)=>Object.entries(G).some(([k,a])=>k!==g&&a.map(fold).includes(fold(x)));
+Object.assign(SK,{
+ ci_cos:bankSkill('El cos humà','🫀','ci_organs',
+  ['El cos humà funciona gràcies a diversos <b>aparells i sistemes</b> que treballen junts.','<b>Digestiu</b> (estómac, intestins): transforma els aliments en nutrients. <b>Respiratori</b> (pulmons): agafa l\'oxigen de l\'aire. <b>Circulatori</b> (cor, vasos sanguinis): porta la sang per tot el cos. <b>Excretor</b> (ronyons): elimina substàncies de rebuig.','<b>Sistema nerviós</b> (cervell, nervis): controla el cos. <b>Aparell locomotor</b> (ossos i músculs): ens permet moure\'ns.'],
+  mkBank([['Quin òrgan bombeja la sang per tot el cos?','cor','Pertany a l\'aparell circulatori i batega.','El <b>cor</b> és un múscul que bombeja la sang per les artèries i les venes.','pulmons|pulmo'],
+   ['En quins òrgans entra l\'aire que respiram i s\'agafa l\'oxigen?','pulmons|pulmó','Pertanyen a l\'aparell respiratori.','Als <b>pulmons</b>, l\'oxigen de l\'aire passa a la sang i el diòxid de carboni en surt.','cor'],
+   ['Quin òrgan controla tot el cos i ens permet pensar?','cervell|encèfal','És la part principal del sistema nerviós i està protegit pel crani.','El <b>cervell</b> rep la informació dels sentits i dona ordres als músculs.','cor'],
+   ['Quins òrgans filtren la sang i fabriquen l\'orina?','ronyons|ronyó','Pertanyen a l\'aparell excretor.','Els <b>ronyons</b> netegen la sang i les substàncies de rebuig surten amb l\'orina.','fetge|bufeta'],
+   ['Quin aparell transforma els aliments en nutrients?','aparell digestiu|digestiu|sistema digestiu','Hi participen la boca, l\'estómac i els intestins.','L\'<b>aparell digestiu</b> transforma els aliments en nutrients que passen a la sang.','aparell respiratori|respiratori|aparell circulatori|circulatori'],
+   ['Quin aparell porta la sang per tot el cos?','aparell circulatori|circulatori|sistema circulatori','Hi participen el cor i els vasos sanguinis.','L\'<b>aparell circulatori</b> reparteix l\'oxigen i els nutrients per tot el cos.','aparell respiratori|respiratori|aparell digestiu|digestiu'],
+   ['Quin aparell està format pels ossos i els músculs?','aparell locomotor|locomotor','Ens permet moure\'ns.','L\'<b>aparell locomotor</b> està format per l\'esquelet (ossos) i els músculs.',''],
+   ['Quin gas agafam de l\'aire quan respiram?','oxigen','És el gas que necessiten les cèl·lules.','Respiram per agafar <b>oxigen</b> i expulsar diòxid de carboni.','diòxid de carboni|co2'],
+   ['Quin sentit feim servir amb la llengua?','gust','Ens diu si una cosa és dolça, salada, àcida o amarga.','Amb la llengua notam els sabors: és el sentit del <b>gust</b>.','tacte'],
+   ['On es fa la major part de la digestió i s\'absorbeixen els nutrients?','intestí prim|intestí','És un tub molt llarg que hi ha després de l\'estómac.','A l\'<b>intestí prim</b> els nutrients passen a la sang.','estómac|estomac',1],
+   ['Quins vasos sanguinis porten la sang des del cor cap a la resta del cos?','artèries|artèria','Les venes fan el camí contrari.','Les <b>artèries</b> surten del cor; les venes hi tornen.','venes|vena',1],
+   ['Quants ossos té aproximadament el cos d\'una persona adulta?','206','Són més de 200.','Un adult té <b>206</b> ossos. Els infants en tenen més, perquè alguns s\'uneixen en créixer.','',1],
+   ['Quin és l\'òrgan més gran del cos, que el cobreix tot?','pell','És l\'òrgan del sentit del tacte.','La <b>pell</b> ens protegeix i ens permet sentir el tacte, el fred i la calor.','',1]])),
+ ci_plantes:bankSkill('Les plantes','🌱','ci_plantes',
+  ['Les plantes són éssers vius <b>autòtrofs</b>: fabriquen el seu propi aliment.','Fan la <b>fotosíntesi</b>: amb la <b>llum del sol</b>, l\'<b>aigua</b> i el <b>diòxid de carboni</b> de l\'aire fabriquen el seu aliment i alliberen <b>oxigen</b>.','Parts de la planta: l\'<b>arrel</b> absorbeix aigua i sals minerals; la <b>tija</b> les transporta; les <b>fulles</b> fan la fotosíntesi; la <b>flor</b> serveix per reproduir-se.'],
+  mkBank([['Com es diu el procés amb què les plantes fabriquen el seu aliment gràcies a la llum del sol?','fotosíntesi','La paraula comença amb «foto», que vol dir llum.','La <b>fotosíntesi</b> passa a les fulles, gràcies a la clorofil·la.','respiració|respiracio'],
+   ['Quin gas alliberen les plantes quan fan la fotosíntesi?','oxigen','És el gas que nosaltres necessitam per respirar.','Les plantes alliberen <b>oxigen</b>: per això són tan importants per a la vida.','diòxid de carboni|co2'],
+   ['Quin gas agafen les plantes de l\'aire per fer la fotosíntesi?','diòxid de carboni|CO2','És el gas que nosaltres expulsam en respirar.','Les plantes absorbeixen <b>diòxid de carboni</b> (CO₂) i alliberen oxigen.','oxigen'],
+   ['Quina part de la planta absorbeix l\'aigua i les sals minerals de la terra?','arrel|arrels','Està davall terra.','L\'<b>arrel</b> fixa la planta a terra i n\'absorbeix l\'aigua i les sals minerals.','tija|fulles|fulla'],
+   ['Quina part de la planta fa la fotosíntesi?','fulles|fulla','Són verdes i reben molta llum.','Les <b>fulles</b> tenen clorofil·la i hi fan la fotosíntesi.','arrel|flor|tija'],
+   ['Quina part de la planta la sosté dreta i transporta l\'aigua?','tija|tronc','En els arbres és dura i es diu tronc.','La <b>tija</b> (o el tronc) sosté la planta i transporta la saba.','arrel'],
+   ['Quina part de la planta serveix per reproduir-se i després forma el fruit?','flor|flors','Sovint és de colors i atreu les abelles.','La <b>flor</b> és l\'òrgan reproductor; després es converteix en fruit amb llavors.','fruit|llavor'],
+   ['Com es diu la substància verda de les fulles que capta la llum?','clorofil·la','Dona el color verd a les plantes.','La <b>clorofil·la</b> capta la llum del sol per fer la fotosíntesi.','',1],
+   ['Com es diuen els éssers vius que fabriquen el seu propi aliment?','autòtrofs|autòtrof','«Auto» vol dir un mateix.','Les plantes són <b>autòtrofes</b>; els animals som heteròtrofs.','heteròtrofs|heterotrof',1],
+   ['Com es diu el transport del pol·len d\'una flor a una altra?','pol·linització','Les abelles i el vent hi ajuden.','La <b>pol·linització</b> permet que la flor formi el fruit i les llavors.','fecundació|germinació',1],
+   ['Com es diu el moment en què una llavor comença a créixer i treu l\'arrel?','germinació','Necessita aigua, aire i una temperatura adequada.','La <b>germinació</b> és el naixement d\'una nova planta a partir d\'una llavor.','pol·linització',1]])),
+ ci_ecosis:{mat:'ciencies',nom:'Ecosistemes i cadenes tròfiques',ic:'🦊',
+  teoria:['Un <b>ecosistema</b> està format pels éssers vius i el medi on viuen (aigua, terra, clima...).','Una <b>cadena tròfica</b> mostra qui menja qui. La fletxa vol dir «és menjat per»: herba → conill → guilla.','<b>Productors</b>: plantes i algues (fan la fotosíntesi). <b>Consumidors primaris</b>: herbívors que mengen productors. <b>Consumidors secundaris</b>: carnívors que mengen herbívors. <b>Terciaris</b>: mengen altres carnívors. Els <b>descomponedors</b> (fongs i bacteris) transformen les restes en sals minerals.'],
+  gen(){const ch=pick(CHAINS),i=rnd(0,ch.length-1),chs=`<b>${ch.join(' → ')}</b>`,role=i===0?'el productor':'el '+ROLES[i][0];
+   const paint={kind:'order',items:[...ch].sort(()=>Math.random()-.5),target:ch,label:'Ordena aquesta cadena tròfica: toca primer el <b>productor</b>, després qui se\'l menja, i així successivament.',follow:{q:'Qui és el <b>consumidor primari</b> d\'aquesta cadena?',txt:[ch[1]]}};
+   const st=[`La fletxa vol dir «és menjat per». El primer, «${ch[0]}», és el productor.`,`Després venen els consumidors per ordre: primari, secundari${ch.length>3?', terciari':''}.`,`«${ch[i]}» està a la posició ${i+1}: és ${role}.`];
+   if(Math.random()<.5)return{text:`Cadena tròfica: ${chs}<br>Quin paper té «${ch[i]}»?`,fields:[{label:'Paper (productor, consumidor...)',txt:ROLES[i],loose:true,wide:true}],vis:null,paint,
+    hints:['El primer de la cadena fabrica el seu aliment; els altres són consumidors (primari, secundari...).',i===0?'Fa la fotosíntesi.':`Està a la posició ${i+1}: és el consumidor número ${i}.`],steps:st,
+    err:v=>ROLES.some((r,j)=>j!==i&&r.map(fold).includes(fold(v[0])))?'ci_cadena':null};
+   return{text:`Cadena tròfica: ${chs}<br>Qui és ${role}?`,fields:[{label:'Ésser viu',txt:[ch[i]],loose:true,wide:true}],vis:null,paint,
+    hints:['Recorda: la fletxa vol dir «és menjat per». Compta des del principi.',i===0?'És qui fa la fotosíntesi.':`El consumidor ${['','primari','secundari','terciari'][i]} és a la posició ${i+1}.`],steps:st,
+    err:v=>ch.some((x,j)=>j!==i&&fold(x)===fold(v[0]))?'ci_cadena':null};
+  }},
+ ci_materia:{mat:'ciencies',nom:'La matèria i els canvis d\'estat',ic:'🧊',
+  teoria:['La matèria pot estar en tres <b>estats</b>: <b>sòlid</b> (té forma pròpia), <b>líquid</b> (s\'adapta al recipient) i <b>gas</b> (ocupa tot l\'espai).','Canvis d\'estat: <b>fusió</b> (sòlid → líquid), <b>solidificació</b> (líquid → sòlid), <b>vaporització</b> (líquid → gas; si és lenta, <b>evaporació</b>), <b>condensació</b> (gas → líquid), <b>sublimació</b> (sòlid → gas).','L\'aigua es congela a <b>0 °C</b> i bull a <b>100 °C</b> (a nivell de la mar).'],
+  gen(lv){const r=Math.random();
+   if(r<.5){const t=pick(TRANS.filter(x=>lv>0||!x[5])),inv=TRANS.find(x=>x[0]===t[1]&&x[1]===t[0]),ctx=Math.random()<.5;
+    return{text:ctx?`${t[4]}.<br>Quin canvi d'estat és?`:`Com es diu el pas de l'estat <b>${t[0]}</b> a l'estat <b>${t[1]}</b>?`,fields:[{label:'Canvi d\'estat',txt:[t[2],...t[3]],loose:true,wide:true}],vis:null,
+     hints:[ctx?'De quin estat surt i a quin estat arriba?':'Repassa la llista de canvis d\'estat de la teoria.',`És el pas de ${t[0]} a ${t[1]}. Comença per «${t[2][0].toUpperCase()}».`],
+     steps:[`La matèria passa de ${t[0]} a ${t[1]}.`,`Aquest canvi s'anomena <b>${t[2]}</b>.`,...(inv?[`El canvi contrari (de ${inv[0]} a ${inv[1]}) és la ${inv[2]}.`]:[])],
+     err:v=>inv&&fold(v[0])===fold(inv[2])?'ci_canvis':null}}
+   if(r<.8){const[x,e]=pick(ESTATS),why=e==='sòlid'?'té forma pròpia':e==='líquid'?'no té forma pròpia: s\'adapta al recipient':'ocupa tot l\'espai disponible';
+    return{text:`En quin estat es troba ${x} a temperatura ambient?`,fields:[{label:'Estat',txt:e==='gas'?['gas','gasós']:[e],loose:true}],vis:null,
+     hints:['Té forma pròpia? S\'adapta al recipient? Ocupa tot l\'espai?',`Comença per «${e[0].toUpperCase()}».`],steps:[`${cap(x)} ${why}.`,`Per tant, està en estat <b>${e}</b>.`]}}
+   const bull=Math.random()<.5;
+   return{text:`A quants graus centígrads ${bull?'bull':'es congela'} l'aigua (a nivell de la mar)?`,fields:[{label:'Graus (°C)',txt:[bull?'100':'0'],loose:true}],vis:null,
+    hints:[bull?'És un nombre rodó i força alt.':'És el nombre més petit que no és negatiu.',bull?'Té tres xifres.':'Té una sola xifra.'],
+    steps:[bull?'L\'aigua passa de líquid a gas (bull) a <b>100 °C</b>.':'L\'aigua passa de líquid a sòlid (es congela) a <b>0 °C</b>.','Recorda: 0 °C → gel · 100 °C → bull.']}
+  }},
+ ci_classif:{mat:'ciencies',nom:'Classificació dels animals',ic:'🐸',
+  teoria:['Els animals <b>vertebrats</b> tenen esquelet intern amb columna vertebral. Els <b>invertebrats</b> no en tenen.','Vertebrats: <b>mamífers</b> (pèl, alleten les cries), <b>aus</b> (plomes, bec, ponen ous), <b>rèptils</b> (escates, respiren amb pulmons), <b>amfibis</b> (pell nua i humida; de petits viuen dins l\'aigua) i <b>peixos</b> (aletes, respiren amb brànquies).','Invertebrats: <b>insectes</b> (6 potes), <b>aràcnids</b> (8 potes), <b>mol·luscs</b> (cos tou), <b>crustacis</b> (closca dura), <b>equinoderms</b> (pell amb espines)...'],
+  gen(lv){if(lv>0&&Math.random()<.4){const[n,g,f]=pick(INV);
+    return{text:`A quin grup d'invertebrats pertany ${n}?`,fields:[{label:'Grup',txt:IGRP[g],loose:true,wide:true}],vis:null,
+     hints:['Compta les potes i mira com és el cos.',`Fixa't: ${f}.`],steps:[`${cap(n)} ${f}.`,`Per tant, és un <b>${g}</b>.`],err:v=>otherGroup(IGRP,g,v[0])?'ci_classificacio':null}}
+   const[n,g,f]=pick(VERT.filter(x=>lv>0||!x[3]));
+   return{text:`A quin grup de vertebrats pertany ${n}?`,fields:[{label:'Grup',txt:GRP[g],loose:true,wide:true}],vis:null,
+    hints:['Pensa: té pèl, plomes, escates o pell nua? Com respira?',`Pista: ${f}.`],steps:[`${cap(n)} ${f}.`,`Per tant, és ${g==='au'?'una':'un'} <b>${g}</b>.`],err:v=>otherGroup(GRP,g,v[0])?'ci_classificacio':null};
+  }},
+ ci_energia:bankSkill('L\'energia','⚡','ci_energia',
+  ['L\'<b>energia</b> és la capacitat de produir canvis: moure, escalfar, il·luminar...','Fonts <b>renovables</b> (no s\'esgoten): solar (sol), eòlica (vent), hidràulica (aigua), geotèrmica (calor de la Terra), biomassa.','Fonts <b>no renovables</b> (s\'esgoten i contaminen més): petroli, carbó, gas natural i urani (nuclear).'],
+  mkBank([['Com es diu l\'energia que s\'obté de la llum del sol?','solar','Ve del Sol.','L\'energia <b>solar</b> s\'aprofita amb plaques solars.','eòlica|hidràulica'],
+   ['Com es diu l\'energia que s\'obté del vent?','eòlica','Els aerogeneradors l\'aprofiten.','L\'energia <b>eòlica</b> ve del vent (Èol era el déu grec del vent).','solar|hidràulica'],
+   ['Com es diu l\'energia que s\'obté de l\'aigua dels rius i embassaments?','hidràulica|hidroelèctrica','Ve de l\'aigua en moviment.','L\'energia <b>hidràulica</b> aprofita la força de l\'aigua que cau.','eòlica|solar'],
+   ['Quin aparell transforma la força del vent en electricitat?','aerogenerador|molí de vent','És com un molí de vent modern.','Un <b>aerogenerador</b> té unes pales que giren amb el vent i produeixen electricitat.','placa solar'],
+   ['Quin aparell transforma la llum del sol en electricitat?','placa solar|placa fotovoltaica|panell solar|plaques solars','Sovint es posa a les teulades.','Les <b>plaques solars</b> (fotovoltaiques) transformen la llum en electricitat.','aerogenerador'],
+   ['Com es diu l\'energia que produeix llum, com la d\'una bombeta?','lluminosa','Ens permet veure-hi.','L\'energia <b>lluminosa</b> és la de la llum.',''],
+   ['Com es diu l\'energia que s\'obté de la calor de l\'interior de la Terra?','geotèrmica','«Geo» vol dir Terra i «tèrmica», calor.','L\'energia <b>geotèrmica</b> aprofita la calor de dins la Terra.','solar',1],
+   ['Com es diu l\'energia que s\'obté cremant restes de plantes, fusta o residus orgànics?','biomassa','Ve de la matèria dels éssers vius.','La <b>biomassa</b> és renovable si es tornen a plantar els arbres.','',1],
+   ['Quin tipus d\'energia té un cos que es mou?','cinètica','Ve d\'una paraula grega que vol dir moviment.','L\'energia <b>cinètica</b> és l\'energia del moviment.','',1],
+   ['Quin tipus d\'energia ens donen els aliments?','química','Està guardada dins les substàncies.','Els aliments tenen energia <b>química</b>, que el cos transforma per moure\'s i créixer.','',1],
+   ['Quin combustible fòssil, líquid i negre, es fa servir per fer benzina?','petroli','S\'extreu de sota terra o de sota la mar.','El <b>petroli</b> és una font no renovable: tard o d\'hora s\'esgotarà.','carbó|gas natural',1]])),
+ ci_univers:bankSkill('La Terra i l\'Univers','🌍','ci_moviments',
+  ['El <b>Sistema Solar</b> té una estrella, el <b>Sol</b>, i <b>8 planetes</b>: Mercuri, Venus, la Terra, Mart, Júpiter, Saturn, Urà i Neptú.','La Terra fa dos moviments: <b>rotació</b> (gira sobre ella mateixa en 24 hores → el dia i la nit) i <b>translació</b> (fa una volta al Sol en un any → les estacions).','La <b>Lluna</b> és el satèl·lit de la Terra. Tarda uns 28 dies a fer-li una volta, i per això en veiem les <b>fases</b>.'],
+  mkBank([['Com es diu el moviment de la Terra sobre ella mateixa, que produeix el dia i la nit?','rotació','La Terra gira com una baldufa.','La <b>rotació</b> dura 24 hores: la cara que mira el Sol és de dia.','translació'],
+   ['Com es diu el moviment de la Terra al voltant del Sol?','translació','Dura un any.','La <b>translació</b> dura 365 dies i 6 hores i, amb la inclinació de la Terra, produeix les estacions.','rotació'],
+   ['Quantes hores tarda la Terra a fer una volta sencera sobre ella mateixa?','24|vint-i-quatre','És el que dura un dia sencer.','La rotació dura <b>24 hores</b>.','365'],
+   ['Quants dies tarda la Terra a fer una volta al Sol?','365|tres-cents seixanta-cinc','És el que dura un any.','La translació dura <b>365 dies</b> (i unes 6 hores; per això cada 4 anys hi ha un any de traspàs).','24'],
+   ['Quants planetes té el Sistema Solar?','8|vuit','Mercuri, Venus, la Terra...','El Sistema Solar té <b>8 planetes</b>.','9|nou'],
+   ['Quin és el planeta més proper al Sol?','Mercuri','És el planeta més petit.','<b>Mercuri</b> és el primer planeta i el més petit.','Venus'],
+   ['Quin és el planeta més gran del Sistema Solar?','Júpiter','És un gegant de gas amb una gran taca vermella.','<b>Júpiter</b> és tan gran que hi cabrien més de 1.000 Terres.','Saturn'],
+   ['Com es diu el satèl·lit natural de la Terra?','Lluna','La veiem de nit al cel.','La <b>Lluna</b> fa una volta a la Terra cada 28 dies, més o menys.',''],
+   ['Quina estrella hi ha al centre del Sistema Solar?','Sol','Ens dona llum i calor.','El <b>Sol</b> és una estrella. Tots els planetes hi giren al voltant.',''],
+   ['Quin planeta es coneix com el planeta vermell?','Mart','És el quart planeta.','<b>Mart</b> és vermell perquè la seva terra té molt de ferro rovellat.','Júpiter',1],
+   ['Com es diu la galàxia on vivim?','Via Làctia','Té nom de llet.','Vivim a la <b>Via Làctia</b>, una galàxia amb milers de milions d\'estrelles.','',1],
+   ['Com es diuen les diferents formes amb què veiem la Lluna (plena, creixent...)?','fases|fases de la Lluna','Canvien al llarg del mes.','Les <b>fases de la Lluna</b> són: lluna nova, quart creixent, lluna plena i quart minvant.','',1]])),
+ ci_llibre:{mat:'ciencies',nom:'Preguntes del llibre',ic:'📘',
+  get teoria(){return['Avui repassarem les preguntes del teu llibre.',...(S.sessio.explicacio?[esc(S.sessio.explicacio)]:[]),'Llegeix bé cada pregunta i respon amb les teves paraules. Si no ho saps, demana una pista.']},
+  gen(lv){const pq=(S.sessio.preguntes||[]).filter(x=>x.q&&x.a);
+   if(!pq.length){const sk=pick(['ci_cos','ci_plantes','ci_energia','ci_univers']);return qProb(pick(SK[sk].bank.filter(q=>lv>0||!q.lv)),null)}
+   const it=pick(pq);return qProb({q:it.q,a:String(it.a).split('|').map(s=>s.trim()).filter(Boolean),h:it.h||'',ex:it.ex||'',c:[]},null)}}
+});
+const SUBJ={mates:{nom:'Matemàtiques',ic:'📐'},angles:{nom:'Anglès',ic:'🗣️'},ciencies:{nom:'Ciències naturals',ic:'🔬'}};
+const matOf=k=>SK[k].mat||'mates';
+const ansStr=f=>f.txt?f.txt[0]:fmtR(f.ans);
+const ERR={
+ en_pp_passat:{kid:'Aquesta és la forma del passat. El participi és la tercera forma (go – went – gone).',par:'Confon el participi amb el passat'},
+ en_reg_regla:{kid:'Gairebé! És un verb regular, però revisa la regla d\'ortografia de l\'-ed (e final, y, consonant doble...).',par:'Aplica malament les regles d\'ortografia del passat regular (-ed / -ied / doble consonant)'},
+ en_did_inf:{kid:'Compte! Després de did / didn\'t el verb va en infinitiu, no en passat.',par:'Posa el verb en passat després de did / didn\'t («didn\'t went»)'},
+ en_did_temps:{kid:'La frase és en passat: l\'auxiliar ha d\'estar en passat (did / didn\'t).',par:'Fa servir do / does / don\'t en lloc de did / didn\'t'},
+ en_was:{kid:'Revisa el subjecte: I, he, she, it → was · you, we, they → were.',par:'Confon was i were'},
+ en_cont_ing:{kid:'Falta l\'-ing! El present continuous és am/is/are + verb acabat en -ing.',par:'Oblida l\'-ing del present continuous'},
+ en_cont_spell:{kid:'L\'estructura és bona, però revisa com s\'escriu l\'-ing (treure la e o doblar la consonant).',par:'Errors d\'ortografia en la forma -ing'},
+ ci_organs:{kid:'Compte! Aquest òrgan o aparell té una altra funció. Pensa què fa cadascun.',par:'Confon òrgans i aparells del cos humà'},
+ ci_plantes:{kid:'Compte: has confós dues coses de la planta. Repassa què entra i què surt a la fotosíntesi, i què fa cada part.',par:'Confon les parts de la planta o els gasos de la fotosíntesi'},
+ ci_cadena:{kid:'Recorda: la fletxa vol dir «és menjat per». El primer de la cadena és el productor.',par:'Confon els papers d\'una cadena tròfica'},
+ ci_canvis:{kid:'Has dit el canvi contrari! Mira bé de quin estat surt i a quin estat arriba.',par:'Confon un canvi d\'estat amb el seu contrari'},
+ ci_classificacio:{kid:'Pensa en les característiques: té pèl, plomes, escates o pell nua? Quantes potes té? Com respira?',par:'Classifica malament els animals'},
+ ci_energia:{kid:'Pensa d\'on surt l\'energia: del sol, del vent, de l\'aigua...?',par:'Confon els tipus i les fonts d\'energia'},
+ ci_moviments:{kid:'Compte: un moviment és girar sobre si mateixa i l\'altre és fer la volta al Sol. Quin és quin?',par:'Confon conceptes del Sistema Solar (rotació / translació...)'},
+ en_lletrejat:{kid:'Gairebé! Revisa com s\'escriu: hi ha alguna lletra que no és correcta.',par:'Errors d\'ortografia en paraules angleses'},
+ en_tercera_persona:{kid:'Mira bé el subjecte: en present, només he, she i it porten -s.',par:'Confon la tercera persona del present simple (-s)'},
+ en_terminacio:{kid:'La -s hi va, però compte com s\'escriu: alguns verbs fan -es o -ies.',par:'No aplica bé les terminacions -es / -ies'},
+ en_be:{kid:'Revisa el subjecte: I → am / have · he, she, it → is / has · we, you, they → are / have.',par:'Confon les formes de to be / have got'},
+ en_irregular:{kid:'Aquest verb és irregular: el passat no acaba en -ed.',par:'Regularitza verbs irregulars en passat (goed, eated...)'},
+ en_passat_no:{kid:'La frase passa en el passat: el verb ha de canviar.',par:'No posa el verb en passat'},
+ en_plural_regla:{kid:'Compte! Aquesta paraula no fa el plural només amb -s.',par:'Aplica la -s a plurals irregulars o especials'},
+ en_comparatiu:{kid:'Revisa el comparatiu: curts → -er; llargs → more + adjectiu; good i bad són irregulars.',par:'Forma malament els comparatius'},
+ suma_no_multiplica:{kid:'Compte! Per fer fraccions equivalents no sumem: <b>multipliquem</b> numerador i denominador pel mateix nombre.',par:'Suma en lloc de multiplicar per trobar fraccions equivalents'},
+ suma_denominadors:{kid:'Has sumat també els denominadors? El denominador indica la mida de les parts i no se suma.',par:'Suma els denominadors quan suma fraccions'},
+ nomes_divideix:{kid:'Has trobat quant val una part, però quantes parts t\'has de quedar? Mira el numerador.',par:'Divideix pel denominador però oblida multiplicar pel numerador'},
+ nomes_multiplica:{kid:'Has multiplicat pel numerador, però també has de repartir entre el denominador.',par:'Multiplica pel numerador però no divideix pel denominador'},
+ comes_no_alineades:{kid:'Revisa on és la coma: has d\'alinear dècimes amb dècimes i centèsimes amb centèsimes.',par:'No alinea les comes en sumar o restar decimals'},
+ residu_gran:{kid:'El residu ha de ser més petit que el divisor. Encara hi cap una vegada més!',par:'Deixa un residu més gran que el divisor'},
+ divideix_percent:{kid:'El percentatge no és un divisor. Recorda: p% vol dir p de cada 100.',par:'Confon el percentatge amb una divisió'},
+ massa_rapid:{kid:'',par:'Respon massa de pressa, sense pensar (possibles respostes a l\'atzar)'}
+};
+const MODES={
+ combinada:{ic:'🧩',nom:'Sessió combinada',desc:'Explicació, aventura, exercicis i comprovació'},
+ professor:{ic:'🦉',nom:'Professor particular',desc:'Explicacions, exemples i dubtes'},
+ aventura:{ic:'🗺️',nom:'Aventura',desc:'L\'Illa dels Nombres Perduts'},
+ exercicis:{ic:'🧪',nom:'Exercicis interactius',desc:'Barres, grups i reptes visuals'},
+ escriptura:{ic:'✍️',nom:'Escriptura a mà',desc:'Dictat o còpia al quadern i foto'},
+ comprovacio:{ic:'🎯',nom:'Comprovació',desc:'Està preparat? Exercicis nous sense pistes'}
+};
+const STAGES=[
+ {ic:'🌉',nom:'El pont trencat',txt:'Per creuar el riu has de reparar el pont. Cada tauló necessita una resposta exacta.'},
+ {ic:'🚪',nom:'La cambra del codi',txt:'Una porta de pedra amaga un codi secret. Només s\'obre amb la resposta exacta.'},
+ {ic:'🔬',nom:'El laboratori',txt:'Les màquines del laboratori s\'han espatllat. Respon bé per tornar-les a engegar.'},
+ {ic:'🗝️',nom:'El cofre dels nombres',txt:'Un cofre antic està tancat amb un cadenat numèric.'},
+ {ic:'🏰',nom:'La torre del vent',txt:'Per pujar a la torre has de col·locar els contrapesos amb precisió.'},
+ {ic:'⛵',nom:'El vaixell de tornada',txt:'Darrer repte: prepara el vaixell per tornar a casa!'}
+];
+const DICTATS={5:"La Maria va anar a la platja amb els seus cosins. L'aigua estava freda, però es varen banyar igualment. Després varen menjar un gelat de xocolata.",
+ 6:"Aquell matí d'hivern, el vent bufava amb força entre els pins. En Joan va agafar la bicicleta i va pedalar fins al port. Allà, els pescadors ja descarregaven les caixes de peix."};
+const LV=['En procés','Comprèn','Domina'];
+
+/* ===================== estat ===================== */
+const DEF={perfil:{nom:'',curs:5},cfg:{key:'',model:'gemini-2.5-flash'},sessio:{skills:['frac_equiv','frac_suma_igual'],minuts:30,mode:'combinada',explicacio:'',dictat:'',resum:''},prog:{},log:[],just:[],escrit:[]};
+let S;try{S=Object.assign(JSON.parse(JSON.stringify(DEF)),JSON.parse(localStorage.getItem('aprenem_v1')||'{}'))}catch(e){S=JSON.parse(JSON.stringify(DEF))}
+const save=()=>{try{localStorage.setItem('aprenem_v1',JSON.stringify(S))}catch(e){}};
+const P_=k=>S.prog[k]||(S.prog[k]={att:0,ok:0,sense:0,ajuda:0,errs:{},chk:[],last:0});
+let CUR=null,phaseEnd=0;
+function record(k,ok,help,chk){const p=P_(k);p.att++;if(ok)p.ok++;if(ok&&!help)p.sense++;if(help)p.ajuda++;if(chk){p.chk.push(ok?1:0);p.chk=p.chk.slice(-6)}p.last=Date.now();if(CUR){CUR.tot++;if(ok)CUR.ok++}save()}
+function recErr(k,t){const p=P_(k);p.errs[t]=(p.errs[t]||0)+1;save()}
+function level(k){const p=S.prog[k];if(!p||!p.att)return -1;const c=p.chk.slice(-4);
+ if(c.length>=3&&c.reduce((a,b)=>a+b,0)/c.length>=.75&&p.sense>=3)return 2;
+ if(p.sense>=3&&p.ok/p.att>=.6)return 1;return 0}
+const badge=k=>{const l=level(k);return l<0?'<span class="badge bn">Sense dades</span>':`<span class="badge b${l}">${LV[l]}</span>`};
+const genP=k=>({...SK[k].gen(Math.max(0,level(k)),+S.perfil.curs),k});
+const timeUp=()=>phaseEnd?Date.now()>phaseEnd:(CUR&&Date.now()>CUR.fin);
+function endSession(){if(!CUR)return;const min=(Date.now()-CUR.t0)/60000;if(min>.3||CUR.tot)S.log.push({data:new Date().toISOString(),min:Math.round(min*10)/10,mode:CUR.mode,skills:CUR.skills,tot:CUR.tot,ok:CUR.ok});CUR=null;phaseEnd=0;save()}
+setInterval(()=>{const t=$('#timer');if(!CUR){t.textContent='';return}t.textContent='⏱ '+mmss(Math.max(0,CUR.fin-Date.now()))+(phaseEnd?` · fase ${mmss(Math.max(0,phaseEnd-Date.now()))}`:'')},1000);
+const app=h=>{$('#app').innerHTML=h;window.scrollTo(0,0)};
+
+/* ===================== veu ===================== */
+function plain(h){return String(h).replace(/<span class="fr"><span>([^<]*)<\/span><span>([^<]*)<\/span><\/span>/g,' $1 sobre $2 ').replace(/<br>/g,'. ').replace(/<[^>]+>/g,'').replace(/×/g,' per ').replace(/−/g,' menys ').replace(/ : /g,' entre ').replace(/\s+/g,' ').trim()}
+function say(t,rate=.9,lang='ca-ES'){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(plain(t));u.lang=lang;u.rate=rate;const vs=speechSynthesis.getVoices(),v=vs.find(v=>v.lang.replace('_','-')===lang)||vs.find(v=>v.lang.slice(0,2)===lang.slice(0,2));if(v)u.voice=v;speechSynthesis.speak(u)}catch(e){}}
+try{speechSynthesis.getVoices()}catch(e){}
+const SRc=()=>window.SpeechRecognition||window.webkitSpeechRecognition;
+const micBtn=id=>SRc()?`<button class="sec" type="button" onclick="dictate('${id}',this)">🎤 Dictar</button>`:'';
+function dictate(id,btn){const SR=SRc();if(!SR)return;const r=new SR();r.lang='ca-ES';r.interimResults=false;btn.textContent='🎙️ Escoltant...';
+ r.onresult=e=>{const t=e.results[0][0].transcript,ta=document.getElementById(id);ta.value=(ta.value?ta.value+' ':'')+t};
+ r.onend=r.onerror=()=>btn.textContent='🎤 Dictar';r.start()}
+
+/* ===================== IA (Google AI Studio / Gemini, pla gratuït) ===================== */
+async function gemini(contents,{json=false,system=''}={}){
+ if(!S.cfg.key)throw new Error('La IA no està activada. Els pares la poden activar a Zona famílies → Configuració.');
+ const body={contents,generationConfig:{temperature:.4}};
+ if(json)body.generationConfig.responseMimeType='application/json';
+ if(system)body.systemInstruction={parts:[{text:system}]};
+ const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(S.cfg.model)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':S.cfg.key},body:JSON.stringify(body)});
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error?.message||('Error '+r.status));
+ return(d.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');
+}
+const parseJSON=t=>JSON.parse(t.slice(t.indexOf('{'),t.lastIndexOf('}')+1));
+function fileToPart(f){return new Promise((res,rej)=>{const rd=new FileReader();rd.onerror=rej;rd.onload=()=>{const url=rd.result;
+ if(!f.type.startsWith('image/'))return res({inline_data:{mime_type:f.type||'application/pdf',data:url.split(',')[1]}});
+ const im=new Image();im.onload=()=>{const s=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res({inline_data:{mime_type:'image/jpeg',data:c.toDataURL('image/jpeg',.85).split(',')[1]}})};
+ im.onerror=()=>res({inline_data:{mime_type:f.type,data:url.split(',')[1]}});im.src=url};rd.readAsDataURL(f)})}
+const tutorSys=()=>`Ets el Mestre Òliba, professor particular d'un infant de ${ORD[S.perfil.curs]} de Primària a les Illes Balears. Parles sempre en català, amb frases curtes i to amable i proper.
+Temes d'avui: ${(CUR?.skills||S.sessio.skills).map(k=>SUBJ[matOf(k)].nom+' – '+SK[k].nom).join(', ')}. Si el tema és d'anglès, explica en català i posa els exemples en anglès, i anima'l a escriure frases curtes en anglès. ${S.sessio.explicacio?'Resum del llibre: '+S.sessio.explicacio:''}
+Normes: no donis mai directament la resposta final d'un exercici; guia amb preguntes i pistes pas a pas. Si s'equivoca, explica l'error amb amabilitat. Fes servir exemples de la vida quotidiana. Màxim 80 paraules per resposta. Si et pregunta coses que no són d'estudi, porta'l amablement de tornada al tema.`;
+
+/* ===================== components d'exercici ===================== */
+function guided(c,steps,then,intro='Sembla que costa una mica. El Mestre Òliba t\'ho explica pas a pas:'){let j=0;
+ const draw=()=>{c.innerHTML=`<div style="margin-top:16px"><div class="owl"><div class="ic">${OWL(56)}</div><div class="bub"><p><b>${intro}</b></p><ol class="steps">${steps.slice(0,j+1).map(s=>`<li>${s}</li>`).join('')}</ol><button class="gs">${j<steps.length-1?'Següent pas':'Ara prova\'n un de semblant ✏️'}</button></div></div></div>`;
+  c.querySelector('.gs').onclick=()=>{if(j<steps.length-1){j++;draw()}else then()}};draw()}
+
+// mode: 'prac' (pistes), 'adv' (pistes), 'seal' (sense pistes), 'chk' (sense pistes, un intent)
+function exercise(el,k,o){
+ let p,t0,wrong,hints,lock=false;const help=o.mode==='prac'||o.mode==='adv';
+ const fresh=variant=>{p=genP(k);t0=Date.now();wrong=0;hints=0;lock=false;
+  el.innerHTML=`${variant?'<div class="fb info">🔁 Mateixa idea, dades noves. Ara demostra que ho has entès!</div>':''}
+  <div class="prob">${p.text}</div><div class="vis">${o.showVis&&p.vis?p.vis:''}</div>
+  <div class="row">${p.fields.map((f,i)=>`<div style="${f.wide?'flex:1;min-width:240px':''}"><label>${f.label}</label><input class="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-i="${i}" style="${f.wide?'width:100%;font-size:22px':f.txt?'width:240px':''}"></div>`).join('')}</div>
+  <div class="row" style="margin-top:14px"><button class="okb">Comprova</button>${help?'<button class="sec hb">💡 Pista</button>':''}<button class="${p.listen?'sec':'ghost'} sp" title="Escolta">🔊${p.listen?' Escolta':''}</button></div><div class="fbx"></div>`;
+  const ins=el.querySelectorAll('input.ans');ins.forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')check()});ins[0].focus();
+  const speak=()=>p.listen?say(p.listen,.8,'en-GB'):say(p.text);
+  el.querySelector('.okb').onclick=check;if(help)el.querySelector('.hb').onclick=hint;el.querySelector('.sp').onclick=speak;
+  if(p.listen)setTimeout(speak,400);
+ };
+ const lockAll=()=>{el.querySelectorAll('input.ans,.okb,.hb').forEach(x=>x.disabled=true)};
+ function hint(){hints++;if(p.vis)el.querySelector('.vis').innerHTML=p.vis;const h=p.hints[hints-1];
+  el.querySelector('.fbx').innerHTML=`<div class="fb info">💡 ${h||'Ja no queden més pistes. Llegeix-les una altra vegada i prova-ho!'}</div>`}
+ function check(){if(lock)return;
+  const ins=[...el.querySelectorAll('input.ans')],raw=ins.map(i=>i.value.trim()),v=raw.map((r,i)=>p.fields[i].txt?(norm(r)||null):parseVal(r)),fb=el.querySelector('.fbx');
+  if(v.some(x=>!x)){fb.innerHTML=p.fields[0].txt?'<div class="fb warn">Escriu la resposta.</div>':'<div class="fb warn">Escriu un nombre o una fracció (per exemple <b>12</b>, <b>3/4</b> o <b>2,5</b>).</div>';return}
+  const dt=Date.now()-t0;
+  const notes=[];
+  const match=(f,x)=>{if(!f.txt)return req(f.ans,x);if(f.txt.includes(x))return true;if(!f.loose)return false;
+   const fx=fold(x),hit=f.txt.find(t=>fold(t)===fx);
+   if(hit){if(art(norm(hit))!==art(x))notes.push(`Compte amb l'ortografia: s'escriu «${esc(hit)}».`);return true}
+   const near=fx.length>=7&&f.txt.find(t=>lev(fold(t),fx)<=1);
+   if(near){notes.push(`Ho has entès! Però compte amb l'ortografia: s'escriu «${esc(near)}».`);return true}return false};
+  if(p.fields.every((f,i)=>match(f,v[i]))){
+   const used=hints>0||wrong>0;record(k,true,used,o.mode==='chk');lockAll();
+   let note=notes.length?' '+notes.join(' '):'';p.fields.forEach((f,i)=>{if(!f.txt&&raw[i].includes('/')&&raw[i].replace(/\s/g,'')!==fmtR(f.ans))note=` Es pot simplificar: <b>${fmtR(f.ans)}</b>.`});
+   fb.innerHTML=`<div class="fb ok">✅ ${pick(['Molt bé!','Correcte!','Genial!','Ho has clavat!','Well done!'])}${used?' (amb ajuda)':''}${note}</div><div class="row" style="margin-top:10px"><button class="nx">Continuar →</button>${p.pron?'<button class="sec pr">🔊 Escolta com es pronuncia</button>':''}</div>`;
+   if(p.pron)fb.querySelector('.pr').onclick=()=>say(p.pron,.8,'en-GB');
+   const nb=fb.querySelector('.nx');nb.focus();nb.onclick=()=>o.onDone({ok:true,help:used,p});return;
+  }
+  wrong++;const et=p.err?p.err(v):null;if(et)recErr(k,et);
+  if(o.mode==='chk'){record(k,false,false,true);lockAll();
+   fb.innerHTML=`<div class="fb ko">❌ No és correcte. La resposta era <b>${p.fields.map(ansStr).join(' i ')}</b>. Ho repassarem!</div><button class="nx" style="margin-top:10px">Continuar →</button>`;
+   fb.querySelector('.nx').onclick=()=>o.onDone({ok:false,p});return;
+  }
+  if(dt<3500&&wrong===1){recErr(k,'massa_rapid');lock=true;let s=6;
+   const upd=()=>fb.innerHTML=`<div class="fb warn">🦉 Has respost molt de pressa. Llegeix l'enunciat amb calma i pensa abans de respondre. (${s})</div>`;upd();
+   const iv=setInterval(()=>{s--;if(s<=0){clearInterval(iv);lock=false;t0=Date.now()-5000;fb.innerHTML='<div class="fb info">Ara sí: pensa-ho bé i torna-ho a provar.</div>'}else upd()},1000);return;
+  }
+  if(wrong>=2){record(k,false,true,false);lockAll();guided(fb,p.steps,()=>fresh(true));return}
+  fb.innerHTML=`<div class="fb ko">❌ ${et?ERR[et].kid:pick([p.fields[0].txt?'Encara no és correcte. Revisa la resposta.':'Encara no és correcte. Revisa els càlculs.','Gairebé! Torna-ho a mirar amb calma.'])}${help?' Si vols, demana una pista.':''}</div>`;
+  t0=Date.now();
+ }
+ fresh(false);
+}
+
+// manipulatiu: pintar una barra o triar grups; primer cal pensar, després es comprova (sense pistes de "massa/poc")
+function manip(el,k,onDone){
+ let p;for(let t=0;t<12&&!(p&&p.paint);t++)p=genP(k);
+ if(!p.paint)return exercise(el,k,{mode:'prac',showVis:true,onDone});
+ const P=p.paint,sel=new Set(),seq=[],ord=P.kind==='order';let wrong=0;
+ el.innerHTML=`<p class="muted">🤔 ${ord?'Pensa primer qui menja qui. Després toca-ho per ordre.':'Primer calcula quantes en necessites. Després toca-les.'}</p><div class="prob" style="font-size:22px">${P.label}</div>
+  <div class="mz">${ord?`<div class="row">${P.items.map((x,i)=>`<button class="sec" data-i="${i}">${esc(x)}</button>`).join('')}</div><p class="seq" style="font-size:22px;min-height:34px;font-weight:700"></p><button class="ghost clr">↺ Torna a començar</button>`:P.kind==='bar'?barHTML(P.parts,0,true):groupsHTML(P.parts,P.k,0,true)}</div>
+  ${ord?'':'<p class="muted">Seleccionats: <b class="cnt">0</b></p>'}<button class="okb" style="margin-top:10px">Comprova</button><div class="fbx"></div>`;
+ const showSeq=()=>el.querySelector('.seq').textContent=seq.map(i=>P.items[i]).join(' → ');
+ el.querySelectorAll('.mz [data-i]').forEach(d=>d.onclick=()=>{if(el.querySelector('.okb').disabled)return;const i=+d.dataset.i;
+  if(ord){if(seq.includes(i))return;seq.push(i);d.disabled=true;showSeq();return}
+  sel.has(i)?sel.delete(i):sel.add(i);d.classList.toggle('on');el.querySelector('.cnt').textContent=sel.size});
+ if(ord)el.querySelector('.clr').onclick=()=>{if(el.querySelector('.okb').disabled)return;seq.length=0;el.querySelectorAll('.mz [data-i]').forEach(b=>b.disabled=false);showSeq()};
+ el.querySelector('.okb').onclick=()=>{const fb=el.querySelector('.fbx');
+  if(ord&&seq.length<P.items.length){fb.innerHTML='<div class="fb warn">Encara no has col·locat tots els éssers vius.</div>';return}
+  if(ord?seq.every((i,j)=>P.items[i]===P.target[j]):sel.size===P.target){el.querySelector('.okb').disabled=true;
+   fb.innerHTML=`<div class="fb ok">✅ Molt bé!</div><label>${P.follow.q}</label><div class="row"><input class="ans fa" autocomplete="off"><button class="fok">Comprova</button></div><div class="fb2"></div>`;
+   const fa=fb.querySelector('.fa');fa.focus();
+   const go=()=>{const v=fa.value.replace(/\s/g,''),pv=parseVal(v),f2=fb.querySelector('.fb2');
+    const ok=P.follow.txt?P.follow.txt.map(fold).includes(fold(fa.value)):P.follow.raw?v===P.follow.raw:(pv&&req(pv,P.follow.ans));
+    if(ok){record(k,true,wrong>0);f2.innerHTML='<div class="fb ok">✅ Perfecte!</div><button class="nx" style="margin-top:10px">Continuar →</button>';f2.querySelector('.nx').onclick=onDone}
+    else if(P.follow.raw&&pv&&req(pv,P.follow.ans))f2.innerHTML='<div class="fb warn">És equivalent, però escriu-la amb el denominador que et demanem.</div>';
+    else{wrong++;f2.innerHTML='<div class="fb ko">Revisa-ho: compta les parts que has seleccionat i quantes n\'hi ha en total.</div>'}};
+   fb.querySelector('.fok').onclick=go;fa.onkeydown=e=>{if(e.key==='Enter')go()};
+  }else{wrong++;
+   if(wrong>=2){record(k,false,true);el.querySelector('.okb').disabled=true;guided(fb,p.steps,()=>manip(el,k,onDone))}
+   else fb.innerHTML=`<div class="fb ko">No és correcte. No provis a l'atzar: ${ord?'pensa qui fabrica el seu aliment i qui se\'l menja.':'calcula quantes parts necessites i després selecciona-les.'}</div>`;
+  }};
+}
+
+/* ===================== pantalles principals ===================== */
+const OWL=(s=56)=>`<svg width="${s}" height="${s}" viewBox="0 0 64 64" aria-hidden="true"><path d="M14 18 L19 5 L26 13 Q32 10 38 13 L45 5 L50 18 Q57 28 54 41 Q51 59 32 59 Q13 59 10 41 Q7 28 14 18Z" fill="#4338CA"/><path d="M14 18 L19 5 L26 13 Q32 10 38 13 L45 5 L50 18" fill="none" stroke="#312E81" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="32" cy="45" rx="13" ry="11" fill="#C7D2FE"/><path d="M23 47q3 2.2 6 0M31 51q3 2.2 6 0M35 45q3 2.2 6 0" stroke="#818CF8" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="23" cy="28" r="9.5" fill="#fff"/><circle cx="41" cy="28" r="9.5" fill="#fff"/><circle cx="24" cy="29" r="4.5" fill="#17203A"/><circle cx="40" cy="29" r="4.5" fill="#17203A"/><circle cx="25.6" cy="27.4" r="1.5" fill="#fff"/><circle cx="41.6" cy="27.4" r="1.5" fill="#fff"/><path d="M28.5 36 L35.5 36 L32 41Z" fill="#F59E0B"/><path d="M20 58 l3-3 3 3M38 58 l3-3 3 3" stroke="#F59E0B" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const sc=k=>`--c:var(--s-${matOf(k)})`;
+const modeBtn=(k,m,extra='')=>`<button type="button" class="mode${extra}" data-m="${k}"><span class="tile">${m.ic}</span><span><b>${m.nom}</b><small>${m.desc}</small></span></button>`;
+function home(){endSession();const nm=S.perfil.nom?esc(S.perfil.nom):'';
+ PARENT_OK=false;const s=S.sessio,m=MODES[s.mode];
+ app(`<section class="hero"><button class="lockbtn" onclick="askPin()" aria-label="Zona famílies (amb PIN)">🔒 Famílies</button><div class="hero-t"><span class="pill light">${ORD[S.perfil.curs]} de Primària</span><h2>${nm?`Hola, ${nm}!`:'Hola!'}<br>Què aprendrem avui?</h2><p>Estudia amb el teu professor particular, supera aventures i demostra el que saps.</p></div><div class="hero-owl">${OWL(130)}</div></section>
+ <h3 style="margin:0 0 12px">La teva missió d'avui</h3>
+ <div class="card mission"><div class="mission-l"><div class="row" style="gap:8px;margin-bottom:10px"><span class="chip">${m.ic} ${m.nom}</span><span class="chip" style="--c:var(--acc-d)">⏱ ${s.minuts} minuts</span></div>
+ ${s.mode==='escriptura'?'<div class="sk"><span class="tile">✍️</span><span><b>Escriptura al quadern</b><small>Dictat o còpia amb foto</small></span></div>':s.skills.map(k=>`<div class="sk"><span class="tile" style="${sc(k)}">${SK[k].ic}</span><span><b>${SK[k].nom}</b><small>${SUBJ[matOf(k)].nom}</small></span>${badge(k)}</div>`).join('')}</div>
+ <div class="mission-r"><button class="big" onclick="start('${s.mode}')">Comença ▶</button><small style="text-align:center">L'han preparada els teus pares</small></div></div>
+ <h3 style="margin:30px 0 12px">Assignatures</h3><div class="grid">${Object.entries(SUBJ).map(([m,s])=>`<button class="role subjcard" style="--c:var(--s-${m})" onclick="subject('${m}')"><span class="tile">${s.ic}</span><span><b>${s.nom}</b><small>${skillsOf(m).length} temes${m==='angles'?' · taula de verbs':''}</small></span><span class="arr">→</span></button>`).join('')}</div>
+ <h3 style="margin:30px 0 12px">Altres maneres de practicar</h3><div class="grid" id="om">${Object.entries(MODES).filter(([k])=>k!=='combinada').map(([k,m])=>modeBtn(k,m)).join('')}</div>
+ <h3 style="margin:30px 0 12px">Material d'estudi</h3><div class="grid2">
+ <button class="role" onclick="verbTable()"><span class="tile" style="--c:var(--s-angles)">📚</span><span><b>Taula de verbs anglesos</b><small>Infinitiu, passat, participi i traducció</small></span><span class="arr">→</span></button>
+ <button class="role" onclick="temari(false)"><span class="tile" style="--c:var(--s-angles)">🗂️</span><span><b>Temari d'anglès</b><small>Què s'aprèn a ${ORD[S.perfil.curs]} i com practicar-ho</small></span><span class="arr">→</span></button></div>`);
+ document.querySelectorAll('#om .mode').forEach(b=>b.onclick=()=>start(b.dataset.m))}
+const kid=home;
+
+/* ---------- Accés de les famílies amb PIN ---------- */
+let PARENT_OK=false;
+const pinHash=p=>{let h=5381;for(const c of 'aprenem:'+p)h=((h<<5)+h+c.charCodeAt(0))>>>0;return h.toString(36)};
+function closeModal(){const m=$('#modal');if(m)m.remove()}
+function modal(html){closeModal();const d=document.createElement('div');d.id='modal';d.className='modal-bg';d.innerHTML=`<div class="modal" role="dialog" aria-modal="true">${html}</div>`;d.onclick=e=>{if(e.target===d)closeModal()};document.body.appendChild(d);const i=d.querySelector('input');if(i)i.focus()}
+const pinInput=(id,ph)=>`<input id="${id}" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" placeholder="${ph}" style="font-size:26px;text-align:center;letter-spacing:.3em;margin-top:6px">`;
+function askPin(){
+ if(!S.pin){modal(`<h3 style="margin-top:0">🔒 Crea el PIN de la família</h3><p class="muted" style="margin-top:0">La primera vegada, triau un PIN de 4 xifres. El demanarem cada vegada que entreu a la zona de famílies, perquè els infants no la puguin obrir.</p>
+  <label for="p1">PIN nou</label>${pinInput('p1','••••')}<label for="p2">Repetiu el PIN</label>${pinInput('p2','••••')}
+  <div id="pm"></div><div class="row" style="margin-top:16px;justify-content:flex-end"><button class="ghost" onclick="closeModal()">Cancel·lar</button><button id="pok">Crear i entrar</button></div>`);
+  const go=()=>{const a=$('#p1').value.trim(),b=$('#p2').value.trim();
+   if(!/^\d{4,8}$/.test(a)){$('#pm').innerHTML='<div class="fb warn">El PIN ha de tenir entre 4 i 8 xifres.</div>';return}
+   if(a!==b){$('#pm').innerHTML='<div class="fb warn">Els dos PIN no coincideixen. Torna-ho a provar.</div>';return}
+   S.pin=pinHash(a);save();closeModal();PARENT_OK=true;parent('sessio')};
+  $('#pok').onclick=go;$('#p2').onkeydown=e=>{if(e.key==='Enter')go()};return}
+ modal(`<h3 style="margin-top:0">🔒 Zona de famílies</h3><p class="muted" style="margin-top:0">Escriviu el PIN per entrar.</p>${pinInput('p1','••••')}<div id="pm"></div>
+  <div class="row" style="margin-top:16px;justify-content:space-between;align-items:center"><button class="ghost" id="pfg" style="min-height:42px;padding:8px 12px;font-size:15px">He oblidat el PIN</button><span class="row"><button class="ghost" onclick="closeModal()">Cancel·lar</button><button id="pok">Entrar</button></span></div>`);
+ const go=()=>{if(pinHash($('#p1').value.trim())===S.pin){closeModal();PARENT_OK=true;parent('sessio')}else{$('#pm').innerHTML='<div class="fb ko">PIN incorrecte.</div>';$('#p1').value='';$('#p1').focus()}};
+ $('#pok').onclick=go;$('#p1').onkeydown=e=>{if(e.key==='Enter')go()};
+ $('#pfg').onclick=()=>{const a=rnd(23,89),b=rnd(23,89);
+  modal(`<h3 style="margin-top:0">He oblidat el PIN</h3><p class="muted" style="margin-top:0">Per crear-ne un de nou, resoleu aquesta operació. No s'esborra cap dada de progrés.</p><p style="font-size:26px;font-weight:900;text-align:center">${a} × ${b} = ?</p><input id="p1" inputmode="numeric" style="font-size:24px;text-align:center"><div id="pm"></div>
+   <div class="row" style="margin-top:16px;justify-content:flex-end"><button class="ghost" onclick="closeModal()">Cancel·lar</button><button id="pok">Comprovar</button></div>`);
+  $('#pok').onclick=()=>{if(+$('#p1').value.trim()===a*b){S.pin='';save();askPin()}else $('#pm').innerHTML='<div class="fb ko">No és correcte.</div>'}}
+}
+
+/* ---------- Pàgina d'assignatura ---------- */
+function subject(m){endSession();const sb=SUBJ[m],ks=skillsOf(m);
+ app(`<div class="row ph" style="justify-content:space-between;align-items:center"><div class="row" style="align-items:center;gap:14px;flex-wrap:nowrap"><span class="tile" style="--c:var(--s-${m});width:60px;height:60px;font-size:30px;border-radius:18px">${sb.ic}</span><div><h2 style="margin:0">${sb.nom}</h2><p class="muted" style="margin:0">${ks.length} temes · ${ORD[S.perfil.curs]} de Primària</p></div></div><button class="ghost" onclick="home()">← Inici</button></div>
+ ${m==='angles'?`<div class="grid2" style="margin-bottom:18px"><button class="role" onclick="verbTable('irr','angles')"><span class="tile" style="--c:var(--s-angles)">📚</span><span><b>Taula de verbs</b><small>Infinitiu, passat, participi i traducció</small></span><span class="arr">→</span></button>
+ <button class="role" id="tm"><span class="tile" style="--c:var(--s-angles)">🗂️</span><span><b>Temari de 5è i 6è</b><small>Què s'aprèn a cada curs</small></span><span class="arr">→</span></button></div>`:''}
+ <div class="card subj" style="--c:var(--s-${m})"><h3 style="margin-top:0">Temes</h3><p class="muted" style="margin-top:-6px">🦉 <b>Aprendre</b>: explicació, exemple i pràctica guiada. ✏️ <b>Practicar</b>: exercicis nous.</p>
+ ${ks.map((k,i,a)=>{const v=SK[k];return(v.bloc&&v.bloc!==SK[a[i-1]]?.bloc?`<div class="bloch">${v.bloc}</div>`:'')+`<div class="sk topic"><span class="tile" style="${sc(k)}">${v.ic}</span><span class="tn"><b>${v.nom}</b><small>${badge(k)}</small></span><span class="tb"><button class="sec" data-l="${k}">🦉 Aprendre</button><button data-p="${k}">✏️ Practicar</button></span></div>`}).join('')}</div>`);
+ if($('#tm'))$('#tm').onclick=()=>{temari(false);const b=document.querySelector('.ph .ghost');if(b)b.onclick=()=>subject('angles')};
+ document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>start('professor',[b.dataset.l],15));
+ document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>start('exercicis',[b.dataset.p],15));
+}
+
+
+/* ---------- Taula de verbs ---------- */
+function verbTable(tab='irr',back='kid'){endSession();let all=+S.perfil.curs>=6;
+ app(`<div class="row ph" style="justify-content:space-between;align-items:flex-end"><div><h2>📚 Taula de verbs</h2><p class="muted">Infinitiu, passat simple, participi i traducció. Toca un verb per escoltar-lo.</p></div><div class="row noprint"><button class="ghost" id="vback">← Tornar</button><button class="ghost" onclick="window.print()">🖨 Imprimir</button></div></div>
+ <div class="tabs noprint"><button data-t="irr" class="${tab==='irr'?'on':''}">Verbs irregulars</button><button data-t="reg" class="${tab==='reg'?'on':''}">Verbs regulars</button></div>
+ <div class="card"><div class="row noprint" style="align-items:center;margin-bottom:6px"><input id="vq" placeholder="Cerca un verb, en anglès o en català..." style="flex:1;min-width:220px"><label class="chk" style="margin:0"><input type="checkbox" id="va" ${all?'checked':''}> Tots (6è)</label></div><p class="muted" id="vn" style="margin:8px 0 0;font-size:15px"></p><div class="tablewrap"><table class="vt" id="vtb"></table></div></div>
+ ${tab==='irr'?`<div class="card"><h3>🧩 Truc: aprèn-los per famílies</h3><div class="grid">${FAM.map(f=>`<div class="stat" style="background:var(--kobg)"><b style="font-size:16px;color:var(--s-angles)">${f.n[0].toUpperCase()+f.n.slice(1)}</b><span>${f.v.map(x=>{const y=IRR.find(i=>i.b===x);return`${x} → <b>${y.p[0]}</b>`}).join('<br>')}</span></div>`).join('')}</div></div>`
+ :`<div class="card"><h3>📏 Regles del passat regular</h3><div class="tablewrap"><table class="mini"><tr><th>Regla</th><th>Exemple</th></tr><tr><td>Normalment: + <b>-ed</b></td><td>walk → walked</td></tr><tr><td>Acaba en -e: només + <b>-d</b></td><td>dance → danced</td></tr><tr><td>Consonant + y: <b>-ied</b></td><td>study → studied</td></tr><tr><td>Vocal + y: + -ed</td><td>play → played</td></tr><tr><td>Vocal curta + consonant: <b>doble</b></td><td>stop → stopped</td></tr></table></div></div>`}
+ <div class="card noprint"><h3>✏️ Practica'ls</h3><p class="muted" style="margin-top:0">Exercicis nous cada vegada, sense poder endevinar: s'han d'escriure.</p><div class="row">
+ ${tab==='irr'?'<button data-p="en_irr_past">Passat dels irregulars</button><button class="sec" data-p="en_irr_pp">Participi dels irregulars</button><button class="sec" data-p="en_irr_inf">De quin verb ve?</button>':'<button data-p="en_reg_past">Passat dels regulars</button>'}<button class="sec" data-p="en_verb_sig">Significat dels verbs</button></div></div>`);
+ document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>verbTable(b.dataset.t,back));
+ $('#vback').onclick=()=>back==='kid'?kid():subject(back);
+ document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>start('exercicis',[b.dataset.p],15));
+ const draw=()=>{const q=fold($('#vq').value),list=(tab==='irr'?IRR:REG).filter(v=>(all||!v.h)&&(!q||[v.b,...v.p,...v.ca].some(x=>fold(x).includes(q))));
+  $('#vn').textContent=`${list.length} verbs${all?'':' bàsics (marca «Tots» per veure els de 6è)'}`;
+  $('#vtb').innerHTML=`<tr><th>Infinitiu</th><th>Passat</th><th>Participi</th><th>Traducció</th>${tab==='reg'?'<th class="rg">Regla</th>':''}<th class="noprint sp"></th></tr>`+
+   list.map(v=>`<tr data-s="${v.b}, ${v.p[0]}, ${v.pp[0]}"><td><b>${v.b}</b></td><td><b style="color:var(--s-angles)">${v.p.join(' / ')}</b></td><td><b style="color:var(--pri)">${v.pp.join(' / ')}</b></td><td>${caList(v)}</td>${tab==='reg'?`<td class="rg"><small>${regRule(v.b)}</small></td>`:''}<td class="noprint sp"><button class="ghost" style="min-height:38px;padding:4px 12px">🔊</button></td></tr>`).join('')||'<tr><td colspan="6" class="muted">Cap verb coincideix amb la cerca.</td></tr>';
+  $('#vtb').querySelectorAll('tr[data-s]').forEach(r=>r.onclick=()=>{say(r.dataset.s,.8,'en-GB');r.classList.add('spk');setTimeout(()=>r.classList.remove('spk'),900)})};
+ $('#vq').oninput=draw;$('#va').onchange=e=>{all=e.target.checked;draw()};draw();
+}
+
+/* ---------- Temari ---------- */
+function temari(forParent,el){const T=TEMARI.angles,c=+S.perfil.curs>=6?6:5;
+ const html=`${forParent?'':`<div class="row ph" style="justify-content:space-between;align-items:flex-end"><div><h2>🗂️ Temari d'anglès</h2><p class="muted">Què s'aprèn a 5è i 6è de Primària.</p></div><button class="ghost" onclick="kid()">← Tornar</button></div>`}
+ <div class="fb info" style="margin:0 0 18px">Temari orientatiu basat en els continguts habituals d'anglès del 3r cicle de Primària. Comprovau-lo amb el llibre i la programació de l'escola: amb fotos del llibre, la IA ajusta la sessió al que fa a classe.</div>
+ ${[5,6].map(n=>`<div class="card subj" style="--c:var(--s-angles)"><div class="exhead"><h3 style="margin:0">${ORD[n]} de Primària</h3>${n===c?'<span class="chip" style="--c:var(--s-angles)">El teu curs</span>':''}</div>
+  ${T[n].map(([t,sk])=>`<div class="sk"><span class="tile" style="--c:var(--s-angles);width:40px;height:40px;font-size:18px">${sk.length?'✔':'…'}</span><span style="flex:1"><b style="font-weight:700">${t}</b><small>${sk.length?sk.map(k=>SK[k].nom).join(' · '):'Exercicis properament'}</small></span>
+  ${sk.length?(forParent?`<button class="sec" data-add="${sk.join(',')}" style="min-height:42px;padding:8px 14px">+ Sessió</button>`:`<button class="sec" data-pr="${sk.join(',')}" style="min-height:42px;padding:8px 14px">Practicar</button>`):''}</div>`).join('')}</div>`).join('')}`;
+ if(forParent){el.innerHTML=html+'<p class="muted" id="tmok"></p>'}else app(html);
+ document.querySelectorAll('[data-pr]').forEach(b=>b.onclick=()=>start('exercicis',b.dataset.pr.split(','),15));
+ document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{const sk=b.dataset.add.split(',');S.sessio.skills=[...new Set([...S.sessio.skills,...sk])];save();b.textContent='✔ Afegit';b.disabled=true;$('#tmok').textContent='Temes afegits a la sessió d\'avui. Revisau-la a la pestanya «Sessió d\'avui».'});
+}
+
+const PH=[['professor',.15],['aventura',.4],['exercicis',.25],['comprovacio',.2]];
+function start(mode,ovSkills,ovMin){const skills=ovSkills||S.sessio.skills,min=ovMin||S.sessio.minuts;
+ if(!skills.length&&mode!=='escriptura'){app(`<div class="card" style="text-align:center;max-width:560px;margin:0 auto">${OWL(80)}<h3>Encara no hi ha cap tema triat</h3><p class="muted">Els pares han de triar almenys un tema a la Zona famílies, o pots entrar a una assignatura des de l'inici.</p><button onclick="home()">Tornar a l'inici</button></div>`);return}
+ CUR={t0:Date.now(),fin:Date.now()+min*60000,tot:0,ok:0,mode,skills:skills.slice()};phaseEnd=0;
+ if(mode==='combinada')return phase(0);
+ runMode(mode,null,finish);
+}
+function phase(i){if(i>=PH.length)return finish();phaseEnd=Date.now()+S.sessio.minuts*PH[i][1]*60000;runMode(PH[i][0],i,()=>phase(i+1))}
+function runMode(mode,pi,done){done=once(done);
+ app(`${pi!=null?`<div class="stepper">${PH.map((p,j)=>`<div class="stp ${j===pi?'on':j<pi?'done':''}"><i>${j<pi?'✓':j+1}</i><span>${MODES[p[0]].nom}</span></div>`).join('')}</div>`:''}
+ <div class="row ph" style="justify-content:space-between;align-items:center"><div class="row" style="align-items:center;gap:12px"><span class="tile">${MODES[mode].ic}</span><h2 style="margin:0">${MODES[mode].nom}</h2></div><button class="ghost" id="skip">${pi!=null&&pi<PH.length-1?'Següent fase →':'Acabar'}</button></div><div id="stage"></div>`);
+ $('#skip').onclick=done;
+ ({professor:mProf,aventura:mAdv,exercicis:mEx,comprovacio:mChk,escriptura:mWrite})[mode]($('#stage'),done);
+}
+function finish(){const c=CUR;endSession();
+ const pc=c&&c.tot?Math.round(c.ok/c.tot*100):0;
+ app(`<div class="card" style="text-align:center;padding:36px 24px;max-width:620px;margin:0 auto 18px">${OWL(90)}<h2 style="margin:10px 0 4px">Sessió acabada!</h2><p class="muted" style="margin-top:0">Bona feina. Equivocar-se també és aprendre.</p>
+ ${c&&c.tot?`<div class="ring" style="--p:${pc}"><div>${pc}%</div></div><p style="margin-top:0">Has resolt <b>${c.ok}</b> de <b>${c.tot}</b> exercicis.</p>`:''}
+ <div style="text-align:left;margin:18px 0">${(c?c.skills:[]).map(k=>`<div class="sk"><span class="tile" style="${sc(k)}">${SK[k].ic}</span><span><b>${SK[k].nom}</b><small>${SUBJ[matOf(k)].nom}</small></span>${badge(k)}</div>`).join('')}</div>
+ <button class="big" onclick="home()">Tornar a l'inici</button></div>`)}
+
+/* ---------- Mode 1: professor particular ---------- */
+function mProf(el,done){const ks=CUR.skills;let i=0;
+ el.innerHTML='<div id="pa"></div><div id="chatbox"></div>';chatUI($('#chatbox'));const pa=$('#pa');
+ function theory(){if(i>=ks.length)return end();const s=SK[ks[i]];
+  const extra=i===0&&S.sessio.explicacio?`<div class="fb info"><b>📘 Del teu llibre:</b> ${esc(S.sessio.explicacio)}</div>`:'';
+  pa.innerHTML=`<div class="card subj" style="${sc(ks[i])}"><div class="exhead"><span class="chip" style="${sc(ks[i])}">${s.ic} ${s.nom}</span><span class="muted">Tema ${i+1} de ${ks.length}</span></div><div class="owl" style="margin-top:14px"><div class="ic">${OWL(64)}</div><div class="bub">${s.teoria.map(t=>`<p>${t}</p>`).join('')}${extra}</div></div>
+  <div class="row" style="margin-top:18px;justify-content:flex-end"><button class="sec" id="spk">🔊 Escolta</button><button id="go">Ho he llegit → Veure un exemple</button></div></div>`;
+  $('#spk').onclick=()=>say(s.teoria.join(' ')+' '+(i===0?S.sessio.explicacio:''));$('#go').onclick=example}
+ function example(){const p=genP(ks[i]);let j=0;
+  const draw=()=>{pa.innerHTML=`<div class="card"><h3 style="margin-top:0">🦉 Exemple resolt</h3><div class="prob">${p.text}</div><ol class="steps">${p.steps.slice(0,j).map(s=>`<li>${s}</li>`).join('')}</ol>
+   ${j<p.steps.length?`<p class="muted">🤔 Abans de mirar-ho: què creus que toca fer ara?</p><button id="nx">Mostra el pas ${j+1}</button>`:'<button id="nx">Ara tu! ✏️</button>'}</div>`;
+   $('#nx').onclick=()=>{if(j<p.steps.length){j++;draw()}else practice(2)}};draw()}
+ function practice(n){let c=0;pa.innerHTML='<div class="card"><h3 style="margin-top:0">✏️ Practica amb ajuda</h3><div id="ex"></div></div>';
+  const next=()=>{if(c>=n){i++;return theory()}c++;exercise($('#ex'),ks[i],{mode:'prac',onDone:next})};next()}
+ function end(){pa.innerHTML='<div class="card"><h3 style="margin-top:0">Molt bé! Has repassat tots els temes. 🎉</h3><button id="fin">Continuar →</button></div>';$('#fin').onclick=done}
+ theory();
+}
+function chatUI(el){
+ if(!S.cfg.key){el.innerHTML='<p class="muted" style="font-size:15px">💬 Si els teus pares activen la IA, podràs fer preguntes al Mestre Òliba.</p>';return}
+ const hist=[];el.innerHTML=`<div class="card"><h3 style="margin-top:0">💬 Tens algun dubte? Pregunta al Mestre Òliba</h3><div class="chat" id="cl"></div><div class="row" style="align-items:center"><input id="cq" placeholder="Escriu la teva pregunta..." style="flex:1;min-width:180px">${micBtn('cq')}<button id="cs">Envia</button></div></div>`;
+ const add=(r,t)=>{const d=document.createElement('div');d.className='msg '+(r==='user'?'u':'m');d.textContent=t;$('#cl').appendChild(d);$('#cl').scrollTop=1e9;return d};
+ const send=async()=>{const q=$('#cq').value.trim();if(!q)return;$('#cq').value='';add('user',q);hist.push({role:'user',parts:[{text:q}]});const w=add('model','...');
+  try{const a=await gemini(hist,{system:tutorSys()});w.textContent=a;hist.push({role:'model',parts:[{text:a}]})}catch(e){w.textContent='⚠️ '+e.message;hist.pop()}};
+ $('#cs').onclick=send;$('#cq').onkeydown=e=>{if(e.key==='Enter')send()};
+}
+
+/* ---------- Mode 2: aventura ---------- */
+function mAdv(el,done){const ks=CUR.skills;
+ const mins=phaseEnd?(phaseEnd-Date.now())/60000:S.sessio.minuts;const n=Math.max(3,Math.min(STAGES.length,Math.round(mins/2.5)));
+ let st=0,gems=0;
+ function stage(){if(st>=n||(st>0&&timeUp()))return win();const s0=STAGES[st],k=ks[st%ks.length];
+  el.innerHTML=`<div class="card adv"><div class="advtop"><span>🏝️ L'Illa dels Nombres Perduts</span><span class="gems">💎 ${gems}</span></div><div class="path">${STAGES.slice(0,n).map((x,j)=>`<div class="st ${j<st?'done':j===st?'cur':''}">${x.ic}</div>`).join('')}</div>
+  <h3 style="margin:0 0 4px">${s0.ic} ${s0.nom}</h3><p style="margin:0;color:#E0E3FF">${s0.txt}</p><div id="ex" class="advbox"></div></div>`;
+  exercise($('#ex'),k,{mode:'adv',onDone:()=>seal(k)})}
+ function seal(k){$('#ex').innerHTML='<div class="fb info">🔐 <b>Segell del guardià:</b> la porta només s\'obre del tot si ho tornes a fer amb dades noves i <b>sense pistes</b>.</div><div id="ex2" style="margin-top:12px"></div>';
+  exercise($('#ex2'),k,{mode:'seal',onDone:r=>{if(!r.help)gems++;const nx=()=>{st++;stage()};(st===1||st===3)?justify(el,k,r.p,nx):nx()}})}
+ function win(){el.innerHTML=`<div class="card adv" style="text-align:center"><div style="font-size:64px">🏝️</div><h2>Has superat l'aventura!</h2><p>💎 ${gems} gemmes (les gemmes només s'aconsegueixen sense ajuda)</p><p>Superar l'aventura és un gran pas. Per saber si ho domines de veritat, cal fer exercicis nous sense pistes.</p><button id="c">Continuar →</button></div>`;$('#c').onclick=done}
+ stage();
+}
+function justify(el,k,p,next){
+ el.innerHTML=`<div class="card"><div class="owl"><div class="ic">🗿</div><div><b>El guardià vol saber com ho has pensat.</b><p>Explica amb les teves paraules els passos que has fet per resoldre:</p><div style="font-size:20px">${p.text}</div></div></div>
+ <textarea id="jt" rows="3" placeholder="Primer he..." style="margin-top:12px"></textarea><div class="row" style="margin-top:10px"><button id="js">Enviar explicació</button>${micBtn('jt')}</div><div id="jf"></div></div>`;
+ $('#js').onclick=async()=>{const t=$('#jt').value.trim();
+  if(t.length<15){$('#jf').innerHTML='<div class="fb warn">Explica-ho una mica més: què has fet primer? I després?</div>';return}
+  const rec={data:new Date().toISOString(),k,text:t};S.just.push(rec);save();$('#js').disabled=true;
+  if(S.cfg.key){$('#jf').innerHTML='<div class="fb info">🦉 El Mestre Òliba ho està llegint...</div>';
+   try{const j=parseJSON(await gemini([{role:'user',parts:[{text:`Un infant de ${ORD[S.perfil.curs]} de Primària ha resolt correctament aquest exercici: "${plain(p.text)}" (solució: ${p.fields.map(ansStr).join(', ')}). Explica com ho ha fet: "${t}". Valora si l'explicació mostra que entén el procediment. Respon NOMÉS amb JSON: {"enten": true o false, "comentari": "1-2 frases en català, amables, adreçades a l'infant; si falta algun pas, fes-li una pregunta"}`}]}],{json:true}));
+    rec.ia=j.enten?'entén el procediment':'explicació incompleta';save();$('#jf').innerHTML=`<div class="fb ${j.enten?'ok':'warn'}">🦉 ${esc(j.comentari)}</div>`}
+   catch(e){$('#jf').innerHTML='<div class="fb ok">Gràcies! Els teus pares podran llegir la teva explicació.</div>'}}
+  else $('#jf').innerHTML='<div class="fb ok">Gràcies! Els teus pares podran llegir la teva explicació.</div>';
+  $('#jf').insertAdjacentHTML('beforeend','<button id="jn" style="margin-top:10px">Continuar l\'aventura →</button>');$('#jn').onclick=next};
+}
+
+/* ---------- Mode 3: exercicis interactius ---------- */
+function mEx(el,done){const ks=CUR.skills;let r=0;
+ function next(){if(r>0&&timeUp()){el.innerHTML='<div class="card"><p>⏰ S\'ha acabat el temps d\'exercicis. Bona feina!</p><button id="c">Continuar →</button></div>';$('#c').onclick=done;return}
+  const k=ks[r%ks.length];r++;el.innerHTML=`<div class="card subj" style="${sc(k)}"><div class="exhead"><span class="chip" style="${sc(k)}">${SK[k].ic} ${SK[k].nom}</span><span class="muted">Repte ${r}</span></div><div id="ex"></div></div>`;
+  if(r%2===1&&(k==='frac_equiv'||k==='frac_de_nombre'||k==='ci_ecosis'))manip($('#ex'),k,next);else exercise($('#ex'),k,{mode:'prac',showVis:true,onDone:next})}
+ next();
+}
+
+/* ---------- Comprovació ---------- */
+function mChk(el,done){const ks=CUR.skills,n=Math.min(8,Math.max(4,ks.length*2));let i=0;const res=[];
+ el.innerHTML='<div class="card"><p style="margin-top:0">🎯 Exercicis nous, <b>sense pistes</b>. Així sabrem què ja domines i què cal reforçar.</p><div id="ex"></div></div>';
+ const nx=()=>{if(i>=n)return show();const k=ks[i%ks.length];i++;$('#ex').innerHTML=`<div class="exhead" style="margin-top:12px"><span class="chip" style="${sc(k)}">${SK[k].ic} ${SK[k].nom}</span><span class="muted">Pregunta ${i} de ${n}</span></div><div id="ex2"></div>`;exercise($('#ex2'),k,{mode:'chk',onDone:r=>{res.push(r.ok);nx()}})};
+ function show(){el.innerHTML=`<div class="card"><h3 style="margin-top:0">Resultat: ${res.filter(x=>x).length} de ${n}</h3>${ks.map(k=>`<p>${SK[k].ic} ${SK[k].nom}: ${badge(k)}</p>`).join('')}<button id="c">Continuar →</button></div>`;$('#c').onclick=done}
+ nx();
+}
+
+/* ---------- Escriptura a mà ---------- */
+const DICT_EN={5:"My name is Pau. I have got a dog called Max. He is brown and white. We play in the park every day.",6:"Last summer I went to Menorca with my family. We swam in the sea and ate ice cream. It was the best holiday ever!"};
+function mWrite(el,done){const en=S.sessio.dictatLang==='en',D=en?DICT_EN:DICTATS,txt=(S.sessio.dictat||D[S.perfil.curs]||D[5]).trim(),fr=(txt.match(/[^.!?]+[.!?]*/g)||[txt]).map(s=>s.trim()).filter(Boolean);let tipus='dictat';
+ el.innerHTML='<div class="card"><p style="margin-top:0">✍️ Agafa el teu <b>quadern i un llapis</b>. Avui no escriuràs a la pantalla!</p><div class="row"><button id="td">🎧 Dictat</button><button class="sec" id="tc">📄 Còpia</button></div><div id="w" style="margin-top:14px"></div></div><div id="res"></div>';
+ const show=()=>{$('#td').className=tipus==='dictat'?'':'sec';$('#tc').className=tipus==='copia'?'':'sec';
+  $('#w').innerHTML=(tipus==='dictat'?`<p>Escolta cada frase i escriu-la al quadern. La pots escoltar tantes vegades com vulguis.</p><div class="row">${fr.map((f,i)=>`<button class="sec" data-f="${i}">🔊 Frase ${i+1}</button>`).join('')}</div>`
+   :`<p>Copia aquest text al quadern amb la teva millor lletra:</p><div class="card" style="font-size:22px;font-family:Georgia,serif">${esc(txt)}</div>`)+
+   '<h3>📷 Quan acabis, fes una foto del quadern</h3><input type="file" id="ph" accept="image/*" capture="environment"><div class="row" style="margin-top:10px"><button id="cr">Corregeix</button></div>';
+  $('#w').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>say(fr[+b.dataset.f],.7,en?'en-GB':'ca-ES'));$('#cr').onclick=correct};
+ $('#td').onclick=()=>{tipus='dictat';show()};$('#tc').onclick=()=>{tipus='copia';show()};show();
+ async function correct(){const f=$('#ph').files[0],res=$('#res');
+  if(!S.cfg.key){res.innerHTML=`<div class="card"><h3 style="margin-top:0">Corregeix-ho tu mateix</h3><p>Compara el que has escrit amb el text correcte:</p><div class="card" style="font-size:20px">${esc(txt)}</div><p>Revisa: ✔ majúscules ✔ accents ✔ punts i comes ✔ paraules oblidades</p><p class="muted">Amb la IA activada, l'app corregirà la foto automàticament.</p><button id="fi2">He acabat</button></div>`;$('#fi2').onclick=done;return}
+  if(!f){res.innerHTML='<div class="fb warn">Primer fes o tria una foto del quadern.</div>';return}
+  res.innerHTML='<div class="fb info">⏳ El Mestre Òliba està llegint el teu quadern...</div>';
+  try{const part=await fileToPart(f);
+   const prompt=`Ets un mestre de Primària de les Illes Balears que corregeix un exercici escrit a mà per un infant de ${ORD[S.perfil.curs]}. El text està en ${en?'anglès (és la classe d\'anglès; les explicacions per a l\'infant, escriu-les en català)':'català'}.
+Tipus d'exercici: ${tipus==='dictat'?'dictat':'còpia'}. Text de referència (el que havia d'escriure): "${txt}".
+Mira la foto del quadern i compara-la amb el text de referència. Respon NOMÉS amb JSON:
+{"transcripcio":"el que llegeixes que ha escrit","llegibilitat":"bona|regular|difícil","errors":[{"escrit":"...","correcte":"...","tipus":"ortografia|accentuació|puntuació|majúscules|paraula oblidada|gramàtica|altre","explicacio":"explicació breu i amable per a l'infant","confianca":"segura|dubtosa"}],"valoracio":"2 frases positives i concretes","consell_lletra":"un consell sobre la lletra, només sobre el que es veu clarament","exercici_proposat":"un exercici curt per practicar el que ha fallat"}
+Marca "dubtosa" quan no puguis llegir bé la lletra i no estiguis segur de si és un error real o una mala lectura teva. No t'inventis errors.`;
+   const j=parseJSON(await gemini([{role:'user',parts:[part,{text:prompt}]}],{json:true})),errs=j.errors||[];
+   S.escrit.push({data:new Date().toISOString(),tipus,errors:errs.map(e=>({escrit:e.escrit,correcte:e.correcte,tipus:e.tipus,confianca:e.confianca}))});save();
+   res.innerHTML=`<div class="card"><h3 style="margin-top:0">🦉 Correcció</h3><p>${esc(j.valoracio)}</p>
+   ${errs.length?`<ul>${errs.map(e=>`<li class="${e.confianca==='dubtosa'?'err-dub':''}">${e.confianca==='dubtosa'?'⚠️ <i>No ho llegeixo bé:</i> ':'✏️ '}<b>${esc(e.escrit)}</b> → <b>${esc(e.correcte)}</b> <span class="muted">(${esc(e.tipus)})</span><br><span style="color:var(--ink)">${esc(e.explicacio)}</span></li>`).join('')}</ul>`:'<p class="err-ok">✅ No he trobat errors!</p>'}
+   ${j.consell_lletra?`<p>✍️ <b>Sobre la lletra:</b> ${esc(j.consell_lletra)}</p>`:''}
+   ${j.exercici_proposat?`<div class="fb info">📝 <b>Per practicar:</b> ${esc(j.exercici_proposat)}</div>`:''}
+   <details style="margin-top:10px"><summary class="muted">El que he llegit</summary><p>${esc(j.transcripcio)}</p></details>
+   <p class="muted" style="font-size:14px">Els errors marcats amb ⚠️ són dubtosos: potser la IA no ha llegit bé la lletra. Comproveu-ho amb el quadern.</p><button id="fi2">He acabat</button></div>`;$('#fi2').onclick=done;
+  }catch(e){res.innerHTML=`<div class="fb ko">No s'ha pogut corregir: ${esc(e.message)}</div>`}}
+}
+
+/* ===================== zona pares ===================== */
+function parent(tab){endSession();if(!PARENT_OK)return askPin();const T={sessio:'📋 Sessió d\'avui',prog:'📈 Progrés',tem:'🗂️ Temari',cfg:'⚙️ Configuració'};
+ app(`<div class="row ph" style="justify-content:space-between;align-items:flex-end"><div><h2>Zona famílies</h2><p class="muted">Prepareu la sessió d'avui i seguiu el progrés${S.perfil.nom?' de '+esc(S.perfil.nom):''}.</p></div><button class="ghost" onclick="home()">🔒 Sortir</button></div><div class="tabs">${Object.entries(T).map(([k,v])=>`<button class="${k===tab?'on':''}" onclick="parent('${k}')">${v}</button>`).join('')}</div><div id="pz"></div>`);
+ ({sessio:pSessio,prog:pProg,tem:el=>temari(true,el),cfg:pCfg})[tab]($('#pz'))}
+
+function recom(){const L=Object.keys(SK).map(k=>({k,l:level(k),e:Object.values(S.prog[k]?.errs||{}).reduce((a,b)=>a+b,0)}));
+ const weak=L.filter(x=>x.l===0).sort((a,b)=>b.e-a.e).map(x=>x.k),comp=L.filter(x=>x.l===1).map(x=>x.k),nous=L.filter(x=>x.l<0).map(x=>x.k);
+ const nm=a=>a.map(k=>SK[k].nom).join('</b> i <b>');
+ if(weak.length)return{skills:weak.slice(0,2),mode:'combinada',text:`Cal reforçar <b>${nm(weak.slice(0,2))}</b>. Recomanem una <b>sessió combinada</b>: explicació, pràctica guiada i comprovació.`};
+ if(comp.length)return{skills:comp.slice(0,2),mode:'aventura',text:`Ja comprèn <b>${nm(comp.slice(0,2))}</b>. Per arribar a dominar-ho ha d'aplicar-ho sense ajuda: recomanem l'<b>aventura</b> i després una comprovació.`};
+ if(nous.length)return{skills:[nous[0]],mode:'professor',text:`Encara no ha treballat <b>${SK[nous[0]].nom}</b>. Recomanem començar amb el <b>professor particular</b>.`};
+ return{skills:S.sessio.skills,mode:'comprovacio',text:'Domina tots els temes treballats. Feu una <b>comprovació</b> ràpida per mantenir-ho, o introduïu temari nou amb fotos del llibre.'}}
+
+function pSessio(el){const s=S.sessio,r=recom();let mode=s.mode;
+ el.innerHTML=`<div class="card"><h3 style="margin-top:0">✨ Preparar la sessió amb IA</h3>
+ ${S.cfg.key?'':'<div class="fb warn" style="margin-top:0">Per preparar sessions a partir de fotos cal una clau gratuïta de Google AI Studio (pestanya <b>Configuració</b>). Mentrestant, podeu preparar la sessió manualment aquí davall.</div>'}
+ <label>Fotos o documents del llibre o de les fitxes</label><input type="file" id="fi" accept="image/*,application/pdf" multiple>
+ <label>Què ha d'estudiar? (podeu escriure o dictar)</label><textarea id="ins" rows="3" placeholder="Ex.: Demà té un examen de fraccions. Té 30 minuts per estudiar. Prepara activitats perquè ho entengui i comprova si està preparat."></textarea>
+ <div class="row" style="margin-top:10px"><button id="ai" ${S.cfg.key?'':'disabled'}>✨ Preparar amb IA</button>${micBtn('ins')}</div><div id="aist"></div></div>
+ <div class="card"><h3 style="margin-top:0">📋 Sessió d'avui</h3>${s.resum?`<div class="fb info" style="margin-top:0">${esc(s.resum)}</div>`:''}
+ <label>Temes</label>${Object.entries(SUBJ).map(([m,sb])=>`<div class="subjh"><span class="tile" style="--c:var(--s-${m});width:36px;height:36px;font-size:18px;border-radius:10px">${sb.ic}</span>${sb.nom}</div>`+skillsOf(m).map((k,i,a)=>{const v=SK[k];return(v.bloc&&v.bloc!==SK[a[i-1]]?.bloc?`<div class="bloch">${v.bloc}</div>`:'')+`<label class="chk"><input type="checkbox" value="${k}" ${s.skills.includes(k)?'checked':''}><span>${v.ic}</span> ${v.nom} ${badge(k)}</label>`}).join('')).join('')}
+ <label>Preguntes de ciències del llibre (opcional, una per línia: <i>pregunta = resposta</i>). Es fan servir al tema 📘 «Preguntes del llibre».</label><textarea id="pq" rows="3" placeholder="Quin òrgan bombeja la sang? = cor">${esc((s.preguntes||[]).map(x=>`${x.q} = ${x.a}`).join('\n'))}</textarea>
+ <label>Vocabulari d'anglès de la unitat (opcional, una paraula per línia: <i>cat = gat</i>)</label><textarea id="vo" rows="3" placeholder="cat = gat&#10;dog = gos">${esc((s.vocab||[]).map(w=>`${w.en} = ${w.ca}`).join('\n'))}</textarea>
+ <label>Temps disponible (minuts)</label><select id="mi">${[...new Set([10,15,20,30,45,60,+s.minuts])].sort((a,b)=>a-b).map(m=>`<option ${m==s.minuts?'selected':''}>${m}</option>`).join('')}</select>
+ <label>Com estudiarà avui?</label><div class="grid" id="md">${Object.entries(MODES).map(([k,m])=>modeBtn(k,m,k===mode?' sel':'')).join('')}</div>
+ <label>Explicació del llibre (opcional; la veurà al mode Professor)</label><textarea id="ex" rows="3">${esc(s.explicacio)}</textarea>
+ <label>Text per al dictat o la còpia (opcional)</label><textarea id="dc" rows="3" placeholder="Si ho deixau buit, s'usarà un text de mostra.">${esc(s.dictat)}</textarea>
+ <label>Idioma del dictat</label><select id="dl"><option value="ca" ${s.dictatLang!=='en'?'selected':''}>Català</option><option value="en" ${s.dictatLang==='en'?'selected':''}>Anglès</option></select>
+ <div class="row" style="margin-top:14px;align-items:center"><button id="sv">💾 Desar la sessió</button><span id="svok" class="muted"></span></div></div>
+ <div class="card"><h3 style="margin-top:0">🤖 Recomanació</h3><p>${r.text}</p><button class="sec" id="ap">Aplicar la recomanació</button></div>`;
+ el.querySelectorAll('#md .mode').forEach(b=>b.onclick=()=>{mode=b.dataset.m;el.querySelectorAll('#md .mode').forEach(x=>x.classList.toggle('sel',x===b))});
+ const collect=()=>{S.sessio={...S.sessio,skills:[...el.querySelectorAll('label.chk input:checked')].map(i=>i.value),minuts:+$('#mi').value,mode,explicacio:$('#ex').value.trim(),dictat:$('#dc').value.trim(),dictatLang:$('#dl').value,
+  preguntes:$('#pq').value.split('\n').map(l=>{const i=l.lastIndexOf('=');return i<0?null:{q:l.slice(0,i).trim(),a:l.slice(i+1).trim()}}).filter(x=>x&&x.q&&x.a).map(x=>({...x,...((S.sessio.preguntes||[]).find(o=>o.q===x.q&&o.a===x.a)||{})})),
+  vocab:$('#vo').value.split('\n').map(l=>l.split('=')).filter(x=>x.length>1&&x[0].trim()&&x[1].trim()).map(([en,ca])=>{en=en.trim();const old=(S.sessio.vocab||[]).find(w=>w.en===en);return{en,ca:ca.trim(),em:old?.em||'📘'}})}};
+ $('#sv').onclick=()=>{collect();if(!S.sessio.skills.length&&mode!=='escriptura'){$('#svok').textContent='⚠️ Triau almenys un tema.';return}save();$('#svok').textContent='✔ Desada. L\'infant ja la té a la seva zona.'};
+ $('#ap').onclick=()=>{S.sessio={...S.sessio,skills:r.skills,mode:r.mode};save();pSessio(el);$('#svok').textContent='✔ Recomanació aplicada.'};
+ $('#ai').onclick=async()=>{const st=$('#aist'),files=[...$('#fi').files],ins=$('#ins').value.trim();
+  if(!files.length&&!ins){st.innerHTML='<div class="fb warn">Afegiu alguna foto o escriviu què ha d\'estudiar.</div>';return}
+  st.innerHTML='<div class="fb info">⏳ Llegint el material i preparant la sessió...</div>';$('#ai').disabled=true;
+  try{const parts=await Promise.all(files.map(fileToPart));
+   parts.push({text:`Ets l'assistent pedagògic d'una aplicació d'estudi en català (matemàtiques, anglès i ciències naturals) per a infants de Primària (currículum de les Illes Balears). L'infant fa ${ORD[S.perfil.curs]} de Primària.
+Els pares han enviat ${files.length} foto(s)/document(s) del temari i aquesta instrucció: "${ins||'(cap)'}".
+Habilitats disponibles a l'app (id: nom): ${Object.entries(SK).map(([k,v])=>k+': '+v.nom).join('; ')}.
+Respon NOMÉS amb JSON:
+{"habilitats":[ids de la llista que encaixen amb el temari],"minuts":nombre o null,"mode":"combinada"|"professor"|"aventura"|"exercicis"|"escriptura"|"comprovacio"|null,"resum_pares":"2-3 frases: què has entès del temari i què treballarà la sessió","explicacio_infant":"explicació breu i clara del concepte principal, adaptada a l'infant i basada en el llibre (màxim 120 paraules)","dictat":"si el temari és de llengua (català o anglès) o demanen escriptura, 3-5 frases per dictar en aquella llengua; si no, cadena buida","dictat_idioma":"ca"|"en","vocabulari":[{"en":"paraula anglesa","ca":"traducció catalana","emoji":"un emoji que la representi"}] (si el temari és d'anglès, fins a 20 paraules de la unitat; si no, llista buida),"preguntes":[{"q":"pregunta curta sobre el llibre","a":"resposta curta (1-3 paraules); si hi ha sinònims vàlids, separa'ls amb |","h":"pista que no doni la resposta","ex":"explicació breu per a l'infant"}] (si el temari és de ciències, 8-12 preguntes de resposta curta i inequívoca extretes del llibre, i afegeix "ci_llibre" a habilitats; si no, llista buida),"fora_abast":"si part del temari no encaixa amb cap habilitat disponible, explica-ho breument; si no, cadena buida"}
+Si hi ha un examen proper, prioritza el mode "combinada" (acaba amb comprovació).`});
+   const j=parseJSON(await gemini([{role:'user',parts}],{json:true})),sk=(j.habilitats||[]).filter(k=>SK[k]);
+   S.sessio={...S.sessio,skills:sk.length?sk:S.sessio.skills,minuts:+j.minuts||S.sessio.minuts,mode:MODES[j.mode]?j.mode:S.sessio.mode,explicacio:j.explicacio_infant||'',dictat:j.dictat||S.sessio.dictat,dictatLang:j.dictat?(j.dictat_idioma==='en'?'en':'ca'):S.sessio.dictatLang,
+    preguntes:Array.isArray(j.preguntes)&&j.preguntes.length?j.preguntes.filter(x=>x.q&&x.a).map(x=>({q:String(x.q),a:String(x.a),h:x.h||'',ex:x.ex||''})):S.sessio.preguntes,
+    vocab:Array.isArray(j.vocabulari)&&j.vocabulari.length?j.vocabulari.filter(w=>w.en&&w.ca).map(w=>({en:String(w.en).trim(),ca:String(w.ca).trim(),em:w.emoji||'📘'})):S.sessio.vocab,resum:(j.resum_pares||'')+(j.fora_abast?' ⚠️ '+j.fora_abast:'')};
+   save();pSessio(el);$('#svok').textContent='✔ Sessió preparada amb IA i desada. Revisau-la si voleu.';
+  }catch(e){st.innerHTML=`<div class="fb ko">No s'ha pogut preparar: ${esc(e.message)}</div>`;$('#ai').disabled=false}};
+}
+
+function pProg(el){const log=S.log,tot=log.reduce((a,b)=>a+b.min,0),wk=log.filter(l=>Date.now()-new Date(l.data)<7*864e5).reduce((a,b)=>a+b.min,0);
+ const errs=[];for(const[k,p]of Object.entries(S.prog))for(const[t,n]of Object.entries(p.errs))if(ERR[t]&&SK[k])errs.push({k,t,n});errs.sort((a,b)=>b.n-a.n);
+ const stat=(v,l)=>`<div class="stat"><b>${v}</b><span class="muted">${l}</span></div>`;
+ el.innerHTML=`<div class="card"><h3 style="margin-top:0">Resum${S.perfil.nom?' de '+esc(S.perfil.nom):''}</h3><div class="grid">${stat(Math.round(wk)+' min','aquesta setmana')}${stat(log.length,'sessions')}${stat(Math.round(tot)+' min','en total')}</div></div>
+ <div class="card"><h3 style="margin-top:0">Què sap fer</h3><div class="tablewrap"><table><tr><th>Tema</th><th>Nivell</th><th>Exercicis</th><th>Encerts</th><th>Sense ajuda</th></tr>${Object.entries(SUBJ).map(([m,sb])=>`<tr class="grp-h"><th colspan="5">${sb.ic} ${sb.nom}</th></tr>`+skillsOf(m).map(k=>[k,SK[k]]).map(([k,v])=>{const p=S.prog[k];return`<tr><td><div class="row" style="align-items:center;flex-wrap:nowrap;gap:10px"><span class="tile" style="${sc(k)};width:36px;height:36px;font-size:18px;border-radius:10px">${v.ic}</span><b style="font-weight:700">${v.nom}</b></div></td><td>${badge(k)}</td><td>${p?.att||0}</td><td>${p?.att?Math.round(p.ok/p.att*100)+'%':'—'}</td><td>${p?.sense||0}</td></tr>`}).join('')).join('')}</table></div>
+ <p class="muted" style="font-size:14px"><b>En procés:</b> necessita ajuda o explicacions. <b>Comprèn:</b> resol exercicis sense pistes. <b>Domina:</b> supera la comprovació amb exercicis nous i sense ajuda.</p></div>
+ <div class="card"><h3 style="margin-top:0">Errors habituals</h3>${errs.length?'<ul>'+errs.slice(0,6).map(e=>`<li>${ERR[e.t].par} <span class="muted">(${SK[e.k].nom}, ${e.n} ${e.n>1?'vegades':'vegada'})</span></li>`).join('')+'</ul>':'<p class="muted">Encara no hi ha dades.</p>'}</div>
+ <div class="card"><h3 style="margin-top:0">Com explica el que fa</h3>${S.just.slice(-5).reverse().map(j=>`<p>«${esc(j.text)}» <span class="muted">— ${SK[j.k]?.nom||''}${j.ia?' · IA: '+esc(j.ia):''}</span></p>`).join('')||'<p class="muted">Les explicacions que escrigui durant l\'aventura apareixeran aquí.</p>'}</div>
+ <div class="card"><h3 style="margin-top:0">Escriptura a mà</h3>${S.escrit.slice(-5).reverse().map(w=>`<p><b>${new Date(w.data).toLocaleDateString('ca')}</b> · ${w.tipus}: ${w.errors.length} errors (${w.errors.filter(e=>e.confianca==='dubtosa').length} dubtosos)${w.errors.length?' — '+w.errors.slice(0,4).map(e=>esc(e.escrit+' → '+e.correcte)).join(', '):''}</p>`).join('')||'<p class="muted">Encara no hi ha dades.</p>'}</div>
+ <div class="card"><h3 style="margin-top:0">🤖 Recomanació per a la propera sessió</h3><p>${recom().text}</p></div>
+ <div class="card"><h3 style="margin-top:0">Darreres sessions</h3>${log.length?`<div class="tablewrap"><table><tr><th>Data</th><th>Minuts</th><th>Mode</th><th>Encerts</th></tr>${log.slice(-8).reverse().map(l=>`<tr><td>${new Date(l.data).toLocaleString('ca',{dateStyle:'short',timeStyle:'short'})}</td><td>${l.min}</td><td>${MODES[l.mode]?.ic||''} ${MODES[l.mode]?.nom||l.mode}</td><td>${l.ok}/${l.tot}</td></tr>`).join('')}</table></div>`:'<p class="muted">Encara no hi ha sessions.</p>'}</div>
+ <button class="ghost" id="rs">Esborrar tot el progrés</button>`;
+ let arm=false;$('#rs').onclick=()=>{if(!arm){arm=true;$('#rs').textContent='Segur? Torna a pitjar per esborrar-ho tot (no es pot desfer)';$('#rs').style.color='var(--ko)';return}S.prog={};S.log=[];S.just=[];S.escrit=[];save();parent('prog')}}
+
+function pCfg(el){const c=S.cfg,p=S.perfil;
+ el.innerHTML=`<div class="card"><h3 style="margin-top:0">🧒 Infant</h3><label>Nom</label><input id="nm" value="${esc(p.nom)}">
+ <label>Curs</label><select id="cu">${[1,2,3,4,5,6].map(n=>`<option value="${n}" ${n==p.curs?'selected':''} ${n<5?'disabled':''}>${ORD[n]} de Primària${n<5?' (properament)':''}</option>`).join('')}</select>
+ <div class="row" style="margin-top:14px;align-items:center"><button id="sv0">💾 Desar</button><span id="st0" class="muted"></span></div></div>
+ <div class="card"><h3 style="margin-top:0">🔒 PIN de la zona de famílies</h3><p class="muted" style="margin-top:0">Serveix perquè els infants no puguin entrar aquí.</p><button class="sec" id="cpin">Canviar el PIN</button></div>
+ <div class="card"><h3 style="margin-top:0">✨ Intel·ligència artificial <span class="badge bn">opcional</span></h3>
+ ${window.APRENEM_WEB?'<div class="fb ko" style="margin-top:0">⚠️ Esteu fent servir la versió publicada a Claude (la del mòbil). Aquesta versió no pot connectar amb Google, i per tant la IA no hi funciona. Per fer servir la IA, obriu l\'arxiu <b>aprenem-beta.html</b> des de l\'ordinador.</div>':''}
+ <p><b>No cal configurar res per fer servir l'app.</b> Les explicacions, l'aventura, els exercicis, la comprovació i el seguiment funcionen sense IA.</p>
+ <p>La IA és un extra que fa quatre coses:</p>
+ <ul class="steps-ai"><li>📷 Llegir les fotos del llibre i preparar la sessió tota sola.</li><li>💬 Respondre els dubtes de l'infant (xat amb el Mestre Òliba).</li><li>🗣️ Valorar si l'infant explica bé com ha resolt un exercici.</li><li>✍️ Corregir la foto del quadern (dictats i còpies).</li></ul>
+ <p>Per activar-la cal una <b>clau gratuïta de Google</b>, com una contrasenya que deixa que l'app parli amb la IA de Google (Gemini). Es fa una sola vegada i tarda uns 5 minuts:</p>
+ <ol class="steps-ai"><li>Obriu <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> i entrau amb un compte de Google (el del Gmail serveix).</li><li>Pitjau el botó <b>Create API key</b> (Crear clau).</li><li>Copiau la clau que surt. És un codi llarg que comença per <code class="k">AIza</code>.</li><li>Enganxau-la al quadre de davall i pitjau <b>Desar</b>.</li><li>Pitjau <b>Provar la connexió</b>. Si surt ✅, ja està.</li></ol>
+ <label for="ky">Clau de Google (enganxau-la aquí)</label><input id="ky" type="password" value="${esc(c.key)}" placeholder="AIza..." autocomplete="off">
+ <details style="margin-top:12px"><summary class="muted">Opcions avançades</summary><label for="mo">Model de Gemini</label><input id="mo" value="${esc(c.model)}"><small>Deixau-hi «gemini-2.5-flash» si no sabeu què és.</small></details>
+ <div class="row" style="margin-top:16px;align-items:center"><button id="sv">💾 Desar</button><button class="sec" id="ts">Provar la connexió</button></div><div id="st"></div>
+ <div class="fb warn">🔒 La clau només es guarda en aquest aparell. Quan feu servir la IA, el text i les fotos s'envien a Google, que al pla gratuït les pot fer servir per millorar els seus productes. <b>No envieu fotos amb la cara, el nom complet o altres dades personals de l'infant.</b></div></div>`;
+ const keep=()=>{S.perfil={nom:$('#nm').value.trim(),curs:+$('#cu').value};S.cfg={key:$('#ky').value.trim(),model:$('#mo').value.trim()||'gemini-2.5-flash'};save()};
+ const msg=(cls,t)=>$('#st').innerHTML=`<div class="fb ${cls}">${t}</div>`;
+ $('#sv0').onclick=()=>{keep();$('#st0').textContent='✔ Desat.'};
+ $('#cpin').onclick=()=>{S.pin='';save();askPin()};
+ $('#sv').onclick=()=>{keep();msg('ok',S.cfg.key?'✔ Clau desada. Ara pitjau «Provar la connexió».':'✔ Desat. No hi ha cap clau: l\'app funcionarà sense IA.')};
+ $('#ts').onclick=async()=>{keep();if(!S.cfg.key)return msg('warn','Primer enganxau la clau al quadre «Clau de Google» i pitjau «Desar». Si no en teniu, seguiu els 5 passos de dalt.');
+  msg('info','⏳ Provant la connexió amb Google...');
+  try{await gemini([{role:'user',parts:[{text:'Respon només amb la paraula: correcte'}]}]);msg('ok','✅ Connexió correcta. La IA ja està activada.')}
+  catch(e){msg('ko',window.APRENEM_WEB?'❌ En aquesta versió publicada la IA no pot funcionar. Feu-la servir des de l\'arxiu de l\'ordinador.':/API key not valid|API_KEY_INVALID/i.test(e.message)?'❌ La clau no és vàlida. Comprovau que l\'heu copiada sencera, sense espais.':/fetch/i.test(e.message)?'❌ No s\'ha pogut connectar. Comprovau la connexió a internet.':'❌ No ha funcionat: '+esc(e.message))}}}
+
+home();
+</script>
+</body>
+</html>
