@@ -444,3 +444,33 @@ h1,h2,h3{font-weight:800;letter-spacing:-.025em}
  .trow4{flex-wrap:wrap;padding:12px 14px}.tb4{width:100%}.tb4 button{flex:1}
  .mis4 .btn4{width:100%}
 }
+
+/* ================= v4b: estil inspirat en Smartick (blau cel, ona, símbols, botó taronja, targetes blanques) ================= */
+:root{--sky1:#4FB0FA;--sky2:#2D8CEE;--skyd:#1B6FCC;--page:#F3F8FE;--orange:#F26B21;--bg:var(--page)}
+body{background:var(--page)}
+header{background:rgba(255,255,255,.95)}
+.logo{background:var(--sky2)}
+.hero4{background:linear-gradient(180deg,var(--sky1),var(--sky2));padding:28px 28px 58px;margin-bottom:0}
+.hero4::after{display:none}
+.doodles4{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.wave4{position:absolute;left:-2px;bottom:-2px;width:calc(100% + 4px);height:38px;display:block;z-index:1;pointer-events:none}
+.wave4 path{fill:var(--page)}
+.h4-st{box-shadow:0 4px 0 var(--skyd);border:0}
+.hero4 h2,.shead4 h2{letter-spacing:-.03em}
+.cta4{--c:var(--orange)}
+.mis4 .btn4.cta4{min-width:220px}
+/* maneres de practicar: targetes blanques amb icona de color, com les targetes de Smartick */
+.mode4{background:#fff;color:var(--ink);border:2px solid #E2ECF8;box-shadow:0 5px 0 #D5E4F5!important}
+.mode4:hover{background:#fff;filter:none;border-color:color-mix(in srgb,var(--mc) 55%,#E2ECF8)}
+.mode4:active{box-shadow:0 1px 0 #D5E4F5!important}
+.m4-ic{background:var(--mc);color:#fff;width:50px;height:50px;font-size:26px;box-shadow:0 3px 0 color-mix(in srgb,var(--mc) 65%,#000)}
+.mode4 small{color:var(--muted)}
+.mode4.main{border-color:color-mix(in srgb,var(--mc) 45%,#E2ECF8)}
+.mode4.main b{color:var(--mc)}
+/* targetes blanques generals */
+.mis4,.cont4,.matc4,.unit4{border-color:#E2ECF8;box-shadow:0 4px 0 #D5E4F5}
+.cont4,.matc4{box-shadow:0 4px 0 #D5E4F5!important}
+/* capçalera d'assignatura amb ona */
+.shead4{padding-bottom:50px;margin-bottom:0}
+.sec4{color:#14335C}
+@media (max-width:640px){.hero4{padding:20px 18px 50px}.mis4 .btn4.cta4{min-width:0}}

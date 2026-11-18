@@ -25,19 +25,23 @@ function subjArt(m){const W='rgba(255,255,255,';
  if(m==='angles')return`<svg class="art" viewBox="0 0 220 140" aria-hidden="true"><path d="M110 20h84v46h-52l-16 16V66h-16Z" fill="${W}.25)"/><text x="126" y="53" fill="#fff" font-size="24" font-weight="800" font-family="system-ui">Hi!</text><path d="M84 78h72v40h-16v14l-14-14H84Z" fill="#fff"/><text x="98" y="106" fill="currentColor" font-size="20" font-weight="800" font-family="system-ui">ABC</text><path d="M196 92l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2Z" fill="${W}.8)"/></svg>`;
  return`<svg class="art" viewBox="0 0 220 140" aria-hidden="true"><circle cx="186" cy="40" r="20" fill="${W}.25)"/><ellipse cx="186" cy="40" rx="34" ry="9" fill="none" stroke="${W}.7)" stroke-width="3" transform="rotate(-18 186 40)"/><path d="M118 40h28M124 40v26l-16 40c-3 7 2 14 9 14h30c7 0 12-7 9-14l-16-40V40" fill="none" stroke="#fff" stroke-width="5"/><path d="M112 98h44l7 14c2 4-1 8-5 8h-48c-4 0-7-4-5-8Z" fill="${W}.55)"/><path d="M178 128c-24-2-30-24-12-44 20 14 26 34 12 44Z" fill="${W}.8)"/><path d="M176 124c-4-12-6-22-8-34" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>`}
 
+// Estil inspirat en Smartick: símbols blancs suaus al fons de la franja i vora inferior en forma d'ona
+const DOODLES=`<svg class="doodles4" viewBox="0 0 800 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".16"><path d="M70 40v40M50 60h40"/><path d="M640 50l28 28M668 50l-28 28"/><path d="M500 180h36M518 166v0M518 194v0"/><circle cx="518" cy="164" r="3" fill="#fff"/><circle cx="518" cy="196" r="3" fill="#fff"/><path d="M300 30h40M300 44h40"/><circle cx="740" cy="190" r="22"/><path d="M180 200l20-34 20 34Z"/><path d="M420 70q14-22 28 0t28 0"/></g><text x="560" y="250" fill="#fff" opacity=".14" font-size="54" font-weight="800" font-family="system-ui">ABC</text><text x="110" y="250" fill="#fff" opacity=".14" font-size="46" font-weight="800" font-family="system-ui">½</text></svg>`;
+const WAVE=`<svg class="wave4" viewBox="0 0 800 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40V18C120 2 240 0 400 14S680 30 800 8V40Z"/></svg>`;
+
 /* ---------- inici ---------- */
 function home(){endSession();PARENT_OK=false;
  const nm=S.perfil.nom?esc(S.perfil.nom):'',s=S.sessio,m=MODES[s.mode],goal=+s.minuts||30,done=todayMin(),pct=Math.round(Math.min(100,done/goal*100)),st=streak();
  const lt=lastTopic();
- app(`<section class="hero4"><button class="lockbtn" onclick="askPin()" aria-label="Zona famílies (amb PIN)">${IC.lock} Famílies</button>
+ app(`<section class="hero4">${DOODLES}<button class="lockbtn" onclick="askPin()" aria-label="Zona famílies (amb PIN)">${IC.lock} Famílies</button>
   <div class="h4-row"><div class="h4-owl">${OWL(96)}</div><div class="h4-t"><span class="h4-pill">${ORD[S.perfil.curs]} de Primària</span><h2>${nm?`Hola, ${nm}!`:'Hola!'}</h2><p>${done>=goal?'Objectiu d\'avui complert. Molt bé!':done>0?`Ja portes ${done} de ${goal} minuts. Endavant!`:'Què t\'agradaria aprendre avui?'}</p></div>
-  <div class="h4-stats"><div class="h4-st">${ringSVG(pct)}<span>Objectiu<br>d'avui</span></div><div class="h4-st"><b class="streak4">${IC.flame}${st}</b><span>${st===1?'dia':'dies'}<br>seguits</span></div></div></div></section>
+  <div class="h4-stats"><div class="h4-st">${ringSVG(pct)}<span>Objectiu<br>d'avui</span></div><div class="h4-st"><b class="streak4">${IC.flame}${st}</b><span>${st===1?'dia':'dies'}<br>seguits</span></div></div></div>${WAVE}</section>
 
  <h3 class="sec4">Com vols practicar?</h3>
  <div class="modes4">${Object.entries(MODES).map(([k,mm])=>`<button class="mode4${k==='combinada'?' main':''}" style="--mc:${MODE_COL[k]}" data-m="${k}"><span class="m4-ic">${mm.ic}</span><b>${mm.nom}</b><small>${MODE_TXT[k]}</small></button>`).join('')}</div>
 
  <section class="mis4"><div class="mis4-t"><span class="eyebrow4">Missió d'avui · l'han preparada els teus pares</span><h3>${s.mode==='escriptura'?'Escriptura al quadern':s.skills.slice(0,3).map(k=>SK[k].nom).join(' · ')+(s.skills.length>3?` i ${s.skills.length-3} més`:'')}</h3><small>${m.nom} · ${s.minuts} minuts</small></div>
-  <button class="btn4 big4" onclick="start('${s.mode}')">Comença &rarr;</button></section>
+  <button class="btn4 big4 cta4" onclick="start('${s.mode}')">Comença &rarr;</button></section>
  ${lt?`<button class="cont4" id="cP" style="--c:var(--s-${matOf(lt)})"><span class="tile">${SK[lt].ic}</span><span class="c4t"><small>Continua on ho deixares</small><b>${SK[lt].nom}</b></span>${lvTag(lt)}<span class="c4go">Practicar &rarr;</span></button>`:''}
 
  <h3 class="sec4">Les teves assignatures</h3>
@@ -50,7 +54,7 @@ function subject(m){endSession();const sb=SUBJ[m],U=unitsOf(m),ks=U.flatMap(u=>u
  const lam=(LAMINES[m]||[]),mat=m==='angles'?[{f:"verbTable('irr','angles')",ic:IC.book,nom:'Taula de verbs',desc:'Infinitiu, passat, participi i traducció'},{id:'tm',ic:IC.list,nom:'Temari de 5è i 6è',desc:'Què s\'aprèn a cada curs'}]:[];
  app(`<section class="shead4" style="--c:var(--s-${m})">${subjArt(m)}<button class="back4" onclick="home()">&larr; Inici</button>
   <div class="sh4-t"><span class="s4-ic">${sb.ic}</span><h2>${sb.nom}</h2><p>${ORD[S.perfil.curs]} de Primària · ${U.length} unitats · ${ks.length} temes</p>
-  <div class="sh4-bar"><span class="s4-bar"><i style="width:${Math.max(ms,3)}%"></i></span><b>${ms}% après</b></div></div></section>
+  <div class="sh4-bar"><span class="s4-bar"><i style="width:${Math.max(ms,3)}%"></i></span><b>${ms}% après</b></div></div>${WAVE}</section>
 
  ${lam.length||mat.length?`<h3 class="sec4">${lam.length?'Làmines per aprendre':'Material d\'estudi'}</h3><div class="mat4">
   ${lam.map(l=>`<button class="matc4" style="--c:var(--s-${m})" onclick="${l.obre}()"><span class="mt4-ic">${IC[l.ic]||IC.book}</span><span><small>Làmina interactiva</small><b>${l.nom}</b><em>${l.desc}</em></span><span class="arr4">&rarr;</span></button>`).join('')}
