@@ -1,5 +1,28 @@
 /* Aprenem - contingut de MATEMATIQUES (temes i generadors d exercicis)
-   Part de l'app d'estudi. Vegeu CLAUDE.md per a l'estructura i les normes. */
+   Part de l'app d'estudi. Vegeu CLAUDE.md per a l'estructura i les normes.
+
+   Arxius de Matemàtiques (en aquest ordre a index.html):
+     matematiques-eines.js        eines comunes (objecte MT: format de nombres, camps, dibuixos)
+     matematiques.js              temes de 5è i 6è (fraccions, decimals, divisions, percentatges) i UNITS.mates
+     matematiques-nombres.js      6è: naturals, operacions, divisibilitat, potències i arrels, enters
+     matematiques-fraccions.js    6è: fraccions, decimals, proporcionalitat, percentatges, escales
+     matematiques-mesura.js       6è: mesura (longitud, massa, capacitat, superfície, volum, temps) i angles
+     matematiques-geometria.js    6è: polígons, circumferència, àrees, cossos i volum
+     matematiques-estadistica.js  6è: estadística i probabilitat + material (formulari i taules de mesura)
+
+   Fonts del temari de 6è:
+   - Decret 31/2022, d'1 d'agost, que estableix el currículum de l'educació primària a les Illes Balears
+     (BOIB núm. 101, de 2 d'agost de 2022). Matemàtiques, sabers bàsics del 3r cicle:
+     A. Sentit numèric (comptatge, quantitat, sentit de les operacions, relacions, educació financera),
+     B. Sentit de la mesura (magnitud, mesura, estimació), C. Sentit espacial (figures de 2 i 3 dimensions,
+     localització, visualització i raonament geomètric), D. Sentit algebraic (patrons, relacions, proporcionalitat),
+     E. Sentit estocàstic (organització i anàlisi de dades, incertesa), F. Sentit socioafectiu.
+     https://www.caib.es/sites/lomloe/ca/normativa_de_educacion_primaria
+     (Nota: el Decret 32/2022 és el de l'ESO; el de Primària és el 31/2022.)
+   - Reial decret 157/2022, d'1 de març (ensenyaments mínims de Primària), annex II, Matemàtiques.
+   - Estructura habitual dels llibres de Matemàtiques de 6è (nombres grans i romans, divisibilitat, potències
+     i arrels, enters, fraccions, decimals, proporcionalitat i percentatges, mesura, angles, polígons i
+     circumferència, àrees, cossos i volum, estadística i probabilitat, resolució de problemes). */
 /* ===================== habilitats (exercicis verificables) ===================== */
 Object.assign(SK,{
  frac_equiv:{nom:'Fraccions equivalents',ic:'🍕',
@@ -64,7 +87,7 @@ Object.assign(SK,{
  divisions:{nom:'Divisions',ic:'➗',
   teoria:['En una divisió hi ha: <b>dividend</b> (el que repartim), <b>divisor</b> (entre quants), <b>quocient</b> (quant toca a cadascú) i <b>residu</b> (el que sobra).','El residu sempre ha de ser <b>més petit que el divisor</b>. Si no, encara en podríem repartir més!','Comprovació: divisor × quocient + residu = dividend.'],
   gen(lv,curs){const dv=curs>=6&&lv>0?rnd(11,29):rnd(3,9),D=rnd(lv?1000:100,lv?9999:999),q=Math.floor(D/dv),r=D%dv;
-   return{text:`Fes la divisió:<br><b>${D} : ${dv}</b>`,fields:[{label:'Quocient',ans:R(q)},{label:'Residu',ans:R(r)}],vis:null,
+   return{text:`Fes la divisió:<br><b>${D} : ${dv}</b>`,fields:[MT.fInt('Quocient',q),{label:'Residu',ans:R(r)}],vis:null,
     hints:[`Comença per les primeres xifres de ${D}: quantes vegades hi cap ${dv}?`,`Pots comprovar el resultat: ${dv} × quocient + residu ha de donar ${D}.`],
     steps:[`${dv} × ${q} = ${dv*q}, que és el múltiple de ${dv} més gran que no passa de ${D}.`,`Residu: ${D} − ${dv*q} = ${r} (és més petit que ${dv} ).`,`Comprovació: ${dv} × ${q} + ${r} = ${D}.`],
     err:v=>v[1].d===1&&v[1].n>=dv?'residu_gran':null};
@@ -81,7 +104,25 @@ Object.assign(SK,{
 });
 
 /* Unitats de MATEMÀTIQUES: [nom, [temes], (opcional) [cursos]] */
+// Els temes sense curs serveixen per a 5è i 6è; els de 6è tenen curs:[6]. Cada curs veu només les seves unitats.
 UNITS.mates=[
- ['Fraccions',['frac_equiv','frac_suma_igual','frac_suma_dif','frac_de_nombre']],
- ['Decimals i percentatges',['decimals','percentatges']],
- ['Operacions',['divisions']]];
+ // ---- 5è ----
+ ['Fraccions',['frac_equiv','frac_suma_igual','frac_suma_dif','frac_de_nombre'],[5]],
+ ['Decimals i percentatges',['decimals','percentatges'],[5]],
+ ['Operacions',['divisions'],[5]],
+ // ---- 6è (ordre habitual del llibre) ----
+ ['Els nombres naturals',['mt_grans','mt_aprox','mt_romans'],[6]],
+ ['Operacions i problemes',['mt_combinades','divisions','mt_problemes'],[6]],
+ ['Divisibilitat',['mt_multiples','mt_criteris','mt_primers','mt_mcm_mcd'],[6]],
+ ['Potències i arrel quadrada',['mt_potencies','mt_pot10','mt_arrels'],[6]],
+ ['Els nombres enters',['mt_enters','mt_enters_op'],[6]],
+ ['Les fraccions',['frac_equiv','mt_simplificar','mt_comu_den','frac_de_nombre'],[6]],
+ ['Operacions amb fraccions',['frac_suma_igual','frac_suma_dif','mt_frac_resta','mt_frac_mult','mt_frac_div'],[6]],
+ ['Els nombres decimals',['mt_frac_dec','decimals','mt_dec_mult','mt_dec_div'],[6]],
+ ['Proporcionalitat i percentatges',['mt_proporcio','percentatges','mt_descomptes','mt_escales'],[6]],
+ ['La mesura',['mt_mesures','mt_superficie','mt_temps'],[6]],
+ ['Els angles',['mt_angles','mt_angles_poligon'],[6]],
+ ['Polígons i circumferència',['mt_poligons','mt_circumf'],[6]],
+ ['Les àrees',['mt_area_quad','mt_area_tri','mt_area_cercle','mt_area_comp'],[6]],
+ ['Cossos geomètrics i volum',['mt_cossos','mt_volum_unitats','mt_volum'],[6]],
+ ['Estadística i probabilitat',['mt_estadistica','mt_grafics','mt_probabilitat'],[6]]];
