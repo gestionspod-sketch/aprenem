@@ -1,7 +1,7 @@
 /* Aprenem - estat, progres, rellotge, veu, IA i components d exercici
    Part de l'app d'estudi. Vegeu CLAUDE.md per a l'estructura i les normes. */
 /* ===================== estat ===================== */
-const DEF={perfil:{nom:'',curs:5},cfg:{key:'',model:'gemini-2.5-flash'},sessio:{skills:['frac_equiv','frac_suma_igual'],minuts:30,mode:'combinada',explicacio:'',dictat:'',resum:''},prog:{},log:[],just:[],escrit:[]};
+const DEF={perfil:{nom:'',curs:6},cfg:{key:'',model:'gemini-2.5-flash'},sessio:{skills:['frac_equiv','frac_suma_igual'],minuts:30,mode:'combinada',explicacio:'',dictat:'',resum:''},prog:{},log:[],just:[],escrit:[]};
 let S;try{S=Object.assign(JSON.parse(JSON.stringify(DEF)),JSON.parse(localStorage.getItem('aprenem_v1')||'{}'))}catch(e){S=JSON.parse(JSON.stringify(DEF))}
 const save=()=>{try{localStorage.setItem('aprenem_v1',JSON.stringify(S))}catch(e){}};
 const P_=k=>S.prog[k]||(S.prog[k]={att:0,ok:0,sense:0,ajuda:0,errs:{},chk:[],last:0});
