@@ -189,8 +189,8 @@ const PLACE={// preposició: [objecte, dibuix, explicació en català, nivell]
  'on':['box',()=>`${BOX(90,90)}${CAT(130,88)}`,'el gat és <b>damunt</b> la capsa',0],
  'under':['table',()=>`${TABLE}${CAT(130,145)}`,'el gat és <b>davall</b> la taula',0],
  'next to':['box',()=>`${BOX(70,90)}${CAT(200,148)}`,'el gat és <b>al costat</b> de la capsa',0],
- 'behind':['box',()=>`${CAT(130,104,34)}${BOX(90,90)}`,'el gat és <b>darrere</b> la capsa (només se li veu el cap)',1],
- 'in front of':['box',()=>`${BOX(90,70)}${CAT(130,160,48)}`,'el gat és <b>davant</b> la capsa (tapa una part de la capsa)',1],
+ 'behind':['box',()=>`${CAT(150,97,40)}${BOX(90,90)}`,'el gat és <b>darrere</b> la capsa (només se li veu el cap)',1],
+ 'in front of':['box',()=>`${BOX(85,70,90,80)}${CAT(130,166,50)}`,'el gat és <b>davant</b> la capsa (tapa una part de la capsa)',1],
  'between':['boxes',()=>`${BOX(20,90,70)}${BOX(170,90,70)}${CAT(130,148)}`,'el gat és <b>entre</b> les dues capses',2]};
 const placeFig=p=>`<svg viewBox="0 0 260 170" width="260" height="170" role="img" aria-label="Dibuix d'un gat"><rect x="0" y="0" width="260" height="170" fill="#EEF6FF"/><path d="M0 150h260" stroke="#9BB3C9" stroke-width="2"/>${PLACE[p][1]()}</svg>`;
 
