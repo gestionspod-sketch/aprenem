@@ -23,7 +23,8 @@ Object.assign(MODES.exercicis,{ic:IC.grid});Object.assign(MODES.escriptura,{ic:I
 IC.search=ICO('<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>');
 IC.leaf=ICO('<path d="M5 19c0-9 6-15 15-15 0 9-6 15-15 15Z"/><path d="M5 19 13 11"/>');
 IC.music=ICO('<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>');
-SUBJ.mates.ic=IC.calc;SUBJ.angles.ic=IC.globe;SUBJ.ciencies.ic=IC.leaf;SUBJ.musica.ic=IC.music;
+IC.quote=ICO('<path d="M4 18h5l1.5-4V7H4v7h3zM13.5 18h5L20 14V7h-6.5v7h3z"/>');
+SUBJ.catala.ic=IC.quote;SUBJ.mates.ic=IC.calc;SUBJ.angles.ic=IC.globe;SUBJ.ciencies.ic=IC.leaf;SUBJ.musica.ic=IC.music;
 const AB={frac_equiv:'Fe',frac_suma_igual:'F+',frac_suma_dif:'F±',frac_de_nombre:'Fn',decimals:'Dc',divisions:'Dv',percentatges:'%',
  en_present:'Ps',en_cont:'Pc',en_be:'Be',en_was:'Ww',en_reg_past:'Rg',en_irr_past:'Ir',en_irr_pp:'Pp',en_irr_inf:'If',en_verb_sig:'Tr',en_past:'Sp',en_past_neg:'Ng',en_plural:'Pl',en_compar:'Cm',en_vocab:'Vc',en_listen:'Ls',
  ci_cos:'Ch',ci_plantes:'Pt',ci_ecosis:'Ec',ci_materia:'Mt',ci_classif:'Cl',ci_energia:'En',ci_univers:'Un',ci_llibre:'Lb',ci_respiratori:'Rs'};
