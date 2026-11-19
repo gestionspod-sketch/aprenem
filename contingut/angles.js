@@ -22,7 +22,7 @@ Object.assign(SK,{
    return{text:`<div style="font-size:64px;line-height:1.2">${w.em}</div>Com es diu en anglès «<b>${esc(w.ca)}</b>»?`,fields:[{label:'En anglès',txt:w.alts.map(norm)}],vis:null,pron:en,
     hints:[`Comença per «${en[0]}» i té ${en.length} lletres.`,`${en[0]} ${'_ '.repeat(Math.max(0,en.length-2))}${en.length>1?en.slice(-1):''}`],
     steps:[`«${esc(w.ca)}» en anglès és <b>${esc(en)}</b>.`,`S'escriu així: ${esc(en.toUpperCase().split('').join(' - '))}.`,'Digues-la en veu alta tres vegades i escriu-la una vegada al quadern.'],
-    err:v=>{const d=lev(v[0],norm(en));return d>0&&d<=2?'en_lletrejat':null}};
+    err:v=>{if(w.alts.map(norm).includes(v[0]))return null;const d=lev(v[0],norm(en));return d>0&&d<=2?'en_lletrejat':null}};
   }},
  en_listen:{mat:'angles',nom:'Comprensió oral (listening)',ic:'',
   teoria:['Per entendre l\'anglès parlat cal <b>escoltar molt</b>. Al principi sembla molt ràpid, però l\'orella s\'hi acostuma.','Truc: escolta-ho una vegada sencer, després paraula per paraula, i escriu el que sents.','Recorda que en anglès moltes paraules no s\'escriuen com sonen: «<b>two</b>» sona «tu».'],
@@ -180,18 +180,10 @@ const TEMARI={angles:{5:[
   ['Primers verbs irregulars: go, eat, have, see, buy...',['en_irr_past','en_verb_sig']],
   ['Plurals regulars i irregulars',['en_plural']],
   ['Can / can\'t: habilitats',[]],['There is / there are',[]],['Preposicions de lloc (in, on, under, next to...)',[]]],
- 6:[
-  ['Past simple: verbs regulars i irregulars',['en_reg_past','en_irr_past','en_irr_inf']],
-  ['Significat dels verbs més freqüents',['en_verb_sig']],
-  ['Les tres formes dels irregulars: infinitiu, passat i participi',['en_irr_pp']],
-  ['Past simple en frases',['en_past']],
-  ['Past simple: frases negatives i preguntes (did / didn\'t)',['en_past_neg']],
-  ['Present simple i present continuous',['en_present','en_cont']],
-  ['Comparatius',['en_compar']],
-  ['Vocabulari i comprensió oral',['en_vocab','en_listen']],
-  ['Going to: plans de futur',[]],['Will: prediccions',[]],['Must / mustn\'t: normes',[]],['Some / any: comptables i incomptables',[]],['Preguntes amb wh- (what, where, when, who...)',[]]]}};
+ 6:[]}}; // el temari de 6è l'omple angles-6e.js (una entrada per unitat)
 
-/* Unitats d'ANGLÈS: [nom, [temes], (opcional) [cursos]] */
+/* Unitats d'ANGLÈS: [nom, [temes], (opcional) [cursos]]
+   Aquestes són les de 5è; angles-6e.js les marca amb [5] i hi afegeix les de 6è. */
 UNITS.angles=[
  ['Verbs i temps verbals',['en_present','en_cont','en_be','en_was','en_reg_past','en_irr_past','en_irr_pp','en_irr_inf','en_verb_sig','en_past','en_past_neg']],
  ['Gramàtica',['en_plural','en_compar']],
