@@ -127,7 +127,7 @@ Pendent (per ordre):
 
 ## 8. Assignatures i registres
 
-- Assignatures (`SUBJ`, a `programa/dades-app.js`): `mates` Matemàtiques · `angles` Anglès · `ciencies` **Medi** (Coneixement del medi natural, social i cultural; la clau continua sent `ciencies` per no perdre el progrés) · `musica` **Música** (llenguatge musical).
+- Assignatures (`SUBJ`, a `programa/dades-app.js`): `catala` **Català** (Llengua catalana i literatura; `contingut/catala.js`, 10 unitats de 6è, formes balears acceptades) · `mates` Matemàtiques · `angles` Anglès · `ciencies` **Medi** (Coneixement del medi natural, social i cultural; la clau continua sent `ciencies` per no perdre el progrés) · `musica` **Música** (llenguatge musical).
 - Cada arxiu de contingut **només afegeix** coses als registres (definits a `dades-app.js`, que es carrega abans):
   - `Object.assign(SK,{ id:{mat:'...', ab:'Xx', curs:[6], ...} })` — temes. `ab` = codi de 2 lletres; `curs` = cursos on surt (sense `curs` = tots).
   - `UNITS.<assig> = [[nom, [ids], (opcional) [cursos]], ...]` — unitats en l'ordre del llibre.
