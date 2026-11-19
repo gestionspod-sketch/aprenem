@@ -7,8 +7,8 @@ $root = Split-Path -Parent $PSScriptRoot
 $utf8 = New-Object Text.UTF8Encoding $false
 function Read-Text($rel) { [IO.File]::ReadAllText((Join-Path $root $rel), [Text.Encoding]::UTF8) }
 $s = Read-Text 'index.html'
-$s = [regex]::Replace($s, '<link rel="stylesheet" href="([^"]+)">', { param($m) "<style>`n" + (Read-Text $m.Groups[1].Value) + "</style>" })
-$s = [regex]::Replace($s, '<script src="([^"]+)"></script>', { param($m) "<script>`n" + (Read-Text $m.Groups[1].Value) + "</script>" })
+$s = [regex]::Replace($s, '<link rel="stylesheet" href="([^"?]+)(\?v=\d+)?">', { param($m) "<style>`n" + (Read-Text $m.Groups[1].Value) + "</style>" })
+$s = [regex]::Replace($s, '<script src="([^"?]+)(\?v=\d+)?"></script>', { param($m) "<script>`n" + (Read-Text $m.Groups[1].Value) + "</script>" })
 New-Item -ItemType Directory -Force (Join-Path $root 'versions') | Out-Null
 $stamp = Get-Date -Format 'yyyyMMdd-HHmm'
 [IO.File]::WriteAllText((Join-Path $root "versions\aprenem-$stamp.html"), $s, $utf8)

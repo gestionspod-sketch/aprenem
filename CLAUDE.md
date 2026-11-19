@@ -102,6 +102,7 @@ Copiar `contingut/lamines/aparell-respiratori.js`: un objecte amb les parts (nú
 
 - **GitHub:** https://github.com/gestionspod-sketch/aprenem (públic). La branca `main` es publica sola a **GitHub Pages**: https://gestionspod-sketch.github.io/aprenem/ (aquí la IA sí pot funcionar). Cada tasca gran es fa en una branca pròpia i s'ajunta a `main` quan el propietari la dona per bona.
 - Git i GitHub CLI estan instal·lats a `C:\Program Files\Git\cmd` i `C:\Program Files\GitHub CLI` (si no són al PATH, cal posar-hi aquestes carpetes). Commits amb l'adreça privada `338169047+gestionspod-sketch@users.noreply.github.com`.
+- **Abans de cada publicació a `main`:** `powershell -ExecutionPolicy Bypass -File eines\versio.ps1` (posa `?v=` nou als arxius d'`index.html`; si no, els navegadors i l'iPhone poden carregar arxius vells fins a 10 minuts i barrejar versions).
 - **Provar a l'ordinador:** doble clic a `index.html` (Chrome o Edge).
 - **Generar la versió d'un sol arxiu:** `powershell -ExecutionPolicy Bypass -File eines\construir.ps1`
   → `publica\aprenem.html` (per publicar) i una còpia datada a `versions\`.
