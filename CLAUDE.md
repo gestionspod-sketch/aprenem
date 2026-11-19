@@ -118,7 +118,8 @@ làmina de l'aparell respiratori, rellotge amb avisos i pas automàtic de fase, 
 
 Pendent (per ordre):
 1. ~~Decidir si la v3 passa a `main`~~ Fet: la v3 és l'actual. (La v2 queda al commit `8ffe380` i a `versions/aprenem-v2-un-sol-arxiu.html`.)
-2. **Desenvolupar el temari complet** de cada assignatura per a 5è i 6è (el propietari indicarà per on començar).
+2. ~~Temari complet de 6è~~ Fet (PR #1-#4, publicat a `main`): Matemàtiques 15 unitats / 49 temes, Anglès 10 / 38, Medi 14 / 37 (natural i social, 7 làmines), Música 11 / 19. Curs per defecte: 6è. **Pendent: el temari complet de 5è** amb el mateix procediment (secció 9).
+3. (antic) **Desenvolupar el temari complet** de cada assignatura per a 5è i 6è (el propietari indicarà per on començar).
 3. **Més làmines** (ciències sobretot: aparell digestiu, circulatori, la planta, la cèl·lula, el sistema solar...).
 4. **Activar la IA** (un altre dia, quan el contingut estigui fet).
 5. Més endavant: comptes d'usuari i progrés compartit entre aparells; altres cursos; altres idiomes.
