@@ -20,6 +20,7 @@ const IC={
 };
 Object.assign(MODES.combinada,{ic:IC.layers});Object.assign(MODES.professor,{ic:IC.cap});Object.assign(MODES.aventura,{ic:IC.map});
 Object.assign(MODES.exercicis,{ic:IC.grid});Object.assign(MODES.escriptura,{ic:IC.pen});Object.assign(MODES.comprovacio,{ic:IC.target});
+IC.search=ICO('<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>');
 IC.leaf=ICO('<path d="M5 19c0-9 6-15 15-15 0 9-6 15-15 15Z"/><path d="M5 19 13 11"/>');
 IC.music=ICO('<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>');
 SUBJ.mates.ic=IC.calc;SUBJ.angles.ic=IC.globe;SUBJ.ciencies.ic=IC.leaf;SUBJ.musica.ic=IC.music;

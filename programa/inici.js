@@ -38,7 +38,9 @@ function home(){endSession();PARENT_OK=false;
  const lt=lastTopic();
  app(`<section class="hero4">${DOODLES}<button class="lockbtn" onclick="askPin()" aria-label="Zona famílies (amb PIN)">${IC.lock} Famílies</button>
   <div class="h4-row"><div class="h4-owl">${OWL(96)}</div><div class="h4-t"><span class="h4-pill">${ORD[S.perfil.curs]} de Primària</span><h2>${nm?`Hola, ${nm}!`:'Hola!'}</h2><p>${done>=goal?'Objectiu d\'avui complert. Molt bé!':done>0?`Ja portes ${done} de ${goal} minuts. Endavant!`:'Què t\'agradaria aprendre avui?'}</p></div>
-  <div class="h4-stats"><div class="h4-st">${ringSVG(pct)}<span>Objectiu<br>d'avui</span></div><div class="h4-st"><b class="streak4">${IC.flame}${st}</b><span>${st===1?'dia':'dies'}<br>seguits</span></div></div></div>${WAVE}</section>
+  <div class="h4-stats"><div class="h4-st">${ringSVG(pct)}<span>Objectiu<br>d'avui</span></div><div class="h4-st"><b class="streak4">${IC.flame}${st}</b><span>${st===1?'dia':'dies'}<br>seguits</span></div></div></div>
+  <label class="srch4" for="cerca">${IC.search}<input id="cerca" type="search" placeholder="Què vols estudiar? Ex.: fraccions, el cor, past simple…" autocomplete="off" enterkeyhint="search"><button class="srx" type="button" aria-label="Esborrar la cerca" hidden>✕</button></label>${WAVE}</section>
+ <div id="cres" aria-live="polite"></div>
 
  <h3 class="sec4">Com vols practicar?</h3>
  <div class="modes4">${Object.entries(MODES).map(([k,mm])=>`<button class="mode4${k==='combinada'?' main':''}" style="--mc:${MODE_COL[k]}" data-m="${k}"><span class="m4-ic">${mm.ic}</span><b>${mm.nom}</b><small>${MODE_TXT[k]}</small></button>`).join('')}</div>
@@ -50,7 +52,32 @@ function home(){endSession();PARENT_OK=false;
  <h3 class="sec4">Les teves assignatures</h3>
  <div class="subjs4">${Object.keys(SUBJ).map(k=>{const ks=topicsOf(k),ms=mastery(ks);return`<button class="subj4" style="--c:var(--s-${k})" onclick="subject('${k}')">${subjArt(k)}<span class="s4-ic">${SUBJ[k].ic}</span><b>${SUBJ[k].nom}</b><small>${ks.length?`${unitsOf(k).length} unitats · ${ks.length} temes${(LAMINES[k]||[]).length?' · làmines':''}${(MATERIAL[k]||[]).length?' · material':''}`:'Properament'}</small><span class="s4-bar"><i style="width:${Math.max(ms,3)}%"></i></span><span class="s4-pct">${ms}% après</span></button>`}).join('')}</div>`);
  if(lt)$('#cP').onclick=()=>start('exercicis',[lt],15);
- document.querySelectorAll('.modes4 [data-m]').forEach(b=>b.onclick=()=>start(b.dataset.m))}
+ document.querySelectorAll('.modes4 [data-m]').forEach(b=>b.onclick=()=>start(b.dataset.m));
+ bindSearch($('#cerca'),q=>{$('#cres').innerHTML=q?searchHTML(q):'';bindTopicButtons($('#cres'))})}
+
+/* ---------- cercador ---------- */
+// Índex de cerca: temes (nom, unitat, assignatura i explicació), làmines i material. Sense accents ni majúscules.
+// Text preparat per cercar inici de paraula: « paraula1 paraula2 » (sense accents, només lletres i xifres)
+const sfold=s=>' '+fold(s).replace(/[^a-z0-9]+/g,' ')+' ';
+const hit=(txt,w)=>txt.includes(' '+w+(w.length<=3?' ':''));   // paraules curtes: paraula sencera; llargues: inici de paraula
+function searchIndex(){const out=[];
+ for(const m of Object.keys(SUBJ)){
+  unitsOf(m).forEach(([un,uk],ui)=>uk.forEach(k=>{const v=SK[k];let teo='';try{teo=plain((v.teoria||[]).join(' '))}catch(e){}
+   out.push({t:'tema',m,k,un,ui,name:sfold(v.nom),ctx:sfold(un+' '+SUBJ[m].nom),body:sfold(teo)})}));
+  for(const[kind,list]of[['làmina',LAMINES[m]||[]],['material',MATERIAL[m]||[]]])for(const x of list)out.push({t:kind,m,x,name:sfold(x.nom),ctx:sfold(SUBJ[m].nom+' '+(x.desc||'')),body:''})}
+ return out}
+const qWords=q=>fold(q).replace(/[^a-z0-9]+/g,' ').split(' ').filter(w=>w.length>1);
+function searchHTML(q){const words=qWords(q);if(!words.length)return'';
+ const res=searchIndex().map(e=>{let sc=0;for(const w of words){if(hit(e.name,w))sc+=e.name.startsWith(' '+w)?6:4;else if(hit(e.ctx,w))sc+=2;else if(hit(e.body,w))sc+=1;else return null}return{e,sc}}).filter(Boolean).sort((a,b)=>b.sc-a.sc).slice(0,12);
+ if(!res.length)return`<div class="sres4 empty"><b>No he trobat res amb «${esc(q)}».</b><small>Prova amb una altra paraula o entra a una assignatura.</small></div>`;
+ return`<div class="sres4"><div class="sres-h">${res.length} ${res.length===1?'resultat':'resultats'}</div>${res.map(({e})=>e.t==='tema'
+  ?`<div class="trow4 sr" style="--c:var(--s-${e.m})"><span class="tile">${SK[e.k].ic}</span><span class="tn4"><b>${SK[e.k].nom}</b><small class="srctx">${SUBJ[e.m].nom} · Unitat ${e.ui+1}: ${esc(e.un)}</small>${lvTag(e.k)}</span><span class="tb4"><button class="btn4o" data-l="${e.k}">Aprendre</button><button class="btn4 sm" data-p="${e.k}">Practicar</button></span></div>`
+  :`<div class="trow4 sr" style="--c:var(--s-${e.m})"><span class="tile">${IC[e.x.ic]||IC.book}</span><span class="tn4"><b>${esc(e.x.nom)}</b><small class="srctx">${SUBJ[e.m].nom} · ${e.t==='làmina'?'Làmina interactiva':'Material'}</small></span><span class="tb4"><button class="btn4 sm" onclick="${e.x.obre}">Obrir</button></span></div>`).join('')}</div>`}
+function bindTopicButtons(root){root.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>start('professor',[b.dataset.l],15));root.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>start('exercicis',[b.dataset.p],15))}
+function bindSearch(inp,fn){if(!inp)return;const x=inp.parentNode.querySelector('.srx');let t;
+ inp.oninput=()=>{clearTimeout(t);x.hidden=!inp.value;t=setTimeout(()=>fn(inp.value.trim()),120)};
+ inp.onkeydown=e=>{if(e.key==='Escape'){inp.value='';x.hidden=true;fn('')}};
+ x.onclick=()=>{inp.value='';x.hidden=true;fn('');inp.focus()}}
 
 // Temari d'anglès obert des de la pàgina de l'assignatura (en tornar, va a Anglès)
 function temariAngles(){temari(false);const b=document.querySelector('.ph .ghost');if(b)b.onclick=()=>subject('angles')}
@@ -60,18 +87,26 @@ function subject(m){endSession();const sb=SUBJ[m],U=unitsOf(m),ks=U.flatMap(u=>u
  const lam=(LAMINES[m]||[]),mat=(MATERIAL[m]||[]);
  app(`<section class="shead4" style="--c:var(--s-${m})">${subjArt(m)}<button class="back4" onclick="home()">&larr; Inici</button>
   <div class="sh4-t"><span class="s4-ic">${sb.ic}</span><h2>${sb.nom}</h2><p>${ORD[S.perfil.curs]} de Primària · ${U.length} unitats · ${ks.length} temes</p>
-  <div class="sh4-bar"><span class="s4-bar"><i style="width:${Math.max(ms,3)}%"></i></span><b>${ms}% après</b></div></div>${WAVE}</section>
+  <div class="sh4-bar"><span class="s4-bar"><i style="width:${Math.max(ms,3)}%"></i></span><b>${ms}% après</b></div></div>
+  ${ks.length?`<label class="srch4" for="cercaU">${IC.search}<input id="cercaU" type="search" placeholder="Cerca dins ${esc(sb.nom)}…" autocomplete="off" enterkeyhint="search"><button class="srx" type="button" aria-label="Esborrar la cerca" hidden>✕</button></label>`:''}${WAVE}</section>
 
  ${lam.length||mat.length?`<h3 class="sec4">${lam.length?'Làmines per aprendre':'Material d\'estudi'}</h3><div class="mat4">
   ${lam.map(l=>`<button class="matc4" style="--c:var(--s-${m})" onclick="${l.obre}"><span class="mt4-ic">${IC[l.ic]||IC.book}</span><span><small>Làmina interactiva</small><b>${l.nom}</b><em>${l.desc}</em></span><span class="arr4">&rarr;</span></button>`).join('')}
   ${mat.map(x=>`<button class="matc4" style="--c:var(--s-${m})" onclick="${x.obre}"><span class="mt4-ic">${IC[x.ic]||IC.book}</span><span><small>Material</small><b>${x.nom}</b><em>${x.desc}</em></span><span class="arr4">&rarr;</span></button>`).join('')}</div>`:''}
  ${ks.length?'':`<div class="mis4"><div class="mis4-t"><h3>Aviat hi haurà temes</h3><small>Estam preparant el temari d'aquesta assignatura.</small></div></div>`}
 
- <h3 class="sec4">Unitats</h3>
+ <h3 class="sec4">Unitats</h3><div id="unone" class="sres4 empty" hidden><b>Cap tema coincideix amb la cerca.</b><small>Prova amb una altra paraula.</small></div>
  ${U.map(([un,uk],i)=>`<section class="unit4" style="--c:var(--s-${m})"><header><span class="un4">${i+1}</span><div class="u4t"><h3>${un}</h3><small>${uk.length} ${uk.length===1?'tema':'temes'}</small></div><span class="u4p">${mastery(uk)}%</span></header>
-  ${uk.map(k=>{const v=SK[k];return`<div class="trow4"><span class="tile">${v.ic}</span><span class="tn4"><b>${v.nom}</b>${lvTag(k)}</span><span class="tb4"><button class="btn4o" data-l="${k}">Aprendre</button><button class="btn4 sm" data-p="${k}">Practicar</button></span></div>`}).join('')}
+  ${uk.map(k=>{const v=SK[k];let teo='';try{teo=plain((v.teoria||[]).join(' '))}catch(e){}return`<div class="trow4" data-s="${esc(sfold(v.nom+' '+un+' '+teo))}"><span class="tile">${v.ic}</span><span class="tn4"><b>${v.nom}</b>${lvTag(k)}</span><span class="tb4"><button class="btn4o" data-l="${k}">Aprendre</button><button class="btn4 sm" data-p="${k}">Practicar</button></span></div>`}).join('')}
   <footer><button class="btn4o wide" data-u="${i}">${IC.target} Prova de la unitat</button></footer></section>`).join('')}`);
  document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>start('professor',[b.dataset.l],15));
  document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>start('exercicis',[b.dataset.p],15));
+ // Filtre dins l'assignatura: amaga els temes i les unitats que no coincideixen
+ bindSearch($('#cercaU'),q=>{const words=qWords(q);let any=0;
+  document.querySelectorAll('.unit4').forEach(u=>{let vis=0;u.querySelectorAll('.trow4').forEach(r=>{const ok=!words.length||words.every(w=>hit(r.dataset.s,w));r.hidden=!ok;if(ok)vis++});
+   const hdr=sfold(u.querySelector('h3').textContent),unitHit=words.length&&words.every(w=>hit(hdr,w));if(unitHit){u.querySelectorAll('.trow4').forEach(r=>r.hidden=false);vis=1}
+   u.hidden=!vis;if(vis)any++});
+  document.querySelectorAll('.mat4 .matc4').forEach(c=>{const t=sfold(c.textContent);const ok=!words.length||words.every(w=>hit(t,w));c.hidden=!ok;if(ok)any++});
+  $('#unone').hidden=!!any});
  document.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>start('comprovacio',U[+b.dataset.u][1],15));
 }
