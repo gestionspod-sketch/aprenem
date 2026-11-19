@@ -121,11 +121,4 @@ Object.assign(SK,{
    const it=pick(pq);return qProb({q:it.q,a:String(it.a).split('|').map(s=>s.trim()).filter(Boolean),h:it.h||'',ex:it.ex||'',c:[]},null)}}
 });
 
-/* Unitats de MEDI (clau interna 'ciencies'): [nom, [temes], (opcional) [cursos]]
-   Les làmines s'afegeixen soles des del seu arxiu (contingut/lamines/). */
-UNITS.ciencies=[
- ['El cos humà',['ci_cos','ci_respiratori']],
- ['Els éssers vius',['ci_plantes','ci_classif','ci_ecosis']],
- ['La matèria i l\'energia',['ci_materia','ci_energia']],
- ['La Terra i l\'Univers',['ci_univers']],
- ['Del teu llibre',['ci_llibre']]];
+/* Les unitats de MEDI (5è i 6è) són a contingut/medi-unitats.js, que es carrega el darrer del bloc. */
