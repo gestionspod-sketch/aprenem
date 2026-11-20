@@ -1,7 +1,7 @@
 /* Aprenem - assignatures, modes d estudi, errors tipics, aventura i dictats
    Part de l'app d'estudi. Vegeu CLAUDE.md per a l'estructura i les normes. */
 // Assignatures. La clau interna de Medi continua sent 'ciencies' perquè no es perdi el progrés guardat.
-const SUBJ={catala:{nom:'Català',llarg:'Llengua catalana i literatura',ic:'✍️'},mates:{nom:'Matemàtiques',ic:'📐'},angles:{nom:'Anglès',ic:'🗣️'},ciencies:{nom:'Medi',llarg:'Coneixement del medi natural, social i cultural',ic:'🔬'},musica:{nom:'Música',llarg:'Llenguatge musical',ic:'🎵'}};
+const SUBJ={catala:{nom:'Català',llarg:'Llengua catalana i literatura',ic:'✍️'},castella:{nom:'Castellà',llarg:'Lengua castellana y literatura',ic:'📖'},mates:{nom:'Matemàtiques',ic:'📐'},angles:{nom:'Anglès',ic:'🗣️'},ciencies:{nom:'Medi',llarg:'Coneixement del medi natural, social i cultural',ic:'🔬'},musica:{nom:'Música',llarg:'Llenguatge musical',ic:'🎵'}};
 // Registres que omple cada arxiu de contingut (així cada assignatura és independent):
 //   UNITS[assignatura]    = [[nom de la unitat, [ids de temes], (opcional) [cursos]], ...]
 //   LAMINES[assignatura]  = [{obre:'funcio()', nom, desc, ic}]  (làmines interactives)

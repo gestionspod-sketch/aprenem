@@ -24,7 +24,7 @@ IC.search=ICO('<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>');
 IC.leaf=ICO('<path d="M5 19c0-9 6-15 15-15 0 9-6 15-15 15Z"/><path d="M5 19 13 11"/>');
 IC.music=ICO('<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>');
 IC.quote=ICO('<path d="M4 18h5l1.5-4V7H4v7h3zM13.5 18h5L20 14V7h-6.5v7h3z"/>');
-SUBJ.catala.ic=IC.quote;SUBJ.mates.ic=IC.calc;SUBJ.angles.ic=IC.globe;SUBJ.ciencies.ic=IC.leaf;SUBJ.musica.ic=IC.music;
+SUBJ.catala.ic=IC.quote;SUBJ.castella.ic=IC.book;SUBJ.mates.ic=IC.calc;SUBJ.angles.ic=IC.globe;SUBJ.ciencies.ic=IC.leaf;SUBJ.musica.ic=IC.music;
 const AB={frac_equiv:'Fe',frac_suma_igual:'F+',frac_suma_dif:'F±',frac_de_nombre:'Fn',decimals:'Dc',divisions:'Dv',percentatges:'%',
  en_present:'Ps',en_cont:'Pc',en_be:'Be',en_was:'Ww',en_reg_past:'Rg',en_irr_past:'Ir',en_irr_pp:'Pp',en_irr_inf:'If',en_verb_sig:'Tr',en_past:'Sp',en_past_neg:'Ng',en_plural:'Pl',en_compar:'Cm',en_vocab:'Vc',en_listen:'Ls',
  ci_cos:'Ch',ci_plantes:'Pt',ci_ecosis:'Ec',ci_materia:'Mt',ci_classif:'Cl',ci_energia:'En',ci_univers:'Un',ci_llibre:'Lb',ci_respiratori:'Rs'};
@@ -32,3 +32,12 @@ IC.lungs=ICO('<path d="M12 3v8M12 11c-1.5 1.2-3 1.8-4.5 1.8M12 11c1.5 1.2 3 1.8 
 // Codi de 2 lletres: la propietat ab del tema (preferida) o la taula AB
 for(const k in SK)SK[k].ic=`<span class="ab">${SK[k].ab||AB[k]||SK[k].nom.slice(0,2)}</span>`;
 
+// v5: icones de la closca (menú, barra inferior) i de la pantalla d'exercici
+IC.home=ICO('<path d="M3 11 12 4l9 7v9h-6v-6H9v6H3Z"/>');
+IC.chart=ICO('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>');
+IC.bulb=ICO('<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3Z"/>');
+IC.speaker=ICO('<path d="M11 5 6 9H2v6h4l5 4ZM16 9a4 4 0 0 1 0 6"/>');
+IC.x=ICO('<path d="M6 6l12 12M18 6 6 18"/>');
+IC.okc=ICO('<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>');
+IC.chev=ICO('<path d="m6 9 6 6 6-6"/>');
+IC.left=ICO('<path d="M15 6l-6 6 6 6"/>');

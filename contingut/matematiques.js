@@ -9,6 +9,11 @@
      matematiques-mesura.js       6è: mesura (longitud, massa, capacitat, superfície, volum, temps) i angles
      matematiques-geometria.js    6è: polígons, circumferència, àrees, cossos i volum
      matematiques-estadistica.js  6è: estadística i probabilitat + material (formulari i taules de mesura)
+     matematiques-practica.js     6è: temes afegits per seguir el llibre de referència (comparar fraccions i decimals,
+                                  coordenades, bisectriu i mediatriu, freqüències)
+     matematiques-estat.js        6è: sabers del currículum estatal (RD 157/2022) que no són al llibre: patrons, igualtats,
+                                  moviments al pla, educació financera, fraccions-decimals-percentatges, gràfics
+     lamines/mates-lamines.js     làmines (figures, cossos, recta numèrica, geoplà) i material (convertidor, taules)
 
    Fonts del temari de 6è:
    - Decret 31/2022, d'1 d'agost, que estableix el currículum de l'educació primària a les Illes Balears
@@ -22,7 +27,14 @@
    - Reial decret 157/2022, d'1 de març (ensenyaments mínims de Primària), annex II, Matemàtiques.
    - Estructura habitual dels llibres de Matemàtiques de 6è (nombres grans i romans, divisibilitat, potències
      i arrels, enters, fraccions, decimals, proporcionalitat i percentatges, mesura, angles, polígons i
-     circumferència, àrees, cossos i volum, estadística i probabilitat, resolució de problemes). */
+     circumferència, àrees, cossos i volum, estadística i probabilitat, resolució de problemes).
+   - Llibre de referència (ordre de les unitats de 6è): «Practica Mat 6. Matemàtiques. Illes Balears (6.1-6.2-6.3)»,
+     Comunitat Zoom, Editorial Vicens Vives (J. Fraile i A. Pineda), ISBN 978-84-682-9280-9. Índex consultat a
+     l'extracte oficial en PDF de la fitxa del llibre: https://vicensvives.com/shop/product/9788468292809
+     12 temes: 1 Nombres naturals i operacions · 2 Potències i arrel quadrada · 3 Múltiples i divisors · 4 Fraccions ·
+     5 Nombres decimals · 6 Proporcionalitat i percentatges · 7 Nombres enters · 8 Angles · 9 Unitats de mesura ·
+     10 Unitats de superfície i volum · 11 Àrees i volums · 12 Estadística i probabilitat.
+     Els exercicis de l'app són originals: no es copia cap text ni exercici del llibre. */
 /* ===================== habilitats (exercicis verificables) ===================== */
 Object.assign(SK,{
  frac_equiv:{nom:'Fraccions equivalents',ic:'🍕',
@@ -110,19 +122,23 @@ UNITS.mates=[
  ['Fraccions',['frac_equiv','frac_suma_igual','frac_suma_dif','frac_de_nombre'],[5]],
  ['Decimals i percentatges',['decimals','percentatges'],[5]],
  ['Operacions',['divisions'],[5]],
- // ---- 6è (ordre habitual del llibre) ----
- ['Els nombres naturals',['mt_grans','mt_aprox','mt_romans'],[6]],
- ['Operacions i problemes',['mt_combinades','divisions','mt_problemes'],[6]],
- ['Divisibilitat',['mt_multiples','mt_criteris','mt_primers','mt_mcm_mcd'],[6]],
+ // ---- 6è: ordre del llibre de referència (Practica Mat 6, Vicens Vives, Illes Balears) ----
+ // 1r trimestre (quadern 6.1): temes 1-4
+ ['Nombres naturals i operacions',['mt_grans','mt_aprox','mt_combinades','divisions','mt_problemes'],[6]],
  ['Potències i arrel quadrada',['mt_potencies','mt_pot10','mt_arrels'],[6]],
- ['Els nombres enters',['mt_enters','mt_enters_op'],[6]],
- ['Les fraccions',['frac_equiv','mt_simplificar','mt_comu_den','frac_de_nombre'],[6]],
- ['Operacions amb fraccions',['frac_suma_igual','frac_suma_dif','mt_frac_resta','mt_frac_mult','mt_frac_div'],[6]],
- ['Els nombres decimals',['mt_frac_dec','decimals','mt_dec_mult','mt_dec_div'],[6]],
- ['Proporcionalitat i percentatges',['mt_proporcio','percentatges','mt_descomptes','mt_escales'],[6]],
- ['La mesura',['mt_mesures','mt_superficie','mt_temps'],[6]],
- ['Els angles',['mt_angles','mt_angles_poligon'],[6]],
- ['Polígons i circumferència',['mt_poligons','mt_circumf'],[6]],
- ['Les àrees',['mt_area_quad','mt_area_tri','mt_area_cercle','mt_area_comp'],[6]],
- ['Cossos geomètrics i volum',['mt_cossos','mt_volum_unitats','mt_volum'],[6]],
- ['Estadística i probabilitat',['mt_estadistica','mt_grafics','mt_probabilitat'],[6]]];
+ ['Múltiples i divisors',['mt_multiples','mt_criteris','mt_mcm_mcd','mt_primers'],[6]],
+ ['Fraccions',['frac_de_nombre','mt_simplificar','frac_equiv','mt_frac_comparar','mt_comu_den','frac_suma_igual','frac_suma_dif','mt_frac_resta'],[6]],
+ // temes 5-12 (quaderns 6.2 i 6.3)
+ ['Nombres decimals',['mt_frac_dec','mt_dec_ordre','decimals','mt_dec_mult','mt_dec_div'],[6]],
+ ['Proporcionalitat i percentatges',['mt_proporcio','percentatges','mt_fdp','mt_descomptes','mt_escales'],[6]],
+ ['Nombres enters',['mt_enters','mt_enters_op','mt_coordenades'],[6]],
+ ['Angles',['mt_angles','mt_angles_poligon','mt_bisectriu'],[6]],
+ ['Unitats de mesura',['mt_mesures'],[6]],
+ ['Unitats de superfície i volum',['mt_superficie','mt_volum_unitats'],[6]],
+ ['Àrees i volums',['mt_lam_figures','mt_poligons','mt_area_quad','mt_area_tri','mt_area_cercle','mt_circumf','mt_area_comp','mt_cossos','mt_lam_cossos','mt_volum'],[6]],
+ ['Estadística i probabilitat',['mt_frequencies','mt_estadistica','mt_grafics','mt_grafics_sl','mt_probabilitat'],[6]],
+ // sabers bàsics del currículum estatal (RD 157/2022) que no surten al llibre de referència
+ ['Patrons, igualtats i moviments',['mt_patrons','mt_equacions','mt_moviments'],[6]],
+ ['Educació financera',['mt_finances'],[6]],
+ // temes que no surten al llibre de referència, però que es conserven per repassar i ampliar
+ ['Repàs i ampliació',['mt_romans','mt_frac_mult','mt_frac_div','mt_temps'],[6]]];

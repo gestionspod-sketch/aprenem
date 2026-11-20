@@ -35,6 +35,10 @@ function lamSkill(id,o){return{mat:'ciencies',curs:[6],ab:o.ab,nom:o.nom,ic:'',t
  gen(lv){if(o.gen&&Math.random()<(o.pGen||.25)){const g=o.gen(lv);if(g)return g}
   const b=(o.bank||[]).filter(q=>lv>0||!q.lv);
   if(b.length&&Math.random()<(o.pBank==null?.45:o.pBank))return qProb(pick(b),o.errT);return lamQ(id,lv,o.errT)}}}
+// Converteix un tema que ja existeix en un tema amb làmina: manté el nom, la teoria, el banc i (opcional) el generador propi.
+// Així la clau de progrés no canvia. o: {gen, pGen, pBank, errT, teoria...} (el que s'hi posa substitueix el del tema)
+function lamWrap(id,k,o={}){const s=SK[k];if(!s)return;
+ SK[k]=lamSkill(id,Object.assign({nom:s.nom,ab:s.ab,errT:s.errT,teoria:[...s.teoria,'Mira la làmina:'],bank:s.bank},o));LAM[id].skill=k}
 function lamScreen(id){endSession();const L=LAM[id];let mode='labels',hi=null;
  app(`<div class="row ph" style="justify-content:space-between;align-items:flex-end"><div><div class="eyebrow" style="color:var(--s-ciencies)">Làmina · Medi</div><h2>${L.nom}</h2><p class="muted">${L.intro||'Toca cada part del dibuix per saber què és.'}</p></div><button class="ghost" onclick="subject('ciencies')">← Tornar</button></div>
  <div class="lam"><div class="card lam-fig"><div class="tabs" style="margin:0 0 12px"><button id="lm1" class="on">Amb noms</button><button id="lm2">Sense noms (posa't a prova)</button></div><div id="lsvg"></div></div>
