@@ -122,6 +122,7 @@ const CS_LENG=[['¿Qué lengua es oficial en toda España?','castellano|español
  ['¿Qué registro usamos para hablar con los amigos: formal o informal?','informal|coloquial|registro informal|registro coloquial','Con los amigos usamos un registro informal o coloquial.'],
  ['¿Qué registro usamos para escribir una carta al alcalde: formal o informal?','formal|registro formal|culto','Con personas que no conocemos o con autoridades, usamos el registro formal.'],
  ['Cuando usamos una palabra de otra lengua sin adaptarla (por ejemplo, decir «plegar» en castellano), cometemos una...','interferencia|interferencias|un catalanismo|catalanismo|barbarismo','Las interferencias son errores que se producen al mezclar dos lenguas. Si vienen del catalán, se llaman catalanismos.',1],
+ ['¿Hablar con acento andaluz, canario o mallorquín es hablar peor?','no|no es peor|no, es igual de correcto','Todos los acentos y variedades son igual de válidos. Burlarse de cómo habla alguien es un prejuicio lingüístico.'],
  ['¿Cuál es la lengua de signos que usan muchas personas sordas en España? Escribe sus siglas.','lse|lengua de signos española|lengua de signos','La lengua de signos española (LSE) también es una lengua reconocida.',1]];
 Object.assign(SK,{
  cs_lenguas:{mat:'castella',ab:'Le',nom:'Las lenguas de España',ic:'Le',curs:[6],
@@ -129,6 +130,7 @@ Object.assign(SK,{
    'El castellano, el catalán y el gallego son <b>lenguas románicas</b>: vienen del <b>latín</b>. El euskera es mucho más antiguo y no viene del latín.',
    'Cada lengua tiene <b>dialectos</b> o variedades según la zona: andaluz, canario... (del castellano); mallorquín, menorquín, ibicenco... (del catalán).',
    'Hablamos de manera distinta según la situación: con amigos usamos el registro <b>informal</b> (coloquial); en un examen o con una autoridad, el registro <b>formal</b>.',
+   'Todas las lenguas y todos los acentos son igual de valiosos: reírse de cómo habla alguien es un <b>prejuicio lingüístico</b>. También procuramos usar un <b>lenguaje no discriminatorio</b>, que no excluya ni ofenda a nadie (por ejemplo, decir «el alumnado» o «los niños y las niñas»).',
    'Cuando dos lenguas conviven, a veces se mezclan sin querer: son las <b>interferencias</b>. En castellano, las que vienen del catalán se llaman <b>catalanismos</b> (por ejemplo, «plegar» en lugar de «salir del trabajo»).'],
   gen(lv){const[q,a,ex]=pick(CS_LENG.filter(x=>lv>0||!x[3]));
    return CS.ex(`Respon la pregunta:<br><i lang="es">${q}</i>`,CS.A(a),{loose:true,label:'Resposta',hints:['Relee la teoría: lenguas oficiales, origen latino, dialectos y registros.',`Empieza por «${CS.first(a)[0].toUpperCase()}».`],steps:[ex,`Respuesta: <b>${CS.first(a)}</b>.`]})}}
