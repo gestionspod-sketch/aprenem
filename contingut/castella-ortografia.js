@@ -124,6 +124,7 @@ const PUN=[['Compré peras▢ manzanas y plátanos.','coma|una coma','Usamos <b>
  ['Mi abuelo siempre dice ▢Quien mucho abarca, poco aprieta▢.','comillas|cometes','Las <b>comillas</b> (« ») encierran las palabras exactas que alguien dice o un refrán citado.',1],
  ['Los niños llegaron tarde▢ El autobús se había averiado.','punto|punto y seguido|punt','El <b>punto y seguido</b> separa oraciones de un mismo párrafo.'],
  ['El tren sale a las 9▢30 h.','dos puntos|dos punts','Las horas se escriben con <b>dos puntos</b> (9:30) o con punto (9.30).',1]];
+CS.REGLAS={bv:BV_N,gj:GJ_N,h:H_N,lly:LY_N,xs:XS_N};
 const PUN_NAMES=['coma','dos puntos','punto y coma','puntos suspensivos','interrogación','exclamación','raya','comillas','punto','paréntesis','guion'];
 
 Object.assign(SK,{
