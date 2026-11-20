@@ -1,10 +1,40 @@
 /* Aprenem - contingut de LLENGUA CATALANA I LITERATURA (6è de Primària)
    Part de l'app d'estudi. Vegeu CLAUDE.md per a l'estructura i les normes.
-   Fonts: Decret 32/2022 (Illes Balears), currículum d'Educació Primària, àrea de Llengua Catalana i Literatura,
-   sabers bàsics del 3r cicle: comunicació (comprensió lectora), educació literària (gèneres, recursos, rima) i
-   reflexió sobre la llengua (ortografia: accentuació, apòstrof, contraccions, dièresi, consonants; morfologia:
-   categories gramaticals i el verb; sintaxi: l'oració; lèxic: sinònims, antònims, prefixos). Estructura contrastada
-   amb els llibres de 6è habituals. Es respecta la variant balear (cant / canto, vàrem / vam, servesc / serveixo). */
+   El temari de Català està repartit en aquests arxius (s'han de carregar en aquest ordre):
+     catala.js             base: dades i temes inicials (accentuació, apòstrof, dièresi, consonants, categories,
+                           verbs regulars, oració, sinònims, prefixos, recursos literaris, rima, lectura) i utilitats
+     catala-ortografia.js  diftongs i hiats, accent diacrític, parelles (perquè / per què...), puntuació i majúscules,
+                           x / ix / tx / ig, m / n, consonants finals, vocals àtones en els verbs, guionet
+     catala-gramatica.js   gènere i nombre, determinants i pronoms, sintagma nominal, subjecte el·líptic, tipus de
+                           verbs, veu passiva, verbs irregulars, temps compostos, modes, perífrasis, CD, CI, CC,
+                           atribut, oracions simples i compostes, pronoms febles; taula de verbs irregulars
+     catala-lexic.js       camps semàntics, homònims, manlleus, barbarismes, derivació, compostos i famílies,
+                           frases fetes i refranys, varietats dialectals (el balear)
+     catala-unitats.js     les 13 unitats, en l'ordre del llibre de text
+   FONTS
+   - Decret 31/2022, d'1 d'agost, currículum d'Educació Primària de les Illes Balears (BOIB extr. núm. 101, 2-8-2022),
+     àrea de Llengua Catalana i Literatura, sabers bàsics del 3r cicle: A. Les llengües i els seus parlants (llengua i
+     dialecte, varietats dialectals, registres); B. Comunicació; C. Educació literària (tradició popular de les Illes:
+     rondalles, llegendes, gloses, refranys, endevinalles; tema, personatges, recursos); D. Reflexió sobre la llengua
+     (temps, mode, persona, nombre i conjugació dels verbs; constituents de l'oració; categories gramaticals; famílies
+     lèxiques; prefixos i sufixos; modalitats oracionals; substitucions pronominals; normes d'accentuació; apòstrof,
+     contraccions, punt, punt i coma, coma, dos punts, punts suspensius, guionet i dièresi; diftongs i hiats; diccionari).
+     Concreció per cursos de la Conselleria: https://www.caib.es/sites/lomloe/f/522779
+   - Llibre de text: Llengua catalana 6, Primària, projecte «Saber Fer», Illes Balears (Santillana / Grup Promotor,
+     ISBN 978-84-9130-369-5), índex de les 12 unitats: camps semàntics, hiperònims i hipònims, tipus d'oracions,
+     aleshores / a les hores, sinó / si no, perquè / per què (U1); homònims, propietats textuals, parèntesis, cometes i
+     dos punts (U2); manlleus, el subjecte, subjecte el·líptic i verbs impersonals, accent diacrític (U3); neologismes,
+     sintagma nominal i complement del nom, x / ix / tx / ig (U4); mots incorrectes d'ús freqüent, verbs predicatius i
+     atributius, transitius i intransitius, veu passiva, j / g (U5); prefixos de negació, d'oposició i cultes, verbs
+     regulars i irregulars, vocals a / e i o / u àtones en els verbs (U6); formació de noms i adjectius, perífrasis
+     verbals, ela geminada (U7); formació de verbs, complement directe, m i n (U8); comparació i metàfora, complement
+     indirecte, b / v (U9); anàfora i personificació, complement circumstancial, c / g a final de mot (U10);
+     al·literació i inversió, l'atribut, el guionet (U11); pronoms febles i apòstrof en els pronoms febles (U12).
+     Contrastat amb els títols de Vicens Vives (Pràctica llengua 6, Zoom) i Cruïlla.
+   - Institut d'Estudis Catalans: Ortografia catalana (2016, accent diacrític i guionet), Gramàtica de la llengua
+     catalana (2016) i Gramàtica essencial (formes balears: jo cant, nosaltres cantam, vosaltres cantau, vàrem,
+     servesc, tenc...). Diccionari normatiu (DIEC2) per a les formes correctes dels barbarismes.
+   Es respecta sempre la variant balear correcta (cant / canto, cantam / cantem, vàrem / vam, servesc / serveixo). */
 
 const CA_STRIP=s=>s.normalize('NFD').replace(/[̀́]/g,'').normalize('NFC');      // treu accents (deixa ç, ·, ü, ï)
 const CA_STRIP_UML=s=>s.normalize('NFD').replace(/̈/g,'').normalize('NFC');         // treu dièresis
@@ -55,7 +85,7 @@ const CA_MODEL={1:'1a conjugació (-ar), com cantar',2:'2a conjugació (-re), co
 // Conjuga un verb regular. Cada forma és una llista d'alternatives (la primera és l'estàndard; després, la balear).
 function caConj(inf,mod,t){const st=inf.slice(0,-2),P=x=>x.map(f=>Array.isArray(f)?f:[f]);
  if(t==='perif')return[['vaig'],['vas','vares'],['va'],['vam','vàrem'],['vau','vàreu'],['van','varen']].map(a=>a.map(x=>x+' '+inf));
- if(mod==='1'){if(t==='pres')return P([[st+'o',st],st+'es',st+'a',st+'em',st+'eu',st+'en']);
+ if(mod==='1'){if(t==='pres')return P([[st+'o',st],st+'es',st+'a',[st+'em',st+'am'],[st+'eu',st+'au'],st+'en']);
   if(t==='imp')return P(['ava','aves','ava','àvem','àveu','aven'].map(e=>st+e));
   if(t==='fut')return P(['é','às','à','em','eu','an'].map(e=>inf+e));
   return P(['ia','ies','ia','íem','íeu','ien'].map(e=>inf+e))}
@@ -76,15 +106,31 @@ const CA_SIN=[['content','feliç|alegre'],['començar','iniciar|encetar'],['boni
 const CA_ANT=[['alt','baix'],['obrir','tancar'],['ric','pobre'],['entrar','sortir'],['ample','estret'],['calent','fred'],['ple','buit'],['guanyar','perdre'],['net','brut'],['valent','covard|poruc'],['aprovar','suspendre'],['dur','tou|bla']];
 const CA_PREF=[['feliç','infeliç','in-'],['possible','impossible','im-'],['ordenat','desordenat','des-'],['legal','il·legal','il-'],['responsable','irresponsable','ir-'],['fer','desfer','des-'],['cobrir','descobrir','des-'],['útil','inútil','in-'],['correcte','incorrecte','in-'],['agradable','desagradable','des-'],['paciència','impaciència','im-'],['regular','irregular','ir-']];
 const CA_REC=[['Els teus ulls són com dues estrelles.','comparació|símil'],['La lluna és un plat de plata.','metàfora'],['El vent xiuxiuejava cançons a les fulles.','personificació'],['T\'ho he dit un milió de vegades!','hipèrbole'],['El rellotge fa tic-tac.','onomatopeia'],
- ['Les flors somreien al sol.','personificació'],['Corria com un llamp.','comparació|símil'],['Els teus cabells són or.','metàfora'],['Tinc tanta gana que em menjaria un elefant.','hipèrbole'],['El gos feia bub-bub tota la nit.','onomatopeia']];
-const CA_REC_DEF={comparació:'compara dues coses amb «com» o «semblant a»',metàfora:'diu que una cosa «és» una altra, sense «com»',personificació:'dona qualitats humanes a coses o animals',hipèrbole:'exagera molt',onomatopeia:'imita un so'};
+ ['Les flors somreien al sol.','personificació'],['Corria com un llamp.','comparació|símil'],['Els teus cabells són or.','metàfora'],['Tinc tanta gana que em menjaria un elefant.','hipèrbole'],['El gos feia bub-bub tota la nit.','onomatopeia'],
+ ['Cada dia, cada hora, cada minut penso en tu.','anàfora',1],['Vull la mar, vull el cel, vull la llum del matí.','anàfora',1],['Mira els núvols, mira els ocells, mira el teu jardí.','anàfora',1],
+ ['El vent venia volant per les valls verdes.','al·literació|aliteració',1],['Les serps sinuoses s\'esmunyen per la sorra.','al·literació|aliteració',1],['Rodolen les rodes del carro rovellat.','al·literació|aliteració',1],
+ ['Blanca és la neu de la muntanya.','inversió|hipèrbaton',1],['Verd és el prat i blau és el cel.','inversió|hipèrbaton',1],['D\'aquell jardí, les roses vaig collir.','inversió|hipèrbaton',1]];
+const CA_REC_DEF={comparació:'compara dues coses amb «com» o «semblant a»',metàfora:'diu que una cosa «és» una altra, sense «com»',personificació:'dona qualitats humanes a coses o animals',hipèrbole:'exagera molt',onomatopeia:'imita un so',
+ anàfora:'repeteix la mateixa paraula al principi de diverses frases o versos','al·literació':'repeteix un mateix so (una consonant) en paraules seguides',inversió:'canvia l\'ordre habitual de les paraules de la frase'};
 const CA_RIMA=[['cançó','balcó','consonant'],['casa','plaça','assonant'],['mar','cantar','consonant'],['lluna','bruna','consonant'],['flor','sol','assonant'],['camí','matí','consonant'],['porta','rosa','assonant'],['nit','llit','consonant'],['cadira','camisa','assonant'],['muntanya','castanya','consonant']];
 const CA_GEN=[['Un text en vers que expressa sentiments i emocions.','poesia|lírica|gènere líric'],['Una obra escrita per ser representada pels actors damunt un escenari.','teatre|dramàtic|gènere dramàtic'],['Una història en prosa, explicada per un narrador, amb personatges i fets.','narrativa|narració|gènere narratiu|conte|novel·la'],
- ['Un text curt en vers, amb rima, que sovint s\'aprèn de memòria i es canta als infants.','cançó|poesia|poesia popular|lírica'],['Una narració popular de Mallorca, transmesa de boca en boca, com les que va recollir mossèn Alcover.','rondalla|rondalles|narrativa']];
+ ['Un text curt en vers, amb rima, que sovint s\'aprèn de memòria i es canta als infants.','cançó|poesia|poesia popular|lírica'],['Una narració popular de Mallorca, transmesa de boca en boca, com les que va recollir mossèn Alcover.','rondalla|rondalles|narrativa'],
+ ['Una narració molt antiga que explica l\'origen del món o de la natura amb déus i herois.','mite|mites|mitologia'],
+ ['Una narració popular que barreja fets reals i fantàstics i passa en un lloc concret, com la del Drac de na Coca.','llegenda|llegendes'],
+ ['Uns versos improvisats, típics de les Illes, que se solen cantar i que sovint fan riure.','glosa|gloses|glosat'],
+ ['Un text breu, sovint en vers, que descriu una cosa sense dir-ne el nom perquè l\'endevinem.','endevinalla|endevinalles'],
+ ['Una història explicada amb vinyetes, dibuixos i bafarades.','còmic|novel·la gràfica|historieta'],
+ ['Una frase popular i curta que dona un consell o un ensenyament, com «Qui matina, fa farina».','refrany|refranys|dita|dites']];
 const CA_LECT=[{t:'El far de Formentor',x:'En Miquel era el faroner de Formentor. Cada vespre, quan el sol s\'amagava darrere la serra, pujava els cent vint-i-tres escalons del far i encenia la llum perquè els vaixells no xoquessin amb les roques. Una nit de tempesta, va veure una barca petita que lluitava contra les ones. Va fer senyals amb la llanterna fins que els pescadors van trobar el camí del port. L\'endemà, li van dur una cistella de peix per donar-li les gràcies.',
   q:[['Com es diu el faroner?','miquel|en miquel'],['Quants escalons té el far?','123|cent vint-i-tres'],['Què va veure la nit de tempesta?','una barca|una barca petita|barca'],['Què li van dur els pescadors l\'endemà?','una cistella de peix|peix|cistella de peix']]},
  {t:'L\'excursió a la Serra',x:'Els alumnes de sisè van anar d\'excursió a la Serra de Tramuntana. Van sortir de l\'escola a les vuit en punt amb autocar i van començar a caminar a Sóller. Durant el camí, la mestra els va explicar que les marjades són parets de pedra en sec que els pagesos construïen per poder conrear a la muntanya. A migdia, van dinar a l\'ombra d\'una alzina i, a la tarda, van tornar cansats però contents.',
-  q:[['On van anar d\'excursió?','a la serra de tramuntana|serra de tramuntana|la serra de tramuntana'],['A quina hora van sortir?','a les vuit|les vuit|vuit|8'],['Què són les marjades?','parets de pedra en sec|parets de pedra|parets'],['Sota quin arbre van dinar?','alzina|una alzina|un alzina']]}];
+  q:[['On van anar d\'excursió?','a la serra de tramuntana|serra de tramuntana|la serra de tramuntana'],['A quina hora van sortir?','a les vuit|les vuit|vuit|8'],['Què són les marjades?','parets de pedra en sec|parets de pedra|parets'],['Sota quin arbre van dinar?','alzina|una alzina|un alzina']]},
+ {t:'Sant Antoni a sa Pobla',x:'La nit del 16 de gener, sa Pobla s\'omple de fogueres. Els veïns hi torren sobrassada, botifarrons i llonganisses, i els dimonis ballen pels carrers al so de les xeremies, el flabiol i el tamborino. L\'endemà, el dia de Sant Antoni, els animals desfilen davant l\'església i el capellà els beneeix. La Marta, que té onze anys, hi va dur el seu moix, en Pelut, dins una panera. En Pelut no va miolar ni una vegada: estava ben tranquil.',
+  q:[['Quina nit s\'encenen les fogueres?','la nit del 16 de gener|16 de gener|el 16 de gener|setze de gener'],['Quins instruments sonen mentre ballen els dimonis? (digues-ne un)','xeremies|les xeremies|flabiol|el flabiol|tamborino|el tamborino'],['Què fa el capellà amb els animals?','els beneeix|beneir-los|beneeix|beneir|la benedicció'],['Com es diu el moix de la Marta?','pelut|en pelut'],['Per què sabem que en Pelut estava tranquil?','no va miolar|perquè no va miolar|no miolava|no va miolar ni una vegada']]},
+ {t:'La rabosa i el corb',x:'Un corb havia robat un tros de formatge i se\'n va anar a menjar-lo dalt d\'un arbre. Una rabosa, que el va veure, va pensar com podia aconseguir aquell formatge. «Quines plomes tan negres i lluents! —li va dir—. Si cantes tan bé com ets de bonic, seràs el rei dels ocells.» El corb, tot cofoi, va obrir el bec per cantar, i el formatge va caure a terra. La rabosa el va agafar i, abans d\'anar-se\'n, li va dir: «Aprèn la lliçó: no et refiïs de qui t\'afalaga.»',
+  q:[['Què havia robat el corb?','un tros de formatge|formatge|el formatge'],['Què va fer el corb per cantar?','va obrir el bec|obrir el bec|obre el bec'],['Què li va passar al formatge?','va caure|va caure a terra|caure a terra|cau'],['Quin tipus de text és: un conte de fades o una faula?','faula|una faula'],['Quina és la lliçó de la història? Completa: no et refiïs de qui t\'...','afalaga|t\'afalaga']]},
+ {t:'La posidònia',x:'La posidònia no és una alga, sinó una planta amb arrels, tiges, fulles i flors que viu davall la mar de les Illes Balears. Forma grans praderies que fan que l\'aigua sigui transparent i que donen aliment i amagatall a molts de peixos. A la tardor, les fulles velles es desprenen i arriben a la platja, on protegeixen la sorra de les onades. Per això no les hem de llevar. Les àncores de les barques, però, arrabassen la posidònia, que creix molt a poc a poc: només un o dos centímetres cada any.',
+  q:[['La posidònia és una alga o una planta?','una planta|planta'],['Què donen les praderies als peixos? (digues una cosa)','aliment|menjar|amagatall|aliment i amagatall'],['Què fan les fulles velles a la platja?','protegeixen la sorra|protegir la sorra|protegeixen la sorra de les onades'],['Què arrabassa la posidònia?','les àncores|àncores|les àncores de les barques'],['Quants centímetres creix cada any?','un o dos|1 o 2|un o dos centímetres|1 o 2 centímetres']]}];
 
 /* ---------- auxiliars ---------- */
 const caArticle=([n,g,,iu])=>{const voc=/^h?[aeiouàèéíòóú]/i.test(n);return g==='m'?(voc?"l'"+n:'el '+n):(voc&&!iu?"l'"+n:'la '+n)};
@@ -177,13 +223,14 @@ Object.assign(SK,{
     hints:['Prova amb des-, in-, im-, il- o ir-.',`El prefix és «${p}».`],steps:[`${p} + ${b} = <b>${a}</b>.`,p==='im-'?'Davant p o b, in- es converteix en im-.':p==='il-'?'Davant l, in- es converteix en il- i s\'escriu l·l.':p==='ir-'?'Davant r, in- es converteix en ir-.':'']}}},
  ca_recursos:{mat:'catala',ab:'Rl',nom:'Recursos literaris',ic:'✶',
   teoria:['Els escriptors fan servir <b>recursos literaris</b> per fer els textos més bells i expressius:',`<table class="mini">${Object.entries(CA_REC_DEF).map(([k,d])=>`<tr><td><b>${k}</b></td><td>${d}</td></tr>`).join('')}</table>`],
-  gen(){const[o,r]=pick(CA_REC),k=caFirst(r);
+  gen(lv){const[o,r]=pick(CA_REC.filter(x=>lv>0||!x[2])),k=caFirst(r);
    return{text:`Quin recurs literari hi ha en aquesta frase?<br><i>${o}</i>`,fields:[{label:'Recurs',txt:caAlts(r),loose:true,wide:true}],vis:null,
-    hints:['Compara? Diu que una cosa «és» una altra? Dona vida a una cosa? Exagera? Imita un so?',`Comença per «${k[0].toUpperCase()}».`],steps:[`El recurs «${k}» ${CA_REC_DEF[k]}.`,`En aquesta frase hi ha una <b>${k}</b>.`],
+    hints:['Compara? Diu que una cosa «és» una altra? Dona vida a una cosa? Exagera? Imita un so? Repeteix paraules o sons? Canvia l\'ordre?',`Comença per «${k[0].toUpperCase()}».`],steps:[`El recurs «${k}» ${CA_REC_DEF[k]}.`,`En aquesta frase hi ha una <b>${k}</b>.`],
     err:v=>caAlts(r).map(fold).includes(fold(v[0]))?null:(Object.keys(CA_REC_DEF).map(fold).includes(fold(v[0]))?'ca_recurs':null)}}},
  ca_rima:{mat:'catala',ab:'Ri',nom:'La rima i els gèneres literaris',ic:'♪',
   teoria:['La <b>rima</b> és la repetició de sons al final dels versos, a partir de la darrera vocal tònica:','<b>Consonant</b>: es repeteixen les vocals i les consonants (can<b>çó</b> / bal<b>có</b>, <b>nit</b> / l<b>lit</b>). <b>Assonant</b>: només les vocals (c<b>a</b>s<b>a</b> / pl<b>a</b>ç<b>a</b>).',
-   'Els <b>gèneres literaris</b> són la <b>narrativa</b> (conte, novel·la, rondalla), la <b>poesia</b> o lírica (en vers) i el <b>teatre</b> (per representar). Les <b>rondalles</b> mallorquines són narracions populars que va recollir mossèn Antoni Maria Alcover.'],
+   'Els <b>gèneres literaris</b> són la <b>narrativa</b> (conte, novel·la, rondalla), la <b>poesia</b> o lírica (en vers) i el <b>teatre</b> (per representar). Les <b>rondalles</b> mallorquines són narracions populars que va recollir mossèn Antoni Maria Alcover.',
+   'La literatura popular de les Illes també té <b>llegendes</b> (fets reals i fantàstics lligats a un lloc), <b>mites</b> (l\'origen del món, amb déus i herois), <b>gloses</b> (versos improvisats que es canten), <b>endevinalles</b>, <b>refranys</b> i <b>cançons</b>. Les <b>faules</b> són contes curts d\'animals amb una lliçó final.'],
   gen(lv){if(lv>0&&Math.random()<.5){const[a,b,t]=pick(CA_RIMA);
     return{text:`La rima entre «<b>${a}</b>» i «<b>${b}</b>», és consonant o assonant?`,fields:[{label:'Tipus de rima',txt:[t],loose:true}],vis:null,
      hints:['Mira a partir de la darrera vocal que sona forta.','Si coincideixen també les consonants, és consonant.'],steps:[t==='consonant'?'A partir de la vocal tònica coincideixen vocals i consonants.':'A partir de la vocal tònica només coincideixen les vocals.',`La rima és <b>${t}</b>.`]}}
@@ -212,18 +259,20 @@ Object.assign(ERR,{
  ca_recurs:{kid:'És un recurs literari, però no aquest. Repassa la diferència entre comparació, metàfora i personificació.',par:'Confon els recursos literaris'}
 });
 
-/* ---------- unitats ---------- */
-UNITS.catala=[
- ['L\'accentuació',['ca_accent']],
- ['L\'apòstrof i les contraccions',['ca_apostrof']],
- ['La dièresi',['ca_dieresi']],
- ['Ortografia de les consonants',['ca_consonants']],
- ['Les categories gramaticals',['ca_categories']],
- ['El verb',['ca_conjugar','ca_temps']],
- ['L\'oració',['ca_subjecte','ca_tipus_oracio']],
- ['El lèxic',['ca_sinonims','ca_prefixos']],
- ['Literatura',['ca_recursos','ca_rima']],
- ['Comprensió lectora',['ca_lectura']]];
+/* ---------- unitats: a catala-unitats.js ---------- */
+
+/* ---------- utilitats per als altres arxius de Català ---------- */
+// Exercici de resposta escrita. ans: llista de respostes acceptades (la primera és la que es mostra).
+// o: {label, loose, hints, steps, err, fig}
+function caEx(text,ans,o={}){return{text,fields:[{label:o.label||'Resposta',txt:o.loose?ans:ans.map(caLow),loose:!!o.loose,wide:true}],vis:null,fig:o.fig,
+ hints:o.hints||[],steps:o.steps||[`Resposta: <b>${ans[0]}</b>.`],err:o.err}}
+// Marca la paraula entre asteriscs: «El *gat* dorm» → El <b><u>gat</u></b> dorm
+const caMark=s=>s.replace(/\*(.+?)\*/g,'<b><u>$1</u></b>');
+const caStar=s=>(s.match(/\*(.+?)\*/)||[])[1]||'';
+const caLow=s=>s.toLowerCase();
+const caCap=s=>s[0].toUpperCase()+s.slice(1);
+// Mateixa resposta sense tenir en compte accents, majúscules ni articles (per detectar errors típics)
+const caSame=(a,b)=>fold(a)===fold(b);
 
 /* ---------- material: taula de conjugació ---------- */
 MATERIAL.catala=[{obre:'conjTable()',ic:'list',nom:'Taula de conjugació',desc:'Verbs regulars models: cantar, perdre, dormir, servir'}];
