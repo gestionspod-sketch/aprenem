@@ -473,7 +473,7 @@ header{background:rgba(255,255,255,.95)}
 .sres4.empty{padding:16px 18px;display:flex;flex-direction:column;gap:2px}.sres4.empty small{color:var(--muted)}
 .trow4.sr .tile{background:color-mix(in srgb,var(--c) 12%,#fff);color:var(--c);box-shadow:none}
 .srctx{display:block;width:100%;color:var(--muted);font-weight:600;font-size:13px;order:3}
-:root{--s-musica:#8B5CF6;--s-catala:#E0457B}
+:root{--s-musica:#8B5CF6;--s-catala:#E0457B;--s-castella:#0891B2}
 .subjs4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
 @media (max-width:1000px){.subjs4{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.subjs4{grid-template-columns:1fr}}
