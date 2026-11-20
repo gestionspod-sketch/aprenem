@@ -30,7 +30,8 @@
 /* ===================== nivell triat (Primària / elementals) ===================== */
 const LM_KEY='aprenem_musica';let LM_C=null;
 function lmCfg(){if(LM_C)return LM_C;let c={};try{c=JSON.parse(localStorage.getItem(LM_KEY)||'{}')||{}}catch(e){}
- LM_C={nivell:['pri','tots','lm'].includes(c.nivell)?c.nivell:'pri',ee:[1,2,3,4].includes(c.ee)?c.ee:4};return LM_C}
+ LM_C={nivell:['pri','tots','lm'].includes(c.nivell)?c.nivell:'pri',ee:[1,2,3,4].includes(c.ee)?c.ee:4,ins:typeof c.ins==='string'?c.ins:''};return LM_C}
+const LM_EXTRA=[]; // altres arxius hi afegeixen funcions c=>[unitats] (p. ex. «El meu instrument»)
 function lmSetCfg(c){LM_C={...lmCfg(),...c};try{localStorage.setItem(LM_KEY,JSON.stringify(LM_C))}catch(e){}}
 const lmOn=()=>lmCfg().nivell!=='pri';
 
@@ -612,6 +613,38 @@ lm_audicio:{mat:'musica',ab:'Au',nom:'Audició: intervals, acords i compassos',
    hints:['Canta l\'escala de do des de baix fins a la segona nota i compta.','Do-re 2a, do-mi 3a, do-fa 4a, do-sol 5a, do-la 6a, do-si 7a, do-do 8a.'],steps:[`La segona nota era <b>${lmNom(n2)}</b>: de do a ${lmNom(n2)} hi ha una <b>${k}a</b>.`],err:null}}}
 });
 
+/* ---------- 4t EE: compassos d'amalgama i tonalitats veïnes ---------- */
+const LM_AMG={'5/8':[[2,3],[3,2]],'7/8':[[2,2,3],[2,3,2],[3,2,2]],'8/8':[[3,3,2],[3,2,3],[2,3,3]],'5/4':[[2,3],[3,2]]};
+Object.assign(SK,{
+lm_amalgama:{mat:'musica',ab:'Am',nom:'Compassos d\'amalgama (5/8, 7/8...)',
+ teoria:['Els <b>compassos d\'amalgama</b> (o irregulars) barregen temps de <b>2</b> i de <b>3</b> parts dins el mateix compàs: per això els temps no duren tots igual.','<b>5/8</b> = 2 + 3 o 3 + 2 corxeres (2 temps, un de curt i un de llarg). El <b>zortziko</b> basc és en 5/8.','<b>7/8</b> = 2 + 2 + 3, 2 + 3 + 2 o 3 + 2 + 2 (3 temps). <b>8/8</b> agrupat 3 + 3 + 2 (3 temps). Són molt típics de la música dels Balcans.','Per comptar-los, digues les corxeres agrupades: «<b>u</b>-i <b>u</b>-i-i» (2 + 3). L\'agrupació sovint s\'indica amb les barres que uneixen les corxeres o escrivint-la damunt (2+3/8).'],
+ gen(lv){const ts=pick(lv?Object.keys(LM_AMG):['5/8','7/8']),G=pick(LM_AMG[ts]),[a,b]=ts.split('/').map(Number),gs=G.join(' + '),ty=pick(lv?['temps','parts','llargs','agrupa','classe']:['temps','parts','agrupa']);
+  const un=b===8?'corxeres':'negres';
+  if(ty==='temps')return{text:`Un compàs de <b>${ts}</b> agrupat <b>${gs}</b>: quants <b>temps</b> (pulsacions) té?`,fields:[{label:'Temps',ans:R(G.length)}],
+   hints:['Cada grup (de 2 o de 3) és un temps.','Compta els grups, no les '+un+'.'],steps:[`${gs}: ${G.length} grups → <b>${G.length}</b> temps.`],err:x=>req(x[0],R(a))?'lm_compost':null};
+  if(ty==='parts')return{text:`Quantes <b>${un}</b> té un compàs de <b>${ts}</b>?`,fields:[{label:muCap(un),ans:R(a)}],hints:['Mira el número de dalt.',`El número de baix (${b}) diu quina figura es compta.`],steps:[`El ${ts} té <b>${a}</b> ${un}.`],err:null};
+  if(ty==='llargs'){const k=G.filter(x=>x===3).length;return{text:`En un compàs de <b>${ts}</b> agrupat <b>${gs}</b>, quants temps són <b>llargs</b> (de 3 ${un})?`,fields:[{label:'Temps llargs',ans:R(k)}],
+   hints:['Els temps de 3 són llargs; els de 2, curts.','Compta els 3 de l\'agrupació.'],steps:[`${gs}: hi ha <b>${k}</b> grup${k===1?'':'s'} de 3.`],err:null}}
+  if(ty==='classe'){const c=Math.random()<.5?'7/8':'6/8',am=c==='7/8';return{text:`El compàs de <b>${c}</b>, és d'amalgama o compost?`,fields:[lmF([am?'amalgama':'compost',am?'d\'amalgama':'compàs compost',am?'irregular':'compost'])],
+   hints:['Als compostos tots els temps tenen 3 parts.','Si el número de dalt no es pot repartir en grups iguals de 2 o de 3, és d\'amalgama.'],steps:[am?'7 = 2 + 2 + 3: temps desiguals → <b>d\'amalgama</b>.':'6 = 3 + 3: dos temps iguals de 3 → <b>compost</b>.'],err:v=>lmIn(v[0],[am?'compost':'amalgama'])?'lm_compost':null}}
+  const all=LM_AMG[ts].map(g=>g.join('+'));return{text:`Escriu una agrupació possible d'un compàs de <b>${ts}</b> amb grups de 2 i de 3 (p. ex. 2+3).`,fields:[{label:'Agrupació',txt:lmV(all.flatMap(s=>[s,s.replace(/\+/g,' + '),s.replace(/\+/g,' ')])),wide:false}],
+   hints:[`Els grups han de sumar ${a}.`,'Només pots usar grups de 2 i de 3.'],steps:[`Possibles: <b>${all.join('</b>, <b>')}</b>.`],err:null}}},
+
+lm_veines:{mat:'musica',ab:'Vn',nom:'Tonalitats veïnes i modulació',
+ teoria:['<b>Modular</b> és canviar de tonalitat dins una peça. Les modulacions més habituals són a les <b>tonalitats veïnes</b>: les que tenen una armadura igual o amb <b>una alteració de diferència</b>.','Les veïnes d\'una tonalitat major són: la seva <b>relativa menor</b>, la tonalitat de la <b>dominant</b> (grau V, un sostingut més o un bemoll menys), la de la <b>subdominant</b> (grau IV, un sostingut menys o un bemoll més) i les relatives d\'aquestes dues.','Exemple: <b>do major</b> → la menor, sol major, mi menor, fa major, re menor.','Una modulació sovint s\'anuncia amb una <b>alteració nova</b> que es repeteix: a do major, si apareix sovint el fa♯, la música passa a sol major (o mi menor).'],
+ gen(lv){let n=lmNRange(lv);if(Math.abs(n)>5)n=Math.sign(n)*5;const M=lmMajor(n),ty=pick(lv?['dom','sub','alt','rel']:['dom','sub']);
+  if(ty==='dom'||ty==='sub'){const d=ty==='dom'?1:-1,T=lmMajor(n+d),g=ty==='dom'?'V':'IV';
+   return{text:`Quina és la tonalitat veïna de <b>${lmKey(M,'major')}</b> que es forma sobre el seu grau <b>${g}</b> (${ty==='dom'?'dominant':'subdominant'})?`,fields:[lmF(lmKeyTxt(T,'major',true),'Tonalitat')],
+    hints:[`Busca el grau ${g} de l'escala de ${lmKey(M,'major')}.`,ty==='dom'?'Tindrà un sostingut més (o un bemoll menys).':'Tindrà un sostingut menys (o un bemoll més).'],
+    steps:[`Grau ${g} de ${lmKey(M,'major')}: ${lmNom(T)}.`,`Tonalitat veïna: <b>${lmKey(T,'major')}</b> (${n+d?lmAltTxt(n+d):'cap alteració'}).`],err:v=>lmIn(v[0],lmKeyTxt(lmMajor(n-d),'major',true))?'lm_cercle_dir':null}}
+  if(ty==='alt'){const d=pick([1,-1]),T=lmMajor(n+d),nw=n+d>n?(n+d>0?{l:LM_SH[n+d-1],a:1}:{l:LM_FL[-n-1],a:0}):(n>0?{l:LM_SH[n-1],a:0}:{l:LM_FL[-(n+d)-1],a:-1});
+   return{text:`Una peça en <b>${lmKey(M,'major')}</b> comença a fer servir sovint la nota <b>${lmNom(nw)}${nw.a?'':' becaire (♮)'}</b>. A quina tonalitat major veïna modula?`,fields:[lmF(lmKeyTxt(T,'major',true),'Tonalitat')],
+    hints:[`Mira l'armadura de ${lmKey(M,'major')} (${n?lmAltTxt(n):'cap alteració'}): aquesta nota l'afegeix o la treu?`,'Busca la tonalitat major amb aquesta armadura nova.'],
+    steps:[`Armadura nova: ${n+d?lmAltTxt(n+d):'cap alteració'}.`,`És <b>${lmKey(T,'major')}</b>.`],err:null}}
+  const m=lmMinor(n);return{text:`Quina tonalitat menor és veïna de <b>${lmKey(M,'major')}</b> i té la <b>mateixa armadura</b>?`,fields:[lmF(lmKeyTxt(m,'menor',true),'Tonalitat')],
+   hints:['És la relativa menor.','3a menor per davall de la tònica.'],steps:[`La relativa menor de ${lmKey(M,'major')} és <b>${lmKey(m,'menor')}</b>.`],err:v=>lmIn(v[0],lmKeyTxt(M,'menor',true))?'lm_homonima':null}}}
+});
+
 /* ===================== unitats d'elementals (ordre progressiu) ===================== */
 // [nom, temes, curs d'elementals on se sol treballar]
 const LM_UNITS=[
@@ -628,13 +661,14 @@ const LM_UNITS=[
  ['Graus i acords',['lm_graus','lm_acords'],3],
  ['Formes musicals i història',['lm_formes'],3],
  ['Clau de do, inversió i transport',['lm_clau_do','lm_int_inversio','lm_transport'],4],
+ ['Compassos d\'amalgama i tonalitats veïnes',['lm_amalgama','lm_veines'],4],
  ['Audició',['lm_audicio'],1]];
 const LM_EEN=['','1r','2n','3r','4t'];
 // UNITS.musica es calcula cada vegada segons el nivell triat. Les unitats amagades hi són amb el curs [0]
 // (no es mostren), perquè els seus temes no surtin a «Altres temes».
 {const PRI=UNITS.musica||[];
  Object.defineProperty(UNITS,'musica',{configurable:true,enumerable:true,set(v){},get(){const c=lmCfg(),showP=c.nivell!=='lm',showL=c.nivell!=='pri';
-  return[...PRI.map(u=>showP?u:[u[0],u[1],[0]]),...LM_UNITS.map(([n,ks,ee])=>showL&&ee<=c.ee?[`${n} · ${LM_EEN[ee]} EE`,ks]:[n,ks,[0]])]}})}
+  return[...PRI.map(u=>showP?u:[u[0],u[1],[0]]),...LM_UNITS.map(([n,ks,ee])=>showL&&ee<=c.ee?[`${n} · ${LM_EEN[ee]} EE`,ks]:[n,ks,[0]]),...LM_EXTRA.flatMap(f=>f(c))]}})}
 
 /* ===================== errors típics ===================== */
 Object.assign(ERR,{
@@ -671,9 +705,12 @@ function lmNivell(){endSession();const c=lmCfg();
  ${opt('lm','Només Llenguatge musical d\'elementals','Claus, ritme, intervals, tonalitats, acords... fins a 4t d\'elementals.')}</div>
  <div class="card" id="eeBox" ${c.nivell==='pri'?'hidden':''}><h3 style="margin-top:0">Fins a quin curs d'elementals?</h3><p class="muted" style="margin-top:0">Es mostraran les unitats fins al curs triat (EE = ensenyaments elementals).</p>
  <div class="row">${[1,2,3,4].map(n=>`<button class="${c.ee===n?'':'sec'}" data-ee="${n}">${LM_EEN[n]} EE</button>`).join('')}</div></div>
+ ${typeof IM_LIST!=='undefined'?`<div class="card" ${c.nivell==='pri'?'hidden':''}><h3 style="margin-top:0">El meu instrument</h3><p class="muted" style="margin-top:0">Tria el teu instrument per veure'n la làmina i els exercicis.</p>
+ <div class="row">${[['','Tots / encara no en toc cap'],...IM_LIST].map(([k,v])=>`<button class="${c.ins===k?'':'sec'}" data-ins="${k}">${v}</button>`).join('')}</div></div>`:''}
  <div class="row"><button id="lmOk">Fet</button></div>`);
  document.querySelectorAll('[data-nv]').forEach(b=>b.onclick=()=>{lmSetCfg({nivell:b.dataset.nv});lmNivell()});
  document.querySelectorAll('[data-ee]').forEach(b=>b.onclick=()=>{lmSetCfg({ee:+b.dataset.ee});lmNivell()});
+ document.querySelectorAll('[data-ins]').forEach(b=>b.onclick=()=>{lmSetCfg({ins:b.dataset.ins});lmNivell()});
  $('#lmOk').onclick=()=>subject('musica')}
 
 function lmTaules(tab='cercle'){endSession();
@@ -690,7 +727,7 @@ function lmTaules(tab='cercle'){endSession();
  <div class="tabs" style="margin:0 0 12px">${Object.entries(T).map(([k,v])=>`<button class="${k===tab?'on':''}" onclick="lmTaules('${k}')">${v}</button>`).join('')}</div><div class="card">${body}</div>`)}
 
 // Les làmines d'elementals (lm:true) i les taules només surten si el nivell inclou elementals.
-{let LB=LAMINES.musica||[];Object.defineProperty(LAMINES,'musica',{configurable:true,enumerable:true,get(){return LB.filter(x=>!x.lm||lmOn())},set(v){LB=v}});
+{let LB=LAMINES.musica||[];Object.defineProperty(LAMINES,'musica',{configurable:true,enumerable:true,get(){const c=lmCfg();return LB.filter(x=>(!x.lm||lmOn())&&!(x.ins&&c.ins&&x.ins!==c.ins))},set(v){LB=v}});
  window.lmAddLamina=x=>LB.push(x);
  const MB=MATERIAL.musica||[];Object.defineProperty(MATERIAL,'musica',{configurable:true,enumerable:true,set(v){},get(){const c=lmCfg();
   return[{obre:'lmNivell()',nom:'Nivell de Música: '+(c.nivell==='pri'?'Primària':c.nivell==='tots'?'Primària + elementals':'Llenguatge musical d\'elementals'),desc:c.nivell==='pri'?'Vas al conservatori? Toca aquí per afegir el Llenguatge musical d\'elementals':`Fins a ${LM_EEN[c.ee]} d'elementals · toca per canviar-ho`,ic:'music'},
