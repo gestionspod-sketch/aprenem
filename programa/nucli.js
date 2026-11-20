@@ -81,10 +81,12 @@ function guided(c,steps,then,intro='Sembla que costa una mica. El Mestre Òliba 
 function exercise(el,k,o){
  let p,t0,wrong,hints,lock=false;const help=o.mode==='prac'||o.mode==='adv';
  const fresh=variant=>{p=genP(k);t0=Date.now();wrong=0;hints=0;lock=false;
+  // Píndola «Exercici n de N» (disseny Suau): copia el comptador de la barra superior
+  const nb=document.getElementById('tbN'),nt=nb?nb.textContent.trim():'',pill=nt?`<div class="expill">${/^\d/.test(nt)?'Exercici '+nt:esc(nt)}</div>`:'';
   el.innerHTML=`${variant?'<div class="fb info">Mateixa idea, dades noves. Ara demostra que ho has entès!</div>':''}
-  <div class="ex5w"><div class="prob">${p.text}</div>${p.fig?`<div class="fig">${p.fig}</div>`:''}<div class="vis">${o.showVis&&p.vis?p.vis:''}</div>
-  <div class="ans5"><div class="ans5-row">${p.fields.map((f,i)=>`<div class="fld${f.wide?' w':f.txt?' t':''}"><label>${f.label}</label><input class="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-i="${i}"></div>`).join('')}<button class="okb">Comprova</button></div><div class="fbx" aria-live="polite"></div></div>
-  <div class="tools5">${help?`<button class="sec hb">${IC.bulb}<span class="l">Una pista</span><span class="s">Pista</span></button>`:''}<button class="sec sp">${IC.speaker}<span class="l">${p.listen?'Escolta':'Llegeix-m\'ho'}</span><span class="s">${p.listen?'Escolta':'Llegeix'}</span></button>${help&&SK[k].teoria&&SK[k].teoria.length?`<button class="sec th">${IC.cap}<span class="l">Repassa la teoria</span><span class="s">Teoria</span></button>`:''}</div></div>`;
+  <div class="ex5w">${pill}<div class="prob">${p.text}</div>${p.fig?`<div class="fig">${p.fig}</div>`:''}<div class="vis">${o.showVis&&p.vis?p.vis:''}</div>
+  <div class="ans5"><div class="ans5-row">${p.fields.map((f,i)=>`<div class="fld${f.wide?' w':f.txt?' t':''}"><label>${f.label}</label><input class="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-i="${i}"></div>`).join('')}<span class="okw">${help?`<button class="sec hb" aria-label="Una pista" title="Una pista">${IC.bulb}</button>`:''}<button class="okb">Comprova</button></span></div><div class="fbx" aria-live="polite"></div></div>
+  <div class="tools5"><button class="sec sp">${IC.speaker}<span class="l">${p.listen?'Escolta':'Llegeix-m\'ho'}</span><span class="s">${p.listen?'Escolta':'Llegeix'}</span></button>${help&&SK[k].teoria&&SK[k].teoria.length?`<button class="sec th">${IC.cap}<span class="l">Repassa la teoria</span><span class="s">Teoria</span></button>`:''}</div></div>`;
   if(typeof pinAns==='function')pinAns(el.querySelector('.ans5'));
   const ins=el.querySelectorAll('input.ans');ins.forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')check()});if(!p.fig)ins[0].focus({preventScroll:true});
   const speak=()=>p.listen?say(p.listen,.8,'en-GB'):say(p.text);

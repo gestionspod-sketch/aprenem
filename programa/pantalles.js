@@ -1,8 +1,8 @@
 /* Aprenem - pantalles: inici, assignatures, modes, zona families
    Part de l'app d'estudi. Vegeu CLAUDE.md per a l'estructura i les normes. */
 /* ===================== pantalles principals ===================== */
-// Marca de l'òliba (v5): quadrat blau marí, ulls blancs i bec taronja
-const OWLM=(s=40,bg='#14213D',beak='#F26B1D')=>`<svg viewBox="0 0 40 40" width="${s}" height="${s}" aria-hidden="true"><rect width="40" height="40" fill="${bg}"/><path d="M7 8l6 5M33 8l-6 5" stroke="#fff" stroke-width="2.5"/><circle cx="14" cy="19" r="7" fill="#fff"/><circle cx="26" cy="19" r="7" fill="#fff"/><circle cx="14" cy="19" r="3" fill="${bg}"/><circle cx="26" cy="19" r="3" fill="${bg}"/><path d="M17.5 26h5L20 30Z" fill="${beak}"/></svg>`;
+// Mascota (disseny Suau): l'òliba rodona lila. Els paràmetres bg i beak es mantenen per compatibilitat.
+const OWLM=(s=40,bg,beak)=>`<svg class="owl5" viewBox="0 0 120 120" width="${s}" height="${s}" aria-hidden="true"><ellipse cx="60" cy="72" rx="40" ry="42" fill="#8B6CF0"/><ellipse cx="60" cy="86" rx="25" ry="24" fill="#EDE6FF"/><path d="M26 42 34 22 48 36ZM94 42 86 22 72 36Z" fill="#8B6CF0"/><circle cx="45" cy="56" r="15" fill="#fff"/><circle cx="75" cy="56" r="15" fill="#fff"/><circle cx="47" cy="57" r="6" fill="#1E1B3A"/><circle cx="73" cy="57" r="6" fill="#1E1B3A"/><path d="M55 68h10l-5 8Z" fill="#F2853A"/></svg>`;
 const OWL=(s=56)=>OWLM(s);
 const sc=k=>`--c:var(--s-${matOf(k)})`;
 const modeBtn=(k,m,extra='')=>`<button type="button" class="mode${extra}" data-m="${k}"><span class="tile">${m.ic}</span><span><b>${m.nom}</b><small>${m.desc}</small></span></button>`;
@@ -109,7 +109,7 @@ function nextStep(k){const p=S.prog[k],l=level(k);
 function finish(){const c=CUR;endSession();hideToast();if(!c)return home();
  const h=c.hist||[],tot=c.tot,pc=tot?Math.round(c.ok/tot*100):0,first=h.filter(x=>x.ok&&!x.help).length,min=Math.max(1,Math.round((Date.now()-c.t0)/60000));
  const ks=c.skills.filter(k=>SK[k]),m=ks.length?matOf(ks[0]):'mates',one=ks.length===1;
- const R=70,C=2*Math.PI*R,ringR=`<svg width="170" height="170" viewBox="0 0 170 170" role="img" aria-label="${c.ok} de ${tot} encerts"><circle cx="85" cy="85" r="${R}" fill="none" stroke="#E2E7EF" stroke-width="16"/><circle cx="85" cy="85" r="${R}" fill="none" stroke="#2BA36B" stroke-width="16" stroke-dasharray="${(C*pc/100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 85 85)"/><text x="85" y="86" text-anchor="middle" font-family="Lexend,system-ui" font-weight="800" font-size="44" fill="#14213D">${c.ok}/${tot}</text><text x="85" y="110" text-anchor="middle" font-family="Lexend,system-ui" font-size="14" fill="#64708A">encerts</text></svg>`;
+ const R=82,C=2*Math.PI*R,ringR=`<svg class="res5-ring" width="190" height="190" viewBox="0 0 190 190" role="img" aria-label="${c.ok} de ${tot} encerts"><circle cx="95" cy="95" r="${R}" fill="none" stroke="#D2C4FB" stroke-width="7"/>${pc>0?`<circle cx="95" cy="95" r="${R}" fill="none" stroke="#8B6CF0" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(C*pc/100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 95 95)"/>`:''}<circle cx="95" cy="95" r="62" fill="#fff"/><text x="95" y="100" text-anchor="middle" font-family="Poppins,system-ui" font-weight="500" font-size="40" fill="#1E1B3A">${c.ok}/${tot}</text><text x="95" y="124" text-anchor="middle" font-family="Poppins,system-ui" font-size="13" fill="#8A879E">encerts</text></svg>`;
  const lvB=k=>{const l=level(k);return`<div class="lvl5"><div class="lvl5-h"><span>${one?'El teu nivell en aquest tema':SK[k].nom}</span><em>Ara: ${LV_TXT[l+1]}</em></div><div class="lvl5-b">${[0,1,2].map(j=>`<i class="${l>=j?'l'+(j+1):''}"></i>`).join('')}</div><div class="lvl5-l"><span>En procés${l>=0?' ✓':''}</span><span>Comprèn${l>=1?' ✓':''}</span><span>Domina${l>=2?' ✓':''}</span></div><p>${nextStep(k)}</p></div>`};
  // errors típics d'aquesta sessió i punts forts
  const ec={};(c.errs||[]).forEach(e=>{const id=e.k+'|'+e.t;ec[id]=(ec[id]||0)+1});
@@ -120,13 +120,14 @@ function finish(){const c=CUR;endSession();hideToast();if(!c)return home();
  let nx=null;if(one){const lk=ks[0],U=unitsOf(m),all=U.flatMap(u=>u[1]),i=all.indexOf(lk);
   nx=level(lk)<1&&tot?{k:lk,mode:'exercicis',txt:`Torna a practicar: ${plain(SK[lk].nom)}`}:i>=0&&all[i+1]?{k:all[i+1],mode:level(all[i+1])<0?'professor':'exercicis',txt:`Continua: ${plain(SK[all[i+1]].nom)} →`}:null}
  const title=!tot?'Sessió acabada!':pc>=80?'Molt bona feina!':pc>=50?'Bona feina!':'Equivocar-se també és aprendre!';
+ const nowLv=one?`${plain(SK[ks[0]].nom)} · ara <b>${LV_TXT[level(ks[0])+1]}</b>`:`${SUBJ[m].nom}${ks.length>1?` · ${ks.length} temes`:''}`;
  app(`<div class="res5" style="--c:var(--s-${m})"><div class="res5-in">
-  <div class="res5-h"><small>${one?`${SUBJ[m].nom} · ${SK[ks[0]].nom}`:MODES[c.mode].nom}</small><h1>${title}</h1></div>
-  <div class="card res5-top">${tot?ringR:OWL(110)}<div class="res5-r">
-   <div class="res5-st"><div><b>${first}</b><span>a la primera</span></div><div><b>${min} min</b><span>de feina</span></div><div><b>${tot?pc+'%':'—'}</b><span>de precisió</span></div></div>
-   ${ks.slice(0,4).map(lvB).join('')}</div></div>
-  ${tot?`<div class="res5-2"><div class="card"><span class="lbl">Què has de vigilar</span>${errs.join('')||'<div class="res5-i"><span class="g">✓</span><div>Cap error típic en aquesta sessió.</div></div>'}</div>
-   <div class="card"><span class="lbl">El que ja fas molt bé</span>${good.join('')||'<div class="res5-i"><span class="w">·</span><div>Continua practicant: cada exercici t\'ajuda a aprendre.</div></div>'}</div></div>`:''}
+  <div class="res5-hero"><span class="res5-pill">${one?'Tema acabat':'Sessió acabada'}</span><h1>${title}</h1>
+   ${tot?ringR:OWL(150)}<p>${nowLv}</p></div>
+  <div class="res5-st"><div><span>A la primera</span><b>${first} de ${tot||0}</b></div><div><span>Temps</span><b>${min} min</b></div><div><span>Precisió</span><b>${tot?pc+'%':'—'}</b></div><div><span>Pistes</span><b>${c.hints||0}</b></div></div>
+  <div class="card res5-lv">${ks.slice(0,4).map(lvB).join('')}</div>
+  ${tot?`<div class="res5-2"><div class="res5-w"><b>Per vigilar</b>${errs.join('')||'<div class="res5-i"><span class="g">✓</span><div>Cap error típic en aquesta sessió.</div></div>'}</div>
+   <div class="res5-g"><b>El que ja fas molt bé</b>${good.join('')||'<div class="res5-i"><span class="w">·</span><div>Continua practicant: cada exercici t\'ajuda a aprendre.</div></div>'}</div></div>`:''}
   <div class="res5-btn"><button class="${nx?'sec':''}" onclick="home()">Tornar a l'inici</button>${nx?`<button id="rNx">${esc(nx.txt)}</button>`:''}</div></div></div>`,true);
  if(nx)$('#rNx').onclick=()=>start(nx.mode,[nx.k],15)}
 
