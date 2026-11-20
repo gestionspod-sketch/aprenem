@@ -28,12 +28,23 @@ Més endavant: la resta de Primària i l'ESO.
 
 ## 3. Disseny
 
-**v5 (l'actual):** disseny d'**aplicació professional** per a ordinador, tauleta i mòbil, aprovat pel propietari a partir de les maquetes de `disseny/v5/` (són la referència visual; les dades de les maquetes són inventades).
-- **Lletra Lexend** (Google Fonts, amb la del sistema de reserva). Tinta `#14213D`, fons `#F4F6FA`, targetes blanques amb vora fina `#E2E7EF`. Etiquetes en majúscules petites (12 px, gris `#64708A`).
-- **Cantons rectes a tot arreu** (cap `border-radius`: petició expressa del propietari).
+**Suau (l'actual):** estil suau i amable aprovat pel propietari a partir de les maquetes de `disseny/suau/` (Inici i Exercici i Resultat de mòbil, Inici d'ordinador; les dades són inventades). **Manté l'estructura de pantalles i la lògica de la v5** (vegeu més avall); només canvia l'aspecte. La norma antiga de «botons i targetes rectangulars» **queda anul·lada**: ara els cantons arrodonits són la norma.
+- **Lletra Poppins** (Google Fonts, amb la del sistema de reserva). Tinta `#1E1B3A`, text suau `#8A879E`. Fons de l'app `#F1F4F8` a l'ordinador amb panells blancs; al mòbil, fons blanc.
+- **Colors:** lila d'accent `#8B6CF0` (fosc `#6E4FE0` / `#4B2FB8`), taronja càlid `#F2853A`. Targetes pastel: préssec `#FDE3B8` (continua), lavanda `#E3D9FD` (objectiu i ratxa, amb l'òliba), cel `#D6E8FD`, menta `#D4F1E4`, rosa `#FBDDEB`, llima `#DDF3C9` (maneres de practicar).
+- **Assignatures:** cada una té tres variables a `estil/app.css`: `--s-<assig>` color fort (barres), `--t-<assig>` rajola pastel i `--d-<assig>` color fosc (text i icona). `sujC(m)` (`inici.js`) les posa com a `--c`, `--t` i `--d`.
+- **Formes:** cantons de 18-28 px a les targetes, 20 px als camps de resposta, botons en **píndola**. Ombres suaus només on cal, sense vores pertot. Botó principal lila; el de «Continua» de l'inici, taronja.
+- **Mascota:** l'òliba rodona lila (`OWLM()` a `pantalles.js`), també com a logotip a dalt del menú.
+- **Closca:** ordinador i tauleta = **barra d'icones blanca i arrodonida** amb l'òliba a dalt (dins Assignatures, una rajola per assignatura). Mòbil (<768 px) = **barra inferior blanca** amb els cantons de dalt arrodonits (només icones).
+- **Inici:** data i salutació, cercador, targeta préssec «Continua on ho deixares» (anell de % de la unitat) + targeta lavanda «Objectiu d'avui» (minuts, ratxa i l'òliba), «Com vols practicar?» (6 rajoles pastel), assignatures (rajola pastel + barra del seu color). A sota: missió d'avui, la setmana (ratxa) i el consell de l'òliba.
+- **Exercici:** full blanc arrodonit; figura a dalt, píndola «Exercici n de N» (copia el comptador de la barra superior), enunciat centrat; error típic en un requadre groc suau `#FFF4DE` amb l'òliba; camp de resposta lavanda amb vora lila, botó rodó de pista i «Comprova» lila a baix (fixats a baix al mòbil).
+- **Resultat:** panell lavanda amb la píndola blanca «Tema acabat», l'anell d'encerts i el nivell actual; a sota xifres grans i lleugeres (a la primera, temps, precisió, pistes), nivell amb què li falta, «Per vigilar» (groc) i punts forts (menta), i els botons.
+
+**v5 (substituïda per Suau; queda a l'historial, commit `d2b10d4`):** disseny d'**aplicació professional** per a ordinador, tauleta i mòbil, a partir de les maquetes de `disseny/v5/` (continuen sent la referència de **l'estructura** de cada pantalla).
+- Lletra Lexend. Tinta `#14213D`, fons `#F4F6FA`, targetes blanques amb vora fina `#E2E7EF`. Etiquetes en majúscules petites (12 px, gris `#64708A`).
+- Cantons rectes a tot arreu.
 - **Un sol botó taronja** d'acció per pantalla (`#F26B1D`, ombra inferior: «es pitja»); botons secundaris blancs amb vora.
 - Colors d'assignatura: Català `#E0457B`, Castellà `#F08A24`, Mates `#3B6FE0`, Anglès `#D6453D`, Medi `#2BA36B`, Música `#7B5CE0` (variables `--s-<assig>`). Nivells: sense començar `#E2E7EF`, en procés `#F5B946`, comprèn `#7FA2F0`, domina `#14213D`.
-- Error típic: requadre ambre amb barra a l'esquerra i la **marca de l'òliba** (quadrat blau marí, `OWLM()` a `pantalles.js`). Icones de línia; cap emoticona decorativa.
+- Error típic: requadre ambre amb barra a l'esquerra i la **marca de l'òliba** (a la v5, quadrat blau marí). Icones de línia; cap emoticona decorativa.
 - **Closca:** ordinador (≥1024 px) = menú lateral (Inici, Assignatures amb les assignatures dins, Practicar, Aventura, El meu progrés; Famílies a baix, amb PIN) + columna principal (+ columna dreta a l'inici: objectiu del dia, setmana de la ratxa, missió i consell de l'òliba). Tauleta = menú lateral només amb icones i la columna dreta passa a baix. Mòbil (<768 px) = sense menú lateral, **barra inferior** (Inici, Assignatures, Progrés, Famílies).
 - Inici: salutació i data, cercador, «Continua on ho deixares» (passos de la unitat), «Com vols practicar?» (6 maneres), assignatures amb % i segments de domini per unitat.
 - Assignatura: capçalera del color amb % après → **unitats com un camí vertical** (fetes / la d'ara oberta amb els temes i Aprendre / Practicar / «Fer la prova de la unitat» / pendents, que s'obren en tocar-les) i, al costat, làmines, material i «Per repassar».
@@ -68,8 +79,9 @@ La **v1** (disseny més infantil) es conserva a `versions/aprenem-v1.html` nomé
 
 ```
 index.html                      obre l'app (doble clic) — carrega la resta
-estil/app.css                   estils (disseny v5)
-disseny/v5/                     maquetes aprovades del disseny v5 (referència visual)
+estil/app.css                   estils (disseny Suau)
+disseny/suau/                   maquetes aprovades del disseny Suau (referència visual)
+disseny/v5/                     maquetes del disseny v5 (estructura de les pantalles)
 programa/utils.js               utilitats: fraccions, nombres...
 programa/dades-app.js           assignatures, modes, errors típics (ERR), aventura, dictats
 programa/nucli.js               estat i progrés, rellotge, veu, IA (Gemini), components d'exercici

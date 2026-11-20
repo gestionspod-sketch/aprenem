@@ -25,7 +25,7 @@ function curUnit(m,U){if(!U.length)return 0;const lt=lastTopic(m),ui=lt?U.findIn
  if(ui>=0&&unitLv(U[ui][1])<2)return ui;const nx=U.findIndex((u,i)=>i>ui&&unitLv(u[1])<2);if(nx>=0)return nx;
  const f=U.findIndex(u=>unitLv(u[1])<2);return f>=0?f:Math.max(0,ui)}
 const abOf=k=>SK[k].ab||(typeof AB!=='undefined'&&AB[k])||SK[k].nom.slice(0,2);
-const sujC=m=>`--c:var(--s-${m})`;
+const sujC=m=>`--c:var(--s-${m});--t:var(--t-${m});--d:var(--d-${m})`;   // color fort, rajola pastel i color fosc de l'assignatura
 function greet(){const h=new Date().getHours();return h<6?'Bona nit':h<14?'Bon dia':h<21?'Bona tarda':'Bona nit'}
 function dateStr(){try{const t=new Date().toLocaleDateString('ca-ES',{weekday:'long',day:'numeric',month:'long'});return t.charAt(0).toUpperCase()+t.slice(1)}catch(e){return''}}
 const LEGEND=`<div class="legend5"><span><i></i>Sense començar</span><span><i class="l1"></i>En procés</span><span><i class="l2"></i>Comprèn</span><span><i class="l3"></i>Domina</span></div>`;
@@ -34,29 +34,30 @@ const LEGEND=`<div class="legend5"><span><i></i>Sense començar</span><span><i c
 let NAV={k:'inici',m:null};
 function nav(k,m=null){NAV={k,m};drawShell()}
 function drawShell(){const s=$('#side'),t=$('#tabbar');if(!s||!t)return;const on=x=>NAV.k===x?' class="on" aria-current="page"':'';
- s.innerHTML=`<button class="logo5" onclick="home()" aria-label="Aprenem: anar a l'inici">${OWLM(36)}<b>Aprenem</b></button>
- <nav class="nav5"><button${on('inici')} onclick="home()" title="Inici">${IC.home}Inici</button>
- <button${on('assig')} onclick="subjects()" title="Assignatures">${IC.book}Assignatures</button>
- ${NAV.k==='assig'?`<div class="subs">${Object.keys(SUBJ).map(m=>`<button class="${NAV.m===m?'cur':''}" style="${sujC(m)}" onclick="subject('${m}')"><i></i>${SUBJ[m].nom}</button>`).join('')}</div>`:''}
- <button${on('practicar')} onclick="practicar()" title="Practicar">${IC.grid}Practicar</button>
- <button onclick="start('aventura')" title="Aventura">${IC.map}Aventura</button>
- <button${on('progres')} onclick="progres()" title="El meu progrés">${IC.chart}El meu progrés</button></nav>
- <div class="nav5 side-foot"><button${on('families')} onclick="askPin()" title="Famílies (amb PIN)">${IC.lock}Famílies</button></div>`;
+ s.innerHTML=`<button class="logo5" onclick="home()" aria-label="Aprenem: anar a l'inici" title="Aprenem">${OWLM(50)}<b>Aprenem</b></button>
+ <nav class="nav5"><button${on('inici')} onclick="home()" title="Inici" aria-label="Inici">${IC.home}<span>Inici</span></button>
+ <button${on('assig')} onclick="subjects()" title="Assignatures" aria-label="Assignatures">${IC.book}<span>Assignatures</span></button>
+ ${NAV.k==='assig'?`<div class="subs">${Object.keys(SUBJ).map(m=>`<button class="${NAV.m===m?'cur':''}" style="${sujC(m)}" onclick="subject('${m}')" title="${SUBJ[m].nom}" aria-label="${SUBJ[m].nom}">${SUBJ[m].ic}</button>`).join('')}</div>`:''}
+ <button${on('practicar')} onclick="practicar()" title="Practicar" aria-label="Practicar">${IC.grid}<span>Practicar</span></button>
+ <button onclick="start('aventura')" title="Aventura" aria-label="Aventura">${IC.map}<span>Aventura</span></button>
+ <button${on('progres')} onclick="progres()" title="El meu progrés" aria-label="El meu progrés">${IC.chart}<span>El meu progrés</span></button></nav>
+ <div class="nav5 side-foot"><button${on('families')} onclick="askPin()" title="Famílies (amb PIN)" aria-label="Famílies">${IC.lock}<span>Famílies</span></button></div>`;
  t.innerHTML=[['inici','home()',IC.home,'Inici'],['assig','subjects()',IC.book,'Assignatures'],['progres','progres()',IC.chart,'Progrés'],['families','askPin()',IC.lock,'Famílies']]
-  .map(([k,f,i,n])=>`<button${on(k)} onclick="${f}">${i}${n}</button>`).join('')}
+  .map(([k,f,i,n])=>`<button${on(k)} onclick="${f}" aria-label="${n}">${i}<span>${n}</span></button>`).join('')}
 
 /* ---------- peces reutilitzables ---------- */
-function ring(done,goal,sz){const big=sz>60,r=big?35:17,w=big?9:5,c=2*Math.PI*r,p=Math.max(0,Math.min(1,done/(goal||1))),h=sz/2;
- return`<svg class="ring5" width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" role="img" aria-label="${done} de ${goal} minuts"><circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="#E2E7EF" stroke-width="${w}"/><circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="#2BA36B" stroke-width="${w}" stroke-dasharray="${(c*p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${h} ${h})"/>${big
-  ?`<text x="${h}" y="${h-1}" text-anchor="middle" font-weight="700" font-size="20" fill="#14213D">${done}</text><text x="${h}" y="${h+15}" text-anchor="middle" font-size="10" fill="#64708A">de ${goal} min</text>`
-  :`<text x="${h}" y="${h+4}" text-anchor="middle" font-weight="700" font-size="12" fill="#14213D">${done}'</text>`}</svg>`}
-// Les 6 maneres de practicar (ordre i colors del disseny v5)
-const MODE5=()=>[['professor','Professor','T\'ho explica pas a pas','#3B6FE0',IC.cap],['exercicis','Exercicis','Practica un tema','#2BA36B',IC.grid],['aventura','Aventura','Proves amb segell','#F08A24',IC.map],
- ['combinada','Sessió combinada','Una mica de tot','#7B5CE0',IC.layers],['escriptura','Escriptura','Escriu a mà i fes foto','#E0457B',IC.pen],['comprovacio','Comprovació','Ja ho domines?','#14213D',IC.okc]];
-const modeTiles=big=>MODE5().map(([k,n,d,c,i])=>`<button class="mode5" style="--c:${c}" data-m="${k}"><span class="ico5">${i}</span>${big?MODES[k].nom:n}<small>${big?MODES[k].desc:d}</small></button>`).join('');
-function subCard(m){const U=unitsOf(m),ks=U.flatMap(u=>u[1]),ms=mastery(ks),ui=curUnit(m,U);
- return`<button class="sub5" style="${sujC(m)}" onclick="subject('${m}')"><span class="sub5-t"><b>${SUBJ[m].ic}${SUBJ[m].nom}</b><em>${ms}%</em></span>${U.length
-  ?`<span class="seg" aria-hidden="true">${U.map(u=>`<span class="l${unitLv(u[1])}"></span>`).join('')}</span><small>Unitat ${ui+1} de ${U.length} · ${esc(U[ui][0])}</small>`:'<small>Properament</small>'}<span class="mbar" aria-hidden="true"><span><i style="width:${ms}%"></i></span><b>${ms}%</b></span></button>`}
+// Anell de progrés (Suau): track clar i traç de color arrodonit. col = [traç, track, text]
+function ring(done,goal,sz,col=['#8B6CF0','#D2C4FB','#3B2A8C'],lbl){const big=sz>60,r=big?sz/2-8:sz/2-4,w=big?6:4,c=2*Math.PI*r,p=Math.max(0,Math.min(1,done/(goal||1))),h=sz/2;
+ return`<svg class="ring5" width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" role="img" aria-label="${lbl||`${done} de ${goal} minuts`}"><circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="${col[1]}" stroke-width="${w}"/>${p>0?`<circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="${col[0]}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${(c*p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${h} ${h})"/>`:''}${big
+  ?`<text x="${h}" y="${h+6}" text-anchor="middle" font-weight="400" font-size="${Math.round(sz/6)}" fill="${col[2]}">${lbl||done}</text>`
+  :`<text x="${h}" y="${h+4}" text-anchor="middle" font-weight="500" font-size="12" fill="${col[2]}">${done}'</text>`}</svg>`}
+// Les 6 maneres de practicar (ordre del disseny v5, colors pastel del disseny Suau: [fons, icona])
+const MODE5=()=>[['professor','Professor','T\'ho explica','#D6E8FD','#2D6BD8',IC.cap],['exercicis','Exercicis','Practica un tema','#D4F1E4','#1F8A5B',IC.grid],['aventura','Aventura','Proves amb segell','#FBDDEB','#C93D78',IC.map],
+ ['combinada','Sessió mixta','Una mica de tot','#E3D9FD','#6E4FE0',IC.layers],['escriptura','Escriptura','Escriu i fes foto','#FDE3B8','#C26A17',IC.pen],['comprovacio','Comprovació','Ja ho domines?','#DDF3C9','#3E7A1E',IC.okc]];
+const modeTiles=big=>MODE5().map(([k,n,d,bg,c,i])=>`<button class="mode5" style="--t:${bg};--c:${c}" data-m="${k}"><span class="ico5">${i}</span>${big?MODES[k].nom:n}<small>${big?MODES[k].desc:d}</small></button>`).join('');
+function subCard(m,big){const U=unitsOf(m),ks=U.flatMap(u=>u[1]),ms=mastery(ks),ui=curUnit(m,U);
+ return`<button class="sub5" style="${sujC(m)}" onclick="subject('${m}')"><span class="sub5-ic" aria-hidden="true">${SUBJ[m].ic}</span><span class="sub5-b"><span class="sub5-t"><b>${SUBJ[m].nom}</b><em>${ms}%</em></span><span class="bar5" aria-hidden="true"><i style="width:${ms}%"></i></span>${big&&U.length?`<span class="seg" aria-hidden="true">${U.map(u=>`<span class="l${unitLv(u[1])}"></span>`).join('')}</span>`:''}${U.length
+  ?`<small>Unitat ${ui+1} de ${U.length} · ${esc(U[ui][0])}</small>`:'<small>Properament</small>'}</span><em class="sub5-pc">${ms}%</em></button>`}
 const topicRow=(k,ctx)=>{const v=SK[k],l=level(k);let teo='';try{teo=plain((v.teoria||[]).join(' '))}catch(e){}
  return`<div class="topic5" style="${sujC(matOf(k))}" data-s="${esc(sfold(v.nom+' '+(typeof ctx==='string'?ctx:'')+' '+teo))}"><span class="ab5">${abOf(k)}</span><span class="tn"><b>${v.nom}</b>${ctx&&ctx.show?`<small>${ctx.show}</small>`:''}</span>${lvTag(k)}<span class="tb"><button class="btn2" data-l="${k}">Aprendre</button><button class="btn2${l===0||l===1?' dk':''}" data-p="${k}">Practicar</button></span></div>`};
 function bindModes(root){root.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>start(b.dataset.m))}
@@ -65,21 +66,21 @@ function owlTip(){let best=null;for(const[k,p]of Object.entries(S.prog))if(SK[k]
  const tips=['si t\'equivoques dues vegades, t\'explicaré la solució pas a pas. Equivocar-se també és aprendre!','una mica cada dia val més que molt d\'un sol cop.','abans d\'escriure la resposta, llegeix l\'enunciat dues vegades.','quan un tema et costi, entra a «Aprendre» i mira l\'exemple resolt.'];
  const txt=!best?tips[new Date().getDate()%tips.length]:best.t==='massa_rapid'?'llegeix cada enunciat amb calma abans de respondre. Pensar primer estalvia errors!'
   :`a <b>${SK[best.k].nom}</b> ${best.n>1?`t'has equivocat ${best.n} vegades de la mateixa manera`:`t'has equivocat una vegada`}. Recorda: ${ERR[best.t].kid.replace(/^Gairebé!\s*/,'')}`;
- return`<div class="tip5">${OWLM(34,'#F26B1D','#14213D')}<div><b>Consell de l'òliba:</b> ${txt}</div></div>`}
+ return`<div class="tip5">${OWLM(40)}<div><b>Consell de l'òliba:</b> ${txt}</div></div>`}
 
 /* ---------- inici ---------- */
 function home(){endSession();PARENT_OK=false;nav('inici');
  const nm=S.perfil.nom?esc(S.perfil.nom):'',s=S.sessio,goal=+s.minuts||30,done=todayMin(),st=streak(),lt=lastTopic();
  app(`<div class="home5"><div class="h5-main">
-  <div class="h5-head"><span class="h5-logo">${OWLM(32)}</span><div class="h5-hi"><h1>${greet()}${nm?', '+nm:''}!</h1><p>${dateStr()} · ${ORD[S.perfil.curs]} de Primària</p></div>
-   <div class="h5-mini"><span class="fl" title="Dies seguits">${IC.flame}${st}</span>${ring(done,goal,44)}</div>
+  <div class="h5-head"><div class="h5-hi"><p>${dateStr()} · ${ORD[S.perfil.curs]} de Primària</p><h1>${greet()}${nm?', '+nm:''}!</h1></div>
+   <span class="h5-logo" aria-hidden="true">${OWLM(42)}</span>
    <label class="srch5" for="cerca">${IC.search}<input id="cerca" type="search" placeholder="Cerca un tema o una unitat" autocomplete="off" enterkeyhint="search"><button class="srx" type="button" aria-label="Esborrar la cerca" hidden>✕</button></label></div>
   <div id="cres" aria-live="polite"></div>
-  ${contCard(lt)}
+  <div class="top5">${contCard(lt)}${goalCard(done,goal,st)}</div>
   <section><h2 class="h5">Com vols practicar?</h2><div class="modes5">${modeTiles(false)}</div></section>
-  <section><div class="h5row"><h2>Assignatures</h2><a onclick="subjects()">Veure-les totes</a></div><div class="subjs5">${Object.keys(SUBJ).map(subCard).join('')}</div>${LEGEND}</section>
+  <section><div class="h5row"><h2>Assignatures</h2><a onclick="subjects()">Veure-les totes</a></div><div class="subjs5">${Object.keys(SUBJ).map(m=>subCard(m)).join('')}</div></section>
  </div>
- <aside class="h5-side">${goalCard(done,goal)}${streakCard(st)}${missionCard()}${owlTip()}</aside></div>`);
+ <aside class="h5-side">${missionCard()}${streakCard(st)}${owlTip()}</aside></div>`);
  bindModes($('.modes5'));
  const cg=$('#cGo');if(cg)cg.onclick=lt?()=>start('exercicis',[lt],15):()=>start(s.mode);
  $('#mGo').onclick=()=>start(s.mode);
@@ -87,17 +88,21 @@ function home(){endSession();PARENT_OK=false;nav('inici');
 
 function contCard(lt){
  if(!lt){const k=S.sessio.skills.find(x=>SK[x]),m=k?matOf(k):'mates';
-  return`<div class="card cont5" style="${sujC(m)}"><i></i><div class="cont5-b"><div class="cont5-t"><span class="lbl">Comença per aquí</span><h2>${S.sessio.mode==='escriptura'?'Escriptura al quadern':'La missió d\'avui'}</h2><p>${k?S.sessio.skills.filter(x=>SK[x]).slice(0,3).map(x=>SK[x].nom).join(' · '):'Tria una assignatura i comença a aprendre.'}</p></div><button class="go" id="cGo">Comença →</button></div></div>`}
+  return`<div class="cont5"><div class="cont5-t"><span class="k">Comença per aquí</span><h2>${S.sessio.mode==='escriptura'?'Escriptura al quadern':'La missió d\'avui'}</h2><p>${k?S.sessio.skills.filter(x=>SK[x]).slice(0,3).map(x=>SK[x].nom).join(' · '):'Tria una assignatura i comença a aprendre.'}</p><button class="go" id="cGo">Comença</button></div>${PLAY5}</div>`}
  const m=matOf(lt),U=unitsOf(m),ui=U.findIndex(u=>u[1].includes(lt)),un=ui<0?'':U[ui][0],ks=ui<0?[lt]:U[ui][1];
- const st=ks.map(k=>k===lt?'c':level(k)>=1?'d':''),pv=unitLv(ks)>=3?'d':'';
- const steps=ks.map((k,j)=>`${j?`<em class="${st[j-1]==='d'?'d':''}"></em>`:''}<span class="${st[j]}" title="${esc(SK[k].nom)}">${st[j]==='d'?'✓':j+1}</span>`).join('')+`<em class="${st[st.length-1]==='d'?'d':''}"></em><span class="${pv}" title="Prova de la unitat">${pv?'✓':'P'}</span>`;
- return`<div class="card cont5" style="${sujC(m)}"><i></i><div class="cont5-b"><div class="cont5-t"><span class="lbl">Continua on ho deixares</span><h2>${SUBJ[m].nom}${ui>=0?` · Unitat ${ui+1}: ${esc(un)}`:''}</h2><p>Tema: ${SK[lt].nom}</p>
-  <div class="steps5" aria-hidden="true">${steps}</div><div class="steps5-l" aria-hidden="true">${ks.map(k=>`<span>${abOf(k)}</span>`).join('')}<span>Prova</span></div></div><button class="go" id="cGo">Continua →</button></div></div>`}
-function goalCard(done,goal){const q=goal-done;
- return`<div class="card goal5">${ring(done,goal,84)}<div><span class="lbl">Objectiu d'avui</span><p>${q<=0?'<b>Objectiu complert!</b> Molt bona feina.':`Et ${q===1?'queda':'queden'} <b>${q} ${q===1?'minut':'minuts'}</b>.`}</p></div></div>`}
+ // pas actual dins la unitat: temes + la prova final
+ const pas=ks.indexOf(lt)+1,nP=ks.length+1,ms=mastery(ks);
+ return`<div class="cont5"><div class="cont5-t"><span class="k">Continua on ho deixares</span><h2>${SK[lt].nom}</h2><p>${SUBJ[m].nom}${ui>=0?` · Unitat ${ui+1}: ${esc(un)}`:''} · pas ${pas} de ${nP}</p><button class="go" id="cGo">Continua</button></div>
+  <span class="cont5-r">${ring(ms,100,104,['#F2853A','#F7CD8C','#5A3A0E'],ms+'%')}</span></div>`}
+const PLAY5=`<svg class="cont5-r" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="none" stroke="#F7CD8C" stroke-width="6"/><path d="M27 23v18l14-9Z" fill="#F2853A"/></svg>`;
+// Objectiu d'avui i ratxa (targeta lila amb l'òliba)
+function goalCard(done,goal,st){const q=goal-done;
+ return`<div class="goal5"><span class="k">Objectiu d'avui</span><p>${q<=0?'Objectiu complert! Molt bona feina.':`Et ${q===1?'queda':'queden'} ${q} ${q===1?'minut':'minuts'} per completar-lo`}</p>
+  <span class="goal5-st">${st?`${st} ${st===1?'dia seguit':'dies seguits'}!`:'Comença la ratxa avui!'}</span><span class="goal5-m" aria-label="${done} de ${goal} minuts avui"><i style="width:${Math.min(100,Math.round(done/(goal||1)*100))}%"></i></span>
+  ${OWLM(150)}<span class="cf1"></span><span class="cf2"></span></div>`}
 function streakCard(st){const days=new Set(S.log.map(l=>dayKey(l.data))),d0=new Date(),dow=(d0.getDay()+6)%7;
  const cells=['Dl','Dt','Dc','Dj','Dv','Ds','Dg'].map((n,i)=>{const d=new Date(d0);d.setDate(d0.getDate()-dow+i);return`<span>${n}<i class="${days.has(dayKey(d))?'d':i===dow?'t':''}"></i></span>`}).join('');
- return`<div class="card strk5"><div class="strk5-h"><span class="lbl">Ratxa</span><b>${st?`${st} ${st===1?'dia seguit':'dies seguits'}`:'Comença avui!'}</b></div><div class="week5" aria-hidden="true">${cells}</div></div>`}
+ return`<div class="card strk5"><div class="strk5-h"><span class="lbl">La teva setmana</span><b>${st?`${st} ${st===1?'dia seguit':'dies seguits'}`:'Comença avui!'}</b></div><div class="week5" aria-hidden="true">${cells}</div></div>`}
 function missionCard(){const s=S.sessio,ks=s.skills.filter(k=>SK[k]),today=dayKey(Date.now());let first=true;
  const it=(txt,d)=>{const c=d?'d':first?'n':'';if(!d)first=false;return`<div class="mis5-i${d?' d':''}"><span class="${c}">${d?'✓':''}</span><em>${txt}</em></div>`};
  const items=s.mode==='escriptura'?it('<b>Escriptura</b> al quadern',false):ks.slice(0,4).map(k=>{const p=S.prog[k];return it(`${SK[k].nom} <span class="muted">· ${SUBJ[matOf(k)].nom}</span>`,!!(p&&p.last&&dayKey(p.last)===today))}).join('')+(ks.length>4?`<small>i ${ks.length-4} temes més</small>`:'');
@@ -136,7 +141,7 @@ function showTheory(k){const s=SK[k];if(!s)return;let fig='';try{fig=s.fig?`<div
 
 /* ---------- llista d'assignatures, practicar i el meu progrés ---------- */
 function subjects(){endSession();nav('assig');
- app(`<div class="pagehead5"><h1>Assignatures</h1><p>${ORD[S.perfil.curs]} de Primària · tria una assignatura per veure'n les unitats, les làmines i el material.</p></div><div class="subjs5 big">${Object.keys(SUBJ).map(subCard).join('')}</div>${LEGEND}`)}
+ app(`<div class="pagehead5"><h1>Assignatures</h1><p>${ORD[S.perfil.curs]} de Primària · tria una assignatura per veure'n les unitats, les làmines i el material.</p></div><div class="subjs5 big">${Object.keys(SUBJ).map(m=>subCard(m,true)).join('')}</div>${LEGEND}`)}
 function practicar(){endSession();nav('practicar');const ks=S.sessio.skills.filter(k=>SK[k]);
  app(`<div class="pagehead5"><h1>Com vols practicar?</h1><p>${ks.length?`Practicaràs els temes de la missió d'avui: <b>${ks.slice(0,4).map(k=>SK[k].nom).join(', ')}${ks.length>4?'…':''}</b>.`:'Encara no hi ha temes a la missió d\'avui.'} Per practicar un altre tema, entra a una assignatura.</p></div><div class="modes5 big">${modeTiles(true)}</div>`);
  bindModes($('.modes5'))}

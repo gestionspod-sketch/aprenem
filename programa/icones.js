@@ -1,7 +1,7 @@
 /* Aprenem - icones de linia i codis de tema (disseny v2)
    Part de l'app d'estudi. Vegeu CLAUDE.md per a l'estructura i les normes. */
 /* ================= v2: icones de línia i codis de tema ================= */
-const ICO=d=>`<svg class="ic" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">${d}</svg>`;
+const ICO=d=>`<svg class="ic" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const IC={
  layers:ICO('<path d="M12 3 2 8l10 5 10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/>'),
  cap:ICO('<path d="M2 9 12 4l10 5-10 5Z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/>'),
