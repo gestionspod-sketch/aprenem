@@ -167,6 +167,7 @@ mt_proporcio:{mat:'mates',nom:'Proporcionalitat directa',ab:'Pd',curs:[6],
  teoria:['Dues magnituds són <b>directament proporcionals</b> si, quan una es multiplica per 2, per 3..., l\'altra també es multiplica per 2, per 3... Exemple: el nombre de kg de pomes i el preu.',
   'Per resoldre problemes, el millor és la <b>reducció a la unitat</b>: primer calculam quant val 1, i després multiplicam.',
   'Exemple: 3 kg costen 6,30 €. 1 kg costa 6,30 : 3 = 2,10 €. 5 kg costen 2,10 × 5 = <b>10,50 €</b>.',
+  'També ho pots fer amb la <b>regla de tres</b>: si 3 kg → 6,30 €, aleshores 5 kg → 6,30 × 5 : 3 = <b>10,50 €</b>. Multiplicam en creu i dividim entre el nombre que queda.',
   'Compte: no és proporcional sumar la mateixa quantitat (si 3 kg costen 6 €, 4 kg no costen 7 €).'],
  gen(lv){const n1=rnd(2,lv?8:5);let n2;do{n2=rnd(2,lv?15:10)}while(n2===n1);
   const C=[
