@@ -11,6 +11,9 @@
      matematiques-estadistica.js  6è: estadística i probabilitat + material (formulari i taules de mesura)
      matematiques-practica.js     6è: temes afegits per seguir el llibre de referència (comparar fraccions i decimals,
                                   coordenades, bisectriu i mediatriu, freqüències)
+     matematiques-estat.js        6è: sabers del currículum estatal (RD 157/2022) que no són al llibre: patrons, igualtats,
+                                  moviments al pla, educació financera, fraccions-decimals-percentatges, gràfics
+     lamines/mates-lamines.js     làmines (figures, cossos, recta numèrica, geoplà) i material (convertidor, taules)
 
    Fonts del temari de 6è:
    - Decret 31/2022, d'1 d'agost, que estableix el currículum de l'educació primària a les Illes Balears
@@ -127,12 +130,15 @@ UNITS.mates=[
  ['Fraccions',['frac_de_nombre','mt_simplificar','frac_equiv','mt_frac_comparar','mt_comu_den','frac_suma_igual','frac_suma_dif','mt_frac_resta'],[6]],
  // temes 5-12 (quaderns 6.2 i 6.3)
  ['Nombres decimals',['mt_frac_dec','mt_dec_ordre','decimals','mt_dec_mult','mt_dec_div'],[6]],
- ['Proporcionalitat i percentatges',['mt_proporcio','percentatges','mt_descomptes','mt_escales'],[6]],
+ ['Proporcionalitat i percentatges',['mt_proporcio','percentatges','mt_fdp','mt_descomptes','mt_escales'],[6]],
  ['Nombres enters',['mt_enters','mt_enters_op','mt_coordenades'],[6]],
  ['Angles',['mt_angles','mt_angles_poligon','mt_bisectriu'],[6]],
  ['Unitats de mesura',['mt_mesures'],[6]],
  ['Unitats de superfície i volum',['mt_superficie','mt_volum_unitats'],[6]],
- ['Àrees i volums',['mt_poligons','mt_area_quad','mt_area_tri','mt_area_cercle','mt_circumf','mt_area_comp','mt_cossos','mt_volum'],[6]],
- ['Estadística i probabilitat',['mt_frequencies','mt_estadistica','mt_grafics','mt_probabilitat'],[6]],
+ ['Àrees i volums',['mt_lam_figures','mt_poligons','mt_area_quad','mt_area_tri','mt_area_cercle','mt_circumf','mt_area_comp','mt_cossos','mt_lam_cossos','mt_volum'],[6]],
+ ['Estadística i probabilitat',['mt_frequencies','mt_estadistica','mt_grafics','mt_grafics_sl','mt_probabilitat'],[6]],
+ // sabers bàsics del currículum estatal (RD 157/2022) que no surten al llibre de referència
+ ['Patrons, igualtats i moviments',['mt_patrons','mt_equacions','mt_moviments'],[6]],
+ ['Educació financera',['mt_finances'],[6]],
  // temes que no surten al llibre de referència, però que es conserven per repassar i ampliar
  ['Repàs i ampliació',['mt_romans','mt_frac_mult','mt_frac_div','mt_temps'],[6]]];
