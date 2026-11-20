@@ -28,7 +28,20 @@ Més endavant: la resta de Primària i l'ESO.
 
 ## 3. Disseny
 
-**v4 (l'actual, publicada a `main`):** estil inspirat en Smartick (franja blau cel amb símbols blancs suaus i vora en ona, un únic botó d'acció taronja, maneres de practicar en targetes blanques amb icona de color, fons blanc-blau clar). La v3 es va trobar freda i «d'oficina». La v4 és **per a nens de Primària**: colors vius i plens (no pàl·lids), lletra gruixuda, botons grans que «es pitgen» (ombra inferior), dibuixos a les assignatures i l'òliba a la franja. **Botons i targetes rectangulars** (petició expressa del propietari).
+**v5 (l'actual):** disseny d'**aplicació professional** per a ordinador, tauleta i mòbil, aprovat pel propietari a partir de les maquetes de `disseny/v5/` (són la referència visual; les dades de les maquetes són inventades).
+- **Lletra Lexend** (Google Fonts, amb la del sistema de reserva). Tinta `#14213D`, fons `#F4F6FA`, targetes blanques amb vora fina `#E2E7EF`. Etiquetes en majúscules petites (12 px, gris `#64708A`).
+- **Cantons rectes a tot arreu** (cap `border-radius`: petició expressa del propietari).
+- **Un sol botó taronja** d'acció per pantalla (`#F26B1D`, ombra inferior: «es pitja»); botons secundaris blancs amb vora.
+- Colors d'assignatura: Català `#E0457B`, Castellà `#F08A24`, Mates `#3B6FE0`, Anglès `#D6453D`, Medi `#2BA36B`, Música `#7B5CE0` (variables `--s-<assig>`). Nivells: sense començar `#E2E7EF`, en procés `#F5B946`, comprèn `#7FA2F0`, domina `#14213D`.
+- Error típic: requadre ambre amb barra a l'esquerra i la **marca de l'òliba** (quadrat blau marí, `OWLM()` a `pantalles.js`). Icones de línia; cap emoticona decorativa.
+- **Closca:** ordinador (≥1024 px) = menú lateral (Inici, Assignatures amb les assignatures dins, Practicar, Aventura, El meu progrés; Famílies a baix, amb PIN) + columna principal (+ columna dreta a l'inici: objectiu del dia, setmana de la ratxa, missió i consell de l'òliba). Tauleta = menú lateral només amb icones i la columna dreta passa a baix. Mòbil (<768 px) = sense menú lateral, **barra inferior** (Inici, Assignatures, Progrés, Famílies).
+- Inici: salutació i data, cercador, «Continua on ho deixares» (passos de la unitat), «Com vols practicar?» (6 maneres), assignatures amb % i segments de domini per unitat.
+- Assignatura: capçalera del color amb % après → **unitats com un camí vertical** (fetes / la d'ara oberta amb els temes i Aprendre / Practicar / «Fer la prova de la unitat» / pendents, que s'obren en tocar-les) i, al costat, làmines, material i «Per repassar».
+- Exercici: **pantalla concentrada** (sense menú): barra superior (sortir, assignatura · tema, segments de progrés, n de N, rellotge), enunciat, camp de resposta gran, pista / llegeix-m'ho / teoria; al mòbil la resposta i «Comprova» queden fixades a baix. A l'ordinador, panell «Aquesta sessió».
+- Resultat: anell d'encerts, a la primera / temps / precisió, barra de nivell (En procés / Comprèn / Domina) amb què li falta per pujar, errors típics i punts forts.
+- Pantalles: `programa/inici.js` (closca, inici, assignatures, practicar, el meu progrés, assignatura), `programa/pantalles.js` (exercici, resultat, modes, famílies, PIN), estils a `estil/app.css`.
+
+**v4 (substituïda per la v5; guardada a l'etiqueta git `disseny-v4`):** estil inspirat en Smartick (franja blau cel amb símbols blancs suaus i vora en ona, un únic botó d'acció taronja, maneres de practicar en targetes blanques amb icona de color, fons blanc-blau clar). La v3 es va trobar freda i «d'oficina». La v4 és **per a nens de Primària**: colors vius i plens (no pàl·lids), lletra gruixuda, botons grans que «es pitgen» (ombra inferior), dibuixos a les assignatures i l'òliba a la franja. **Botons i targetes rectangulars** (petició expressa del propietari).
 - Inici: franja blava (òliba, salutació, objectiu del dia, ratxa, «Famílies») → **«Com vols practicar?» just davall la franja** (6 rajoles de colors) → missió d'avui → continua → assignatures (rajoles grans de color amb dibuix).
 - **Les làmines i el material d'estudi van dins cada assignatura**, mai a l'inici.
 - Assignatura: capçalera del color de l'assignatura amb dibuix i % après → làmines/material → unitats (número, temes amb Aprendre / Practicar, prova de la unitat).
@@ -41,7 +54,7 @@ Més endavant: la resta de Primària i l'ESO.
 - Les unitats es defineixen a `contingut/unitats.js`; les pantalles, a `programa/inici.js`.
 
 Base comuna (v2 i v3). Públic: 11-12 anys → **sobri, no infantil**.
-- **Tipografia del sistema** (San Francisco a l'iPhone, Segoe UI a Windows). Sense Google Fonts.
+- **Tipografia del sistema** (San Francisco a l'iPhone, Segoe UI a Windows). Sense Google Fonts. *(La v5 sí que fa servir Lexend.)*
 - **Botons i targetes rectangulars, sense cantons arrodonits.** Sense ombres «inflades».
 - **Icones de línia** (SVG, `programa/icones.js`) per a assignatures i modes. Cada tema té un **codi de 2 lletres** (Fe, Ir, Pp, Rs...) en lloc d'emoticones.
 - Emoticones només com a **contingut** (p. ex. dibuixos del vocabulari d'anglès), mai com a decoració.
@@ -55,7 +68,8 @@ La **v1** (disseny més infantil) es conserva a `versions/aprenem-v1.html` nomé
 
 ```
 index.html                      obre l'app (doble clic) — carrega la resta
-estil/app.css                   estils (base + disseny v2 al final)
+estil/app.css                   estils (disseny v5)
+disseny/v5/                     maquetes aprovades del disseny v5 (referència visual)
 programa/utils.js               utilitats: fraccions, nombres...
 programa/dades-app.js           assignatures, modes, errors típics (ERR), aventura, dictats
 programa/nucli.js               estat i progrés, rellotge, veu, IA (Gemini), components d'exercici

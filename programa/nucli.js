@@ -35,7 +35,12 @@ setInterval(()=>{const t=$('#timer');if(!CUR){t.textContent='';t.className='';re
 },1000);
 // Pinta una pantalla. focus=true: pantalla concentrada (exercici, resultat), sense menú lateral ni barra inferior.
 // El rellotge (#timer) es mou dins la barra de l'exercici (#tbTm) si n'hi ha.
-const app=(h,focus=false)=>{const t=$('#timer');if(t)document.body.appendChild(t);$('#app').innerHTML=h;document.body.classList.toggle('focus',!!focus);
+// Al mòbil el bloc de resposta (.ans5) va fixat a baix: deixam a la pàgina un espai igual a la seva alçada
+let ANS_RO=null;
+function pinAns(a){if(!window.ResizeObserver)return;if(ANS_RO)ANS_RO.disconnect();
+ const fit=()=>{const on=a&&a.isConnected&&getComputedStyle(a).position==='fixed';document.body.style.paddingBottom=on?a.offsetHeight+'px':''};
+ ANS_RO=new ResizeObserver(fit);if(a)ANS_RO.observe(a);fit()}
+const app=(h,focus=false)=>{const t=$('#timer');if(t)document.body.appendChild(t);if(ANS_RO){ANS_RO.disconnect();ANS_RO=null}document.body.style.paddingBottom='';$('#app').innerHTML=h;document.body.classList.toggle('focus',!!focus);
  const slot=$('#tbTm');if(slot&&t)slot.appendChild(t);window.scrollTo(0,0)};
 
 /* ===================== veu ===================== */
@@ -79,7 +84,8 @@ function exercise(el,k,o){
   el.innerHTML=`${variant?'<div class="fb info">Mateixa idea, dades noves. Ara demostra que ho has entès!</div>':''}
   <div class="ex5w"><div class="prob">${p.text}</div>${p.fig?`<div class="fig">${p.fig}</div>`:''}<div class="vis">${o.showVis&&p.vis?p.vis:''}</div>
   <div class="ans5"><div class="ans5-row">${p.fields.map((f,i)=>`<div class="fld${f.wide?' w':f.txt?' t':''}"><label>${f.label}</label><input class="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-i="${i}"></div>`).join('')}<button class="okb">Comprova</button></div><div class="fbx" aria-live="polite"></div></div>
-  <div class="tools5">${help?`<button class="sec hb">${IC.bulb}<span>Una pista</span></button>`:''}<button class="sec sp">${IC.speaker}<span>${p.listen?'Escolta':'Llegeix-m\'ho'}</span></button>${help&&SK[k].teoria&&SK[k].teoria.length?`<button class="sec th">${IC.cap}<span>Repassa la teoria</span></button>`:''}</div></div>`;
+  <div class="tools5">${help?`<button class="sec hb">${IC.bulb}<span class="l">Una pista</span><span class="s">Pista</span></button>`:''}<button class="sec sp">${IC.speaker}<span class="l">${p.listen?'Escolta':'Llegeix-m\'ho'}</span><span class="s">${p.listen?'Escolta':'Llegeix'}</span></button>${help&&SK[k].teoria&&SK[k].teoria.length?`<button class="sec th">${IC.cap}<span class="l">Repassa la teoria</span><span class="s">Teoria</span></button>`:''}</div></div>`;
+  if(typeof pinAns==='function')pinAns(el.querySelector('.ans5'));
   const ins=el.querySelectorAll('input.ans');ins.forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')check()});if(!p.fig)ins[0].focus({preventScroll:true});
   const speak=()=>p.listen?say(p.listen,.8,'en-GB'):say(p.text);
   el.querySelector('.okb').onclick=check;if(help)el.querySelector('.hb').onclick=hint;el.querySelector('.sp').onclick=speak;
