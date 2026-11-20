@@ -444,21 +444,6 @@ Object.assign(SK,{
     steps:[`La pregunta: «${esc(q)}». ${qWord(q)}.`,`Al text diu: «${esc(ev)}».`,`Resposta: <b>${esc(a[0][0].toUpperCase()+a[0].slice(1))}</b>.`]}}}
 });
 
-/* ---------- ordre dels temes, unitats i temari de 6è ---------- */
-SK_ORDER.splice(0,SK_ORDER.length,'en_present','en_pres_neg','en_freq','en_cont','en_simple_cont','en_be','en_was','en_reg_past','en_irr_past','en_irr_pp','en_irr_inf','en_verb_sig','en_past','en_past_neg','en_going','en_will','en_pperf','en_modal',
- 'en_plural','en_compar','en_super','en_wh','en_poss','en_there','en_quant','en_prep','en_prep_t',
- 'en_vocab','en_voc_feel','en_voc_jobs','en_voc_town','en_voc_food','en_voc_sport','en_voc_health','en_voc_tech','en_voc_nature','en_listen','en_read');
-const U6=[
- ['Feelings and routines · Emocions i rutines',['en_voc_feel','en_be','en_present','en_pres_neg','en_freq','en_prep_t'],'Present simple: negatives, preguntes i adverbis de freqüència; in / on / at'],
- ['Jobs · Les feines',['en_voc_jobs','en_cont','en_simple_cont','en_wh'],'Present continuous; present simple o continuous; preguntes amb wh-'],
- ['In town · A la ciutat',['en_voc_town','en_there','en_prep'],'There is / are / was / were; preposicions de lloc; direccions'],
- ['Food and shopping · Menjar i compres',['en_voc_food','en_quant','en_plural'],'Some / any, much / many; plurals'],
- ['Sports and records · Esports i rècords',['en_voc_sport','en_compar','en_super'],'Comparatius i superlatius'],
- ['Health · La salut',['en_voc_health','en_modal','en_poss'],'Can, must, should; possessius'],
- ['Inventions and the past · Invents i el passat',['en_voc_tech','en_was','en_reg_past','en_irr_past','en_irr_inf','en_past','en_past_neg'],'Was / were; past simple regular i irregular; did / didn\'t'],
- ['Our planet and the future · El planeta i el futur',['en_voc_nature','en_going','en_will'],'Going to (plans) i will (prediccions)'],
- ['Experiences · Experiències',['en_pperf','en_irr_pp','en_verb_sig'],'Present perfect amb ever / never; participis'],
- ['Reading and listening · Llegir i escoltar',['en_read','en_listen','en_vocab'],'Comprensió lectora i oral']];
-UNITS.angles=UNITS.angles.map(u=>u[2]?u:[u[0],u[1],[5]]).concat(U6.map(([n,ks])=>[n,ks,[6]]));
-TEMARI.angles[6]=U6.map(([n,ks,g])=>[`${n.split(' · ')[1]} (${n.split(' · ')[0]}): ${g}`,ks]);
+/* L'ordre dels temes, les unitats i el temari de 6è els defineix angles-guess-what-6.js
+   (unitats en l'ordre del llibre de referència «Guess What! 6», Cambridge). */
 })();
