@@ -7,6 +7,13 @@
       "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ".claude/serve.ps1", "-port", "8771"],
       "port": 8771,
       "autoPort": false
+    },
+    {
+      "name": "aprenem-v5",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ".claude/serve.ps1", "-port", "8773"],
+      "port": 8773,
+      "autoPort": false
     }
   ]
 }

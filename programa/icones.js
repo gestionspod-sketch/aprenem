@@ -32,3 +32,12 @@ IC.lungs=ICO('<path d="M12 3v8M12 11c-1.5 1.2-3 1.8-4.5 1.8M12 11c1.5 1.2 3 1.8 
 // Codi de 2 lletres: la propietat ab del tema (preferida) o la taula AB
 for(const k in SK)SK[k].ic=`<span class="ab">${SK[k].ab||AB[k]||SK[k].nom.slice(0,2)}</span>`;
 
+// v5: icones de la closca (menú, barra inferior) i de la pantalla d'exercici
+IC.home=ICO('<path d="M3 11 12 4l9 7v9h-6v-6H9v6H3Z"/>');
+IC.chart=ICO('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>');
+IC.bulb=ICO('<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3Z"/>');
+IC.speaker=ICO('<path d="M11 5 6 9H2v6h4l5 4ZM16 9a4 4 0 0 1 0 6"/>');
+IC.x=ICO('<path d="M6 6l12 12M18 6 6 18"/>');
+IC.okc=ICO('<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>');
+IC.chev=ICO('<path d="m6 9 6 6 6-6"/>');
+IC.left=ICO('<path d="M15 6l-6 6 6 6"/>');

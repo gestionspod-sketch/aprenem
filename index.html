@@ -7,14 +7,18 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Aprenem">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#F4F6FA">
 <meta name="format-detection" content="telephone=no">
-<title>Aprenem · v4</title>
+<title>Aprenem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&amp;display=swap">
 <link rel="stylesheet" href="estil/app.css?v=202611200813">
 </head>
 <body>
-<header><div class="brand" onclick="home()"><span class="logo">A</span><b>Aprenem</b><span class="pill">v4</span></div><span id="timer"></span></header>
-<main id="app"></main>
+<div id="shell"><aside id="side" aria-label="Menú principal"></aside><main id="app"></main></div>
+<nav id="tabbar" aria-label="Menú"></nav>
+<span id="timer"></span>
 <script src="programa/utils.js?v=202611200813"></script>
 <script src="programa/dades-app.js?v=202611200813"></script>
 

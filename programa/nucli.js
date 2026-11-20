@@ -10,8 +10,8 @@ if(!S.cfg.model||/^gemini-(1|2)\./.test(S.cfg.model))S.cfg.model=GEMINI_MODEL;
 const save=()=>{try{localStorage.setItem('aprenem_v1',JSON.stringify(S))}catch(e){}};
 const P_=k=>S.prog[k]||(S.prog[k]={att:0,ok:0,sense:0,ajuda:0,errs:{},chk:[],last:0});
 let CUR=null,phaseEnd=0;
-function record(k,ok,help,chk){const p=P_(k);p.att++;if(ok)p.ok++;if(ok&&!help)p.sense++;if(help)p.ajuda++;if(chk){p.chk.push(ok?1:0);p.chk=p.chk.slice(-6)}p.last=Date.now();if(CUR){CUR.tot++;if(ok)CUR.ok++}save()}
-function recErr(k,t){const p=P_(k);p.errs[t]=(p.errs[t]||0)+1;save()}
+function record(k,ok,help,chk){const p=P_(k);p.att++;if(ok)p.ok++;if(ok&&!help)p.sense++;if(help)p.ajuda++;if(chk){p.chk.push(ok?1:0);p.chk=p.chk.slice(-6)}p.last=Date.now();if(CUR){CUR.tot++;if(ok)CUR.ok++;(CUR.hist=CUR.hist||[]).push({k,ok,help:!!help,chk:!!chk})}save();if(typeof sessSide==="function")sessSide()}
+function recErr(k,t){const p=P_(k);p.errs[t]=(p.errs[t]||0)+1;if(CUR)(CUR.errs=CUR.errs||[]).push({k,t});save()}
 function level(k){const p=S.prog[k];if(!p||!p.att)return -1;const c=p.chk.slice(-4);
  if(c.length>=3&&c.reduce((a,b)=>a+b,0)/c.length>=.75&&p.sense>=3)return 2;
  if(p.sense>=3&&p.ok/p.att>=.6)return 1;return 0}
@@ -33,7 +33,10 @@ setInterval(()=>{const t=$('#timer');if(!CUR){t.textContent='';t.className='';re
  if(pl!=null&&pl<=0&&PHASE_NEXT&&!PH_DUE){PH_DUE=true;toast(`S'ha acabat el temps d'aquesta part. Quan acabis l'exercici, passarem a <b>${MODES[PH[CURPI+1][0]].nom}</b>.`,'Passar ara',nextPhaseNow)}
  else if(left<=0&&!TIME_TOLD&&!PHASE_NEXT){TIME_TOLD=true;toast('S\'ha acabat el temps de la sessió. Pots acabar l\'exercici que estàs fent.','Acabar ara',()=>{hideToast();finish()})}
 },1000);
-const app=h=>{$('#app').innerHTML=h;window.scrollTo(0,0)};
+// Pinta una pantalla. focus=true: pantalla concentrada (exercici, resultat), sense menú lateral ni barra inferior.
+// El rellotge (#timer) es mou dins la barra de l'exercici (#tbTm) si n'hi ha.
+const app=(h,focus=false)=>{const t=$('#timer');if(t)document.body.appendChild(t);$('#app').innerHTML=h;document.body.classList.toggle('focus',!!focus);
+ const slot=$('#tbTm');if(slot&&t)slot.appendChild(t);window.scrollTo(0,0)};
 
 /* ===================== veu ===================== */
 function plain(h){return String(h).replace(/<span class="fr"><span>([^<]*)<\/span><span>([^<]*)<\/span><\/span>/g,' $1 sobre $2 ').replace(/<br>/g,'. ').replace(/<[^>]+>/g,'').replace(/×/g,' per ').replace(/−/g,' menys ').replace(/ : /g,' entre ').replace(/\s+/g,' ').trim()}
@@ -66,7 +69,7 @@ Normes: no donis mai directament la resposta final d'un exercici; guia amb pregu
 
 /* ===================== components d'exercici ===================== */
 function guided(c,steps,then,intro='Sembla que costa una mica. El Mestre Òliba t\'ho explica pas a pas:'){let j=0;
- const draw=()=>{c.innerHTML=`<div style="margin-top:16px"><div class="owl"><div class="ic">${OWL(40)}</div><div class="bub"><p><b>${intro}</b></p><ol class="steps">${steps.slice(0,j+1).map(s=>`<li>${s}</li>`).join('')}</ol><button class="gs">${j<steps.length-1?'Següent pas':'Ara prova\'n un de semblant '}</button></div></div></div>`;
+ const draw=()=>{c.innerHTML=`<div class="guide5">${OWL(40)}<div><p><b>${intro}</b></p><ol class="steps">${steps.slice(0,j+1).map(s=>`<li>${s}</li>`).join('')}</ol><button class="gs">${j<steps.length-1?'Següent pas':'Ara prova\'n un de semblant'}</button></div></div>`;
   c.querySelector('.gs').onclick=()=>{if(j<steps.length-1){j++;draw()}else then()}};draw()}
 
 // mode: 'prac' (pistes), 'adv' (pistes), 'seal' (sense pistes), 'chk' (sense pistes, un intent)
@@ -74,16 +77,17 @@ function exercise(el,k,o){
  let p,t0,wrong,hints,lock=false;const help=o.mode==='prac'||o.mode==='adv';
  const fresh=variant=>{p=genP(k);t0=Date.now();wrong=0;hints=0;lock=false;
   el.innerHTML=`${variant?'<div class="fb info">Mateixa idea, dades noves. Ara demostra que ho has entès!</div>':''}
-  <div class="prob">${p.text}</div>${p.fig?`<div class="fig">${p.fig}</div>`:''}<div class="vis">${o.showVis&&p.vis?p.vis:''}</div>
-  <div class="row">${p.fields.map((f,i)=>`<div style="${f.wide?'flex:1;min-width:240px':''}"><label>${f.label}</label><input class="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-i="${i}" style="${f.wide?'width:100%;font-size:22px':f.txt?'width:240px':''}"></div>`).join('')}</div>
-  <div class="row" style="margin-top:14px"><button class="okb">Comprova</button>${help?'<button class="sec hb">Pista</button>':''}<button class="${p.listen?'sec':'ghost'} sp" title="Escolta"><svg class="ic" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>${p.listen?' Escolta':''}</button></div><div class="fbx"></div>`;
+  <div class="ex5w"><div class="prob">${p.text}</div>${p.fig?`<div class="fig">${p.fig}</div>`:''}<div class="vis">${o.showVis&&p.vis?p.vis:''}</div>
+  <div class="ans5"><div class="ans5-row">${p.fields.map((f,i)=>`<div class="fld${f.wide?' w':f.txt?' t':''}"><label>${f.label}</label><input class="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-i="${i}"></div>`).join('')}<button class="okb">Comprova</button></div><div class="fbx" aria-live="polite"></div></div>
+  <div class="tools5">${help?`<button class="sec hb">${IC.bulb}<span>Una pista</span></button>`:''}<button class="sec sp">${IC.speaker}<span>${p.listen?'Escolta':'Llegeix-m\'ho'}</span></button>${help&&SK[k].teoria&&SK[k].teoria.length?`<button class="sec th">${IC.cap}<span>Repassa la teoria</span></button>`:''}</div></div>`;
   const ins=el.querySelectorAll('input.ans');ins.forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')check()});if(!p.fig)ins[0].focus({preventScroll:true});
   const speak=()=>p.listen?say(p.listen,.8,'en-GB'):say(p.text);
   el.querySelector('.okb').onclick=check;if(help)el.querySelector('.hb').onclick=hint;el.querySelector('.sp').onclick=speak;
+  const th=el.querySelector('.th');if(th)th.onclick=()=>showTheory(k);
   if(p.listen)setTimeout(speak,400);
  };
  const lockAll=()=>{el.querySelectorAll('input.ans,.okb,.hb').forEach(x=>x.disabled=true)};
- function hint(){hints++;if(p.vis)el.querySelector('.vis').innerHTML=p.vis;const h=p.hints[hints-1];
+ function hint(){hints++;if(CUR){CUR.hints=(CUR.hints||0)+1;if(typeof sessSide==='function')sessSide()}if(p.vis)el.querySelector('.vis').innerHTML=p.vis;const h=p.hints[hints-1];
   el.querySelector('.fbx').innerHTML=`<div class="fb info">${h||'Ja no queden més pistes. Llegeix-les una altra vegada i prova-ho!'}</div>`}
  function check(){if(lock)return;
   const ins=[...el.querySelectorAll('input.ans')],raw=ins.map(i=>i.value.trim()),v=raw.map((r,i)=>p.fields[i].txt?(norm(r)||null):parseVal(r)),fb=el.querySelector('.fbx');
@@ -112,7 +116,7 @@ function exercise(el,k,o){
    const iv=setInterval(()=>{s--;if(s<=0){clearInterval(iv);lock=false;t0=Date.now()-5000;fb.innerHTML='<div class="fb info">Ara sí: pensa-ho bé i torna-ho a provar.</div>'}else upd()},1000);return;
   }
   if(wrong>=2){record(k,false,true,false);lockAll();guided(fb,p.steps,()=>fresh(true));return}
-  fb.innerHTML=`<div class="fb ko">${et?ERR[et].kid:pick([p.fields[0].txt?'Encara no és correcte. Revisa la resposta.':'Encara no és correcte. Revisa els càlculs.','Gairebé! Torna-ho a mirar amb calma.'])}${help?' Si vols, demana una pista.':''}</div>`;
+  fb.innerHTML=et?`<div class="fb err">${OWL(40)}<div>${ERR[et].kid}${help?' Si vols, demana una pista.':''}</div></div>`:`<div class="fb ko">${pick([p.fields[0].txt?'Encara no és correcte. Revisa la resposta.':'Encara no és correcte. Revisa els càlculs.','Gairebé! Torna-ho a mirar amb calma.'])}${help?' Si vols, demana una pista.':''}</div>`;
   t0=Date.now();
  }
  fresh(false);

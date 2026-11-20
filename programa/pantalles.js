@@ -1,7 +1,9 @@
 /* Aprenem - pantalles: inici, assignatures, modes, zona families
    Part de l'app d'estudi. Vegeu CLAUDE.md per a l'estructura i les normes. */
 /* ===================== pantalles principals ===================== */
-const OWL=(s=56)=>`<svg width="${s}" height="${s}" viewBox="0 0 64 64" aria-hidden="true"><path d="M14 18 L19 5 L26 13 Q32 10 38 13 L45 5 L50 18 Q57 28 54 41 Q51 59 32 59 Q13 59 10 41 Q7 28 14 18Z" fill="#4338CA"/><path d="M14 18 L19 5 L26 13 Q32 10 38 13 L45 5 L50 18" fill="none" stroke="#312E81" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="32" cy="45" rx="13" ry="11" fill="#C7D2FE"/><path d="M23 47q3 2.2 6 0M31 51q3 2.2 6 0M35 45q3 2.2 6 0" stroke="#818CF8" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="23" cy="28" r="9.5" fill="#fff"/><circle cx="41" cy="28" r="9.5" fill="#fff"/><circle cx="24" cy="29" r="4.5" fill="#17203A"/><circle cx="40" cy="29" r="4.5" fill="#17203A"/><circle cx="25.6" cy="27.4" r="1.5" fill="#fff"/><circle cx="41.6" cy="27.4" r="1.5" fill="#fff"/><path d="M28.5 36 L35.5 36 L32 41Z" fill="#F59E0B"/><path d="M20 58 l3-3 3 3M38 58 l3-3 3 3" stroke="#F59E0B" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+// Marca de l'òliba (v5): quadrat blau marí, ulls blancs i bec taronja
+const OWLM=(s=40,bg='#14213D',beak='#F26B1D')=>`<svg viewBox="0 0 40 40" width="${s}" height="${s}" aria-hidden="true"><rect width="40" height="40" fill="${bg}"/><path d="M7 8l6 5M33 8l-6 5" stroke="#fff" stroke-width="2.5"/><circle cx="14" cy="19" r="7" fill="#fff"/><circle cx="26" cy="19" r="7" fill="#fff"/><circle cx="14" cy="19" r="3" fill="${bg}"/><circle cx="26" cy="19" r="3" fill="${bg}"/><path d="M17.5 26h5L20 30Z" fill="${beak}"/></svg>`;
+const OWL=(s=56)=>OWLM(s);
 const sc=k=>`--c:var(--s-${matOf(k)})`;
 const modeBtn=(k,m,extra='')=>`<button type="button" class="mode${extra}" data-m="${k}"><span class="tile">${m.ic}</span><span><b>${m.nom}</b><small>${m.desc}</small></span></button>`;
 const kid=()=>home();
@@ -10,7 +12,7 @@ const kid=()=>home();
 let PARENT_OK=false;
 const pinHash=p=>{let h=5381;for(const c of 'aprenem:'+p)h=((h<<5)+h+c.charCodeAt(0))>>>0;return h.toString(36)};
 function closeModal(){const m=$('#modal');if(m)m.remove()}
-function modal(html){closeModal();const d=document.createElement('div');d.id='modal';d.className='modal-bg';d.innerHTML=`<div class="modal" role="dialog" aria-modal="true">${html}</div>`;d.onclick=e=>{if(e.target===d)closeModal()};document.body.appendChild(d);const i=d.querySelector('input');if(i)i.focus()}
+function modal(html,cls=''){closeModal();const d=document.createElement('div');d.id='modal';d.className='modal-bg';d.innerHTML=`<div class="modal ${cls}" role="dialog" aria-modal="true">${html}</div>`;d.onclick=e=>{if(e.target===d)closeModal()};document.body.appendChild(d);const i=d.querySelector('input');if(i)i.focus()}
 const pinInput=(id,ph)=>`<input id="${id}" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" placeholder="${ph}" style="font-size:26px;text-align:center;letter-spacing:.3em;margin-top:6px">`;
 function askPin(){
  if(!S.pin){modal(`<h3 style="margin-top:0"><svg class="ic" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Crea el PIN de la família</h3><p class="muted" style="margin-top:0">La primera vegada, triau un PIN de 4 xifres. El demanarem cada vegada que entreu a la zona de famílies, perquè els infants no la puguin obrir.</p>
@@ -68,41 +70,82 @@ function temari(forParent,el){const T=TEMARI.angles,c=+S.perfil.curs>=6?6:5;
 
 const PH=[['professor',.15],['aventura',.4],['exercicis',.25],['comprovacio',.2]];
 function start(mode,ovSkills,ovMin){const skills=ovSkills||S.sessio.skills,min=ovMin||S.sessio.minuts;
- if(!skills.length&&mode!=='escriptura'){app(`<div class="card" style="text-align:center;max-width:560px;margin:0 auto">${OWL(80)}<h3>Encara no hi ha cap tema triat</h3><p class="muted">Els pares han de triar almenys un tema a la Zona famílies, o pots entrar a una assignatura des de l'inici.</p><button onclick="home()">Tornar a l'inici</button></div>`);return}
+ if(!skills.length&&mode!=='escriptura'){app(`<div class="card" style="text-align:center;max-width:560px;margin:40px auto 0">${OWL(64)}<h3>Encara no hi ha cap tema triat</h3><p class="muted">Els pares han de triar almenys un tema a la Zona famílies, o pots entrar a una assignatura des de l'inici.</p><button onclick="home()">Tornar a l'inici</button></div>`);return}
  CUR={t0:Date.now(),fin:Date.now()+min*60000,tot:0,ok:0,mode,skills:skills.slice()};phaseEnd=0;
  TIME_TOLD=false;
  if(mode==='combinada')return phase(0);
  runMode(mode,null,finish);
 }
 function phase(i){if(i>=PH.length)return finish();phaseEnd=Date.now()+S.sessio.minuts*PH[i][1]*60000;runMode(PH[i][0],i,()=>phase(i+1))}
-function runMode(mode,pi,done){done=once(done);hideToast();CURPI=pi;PH_DUE=false;PHASE_NEXT=pi!=null&&pi<PH.length-1?done:null;
- app(`${pi!=null?`<div class="stepper">${PH.map((p,j)=>`<div class="stp ${j===pi?'on':j<pi?'done':''}"><i>${j<pi?'✓':j+1}</i><span>${MODES[p[0]].nom}</span></div>`).join('')}</div>`:''}
- <div class="row ph" style="justify-content:space-between;align-items:center"><div class="row" style="align-items:center;gap:12px"><span class="tile">${MODES[mode].ic}</span><h2 style="margin:0">${MODES[mode].nom}</h2></div><button class="ghost" id="skip">${pi!=null&&pi<PH.length-1?'Següent fase →':'Acabar'}</button></div><div id="stage"></div>`);
- $('#skip').onclick=done;
+// Pantalla concentrada (v5): barra superior (sortir, assignatura · tema, segments de progrés, n de N, rellotge),
+// fases de la sessió combinada, columna de l'exercici i panell «Aquesta sessió».
+function runMode(mode,pi,done){done=once(done);hideToast();CURPI=pi;PH_DUE=false;PHASE_NEXT=pi!=null&&pi<PH.length-1?done:null;CUR.cm=mode;
+ app(`<header class="tb5"><button class="x5" id="xq" aria-label="Sortir de la sessió" title="Sortir">${IC.x}</button><div class="tb5-t" id="tbT"><i></i><span>${MODES[mode].nom}</span></div><div class="tb5-seg" id="tbS" aria-hidden="true"></div><span class="tb5-n" id="tbN"></span><span class="tb5-tm" id="tbTm"></span></header>
+ <div class="fx5">${pi!=null?`<div class="fx5-top"><div class="stepper">${PH.map((p,j)=>`<div class="stp ${j===pi?'on':j<pi?'done':''}"><i>${j<pi?'✓':j+1}</i><span>${MODES[p[0]].nom}</span></div>`).join('')}</div>${pi<PH.length-1?'<button class="ghost" id="skip">Següent fase →</button>':''}</div>`:''}
+ <div class="fx5-body"><div class="fx5-main" id="stage"></div><aside class="fx5-side" id="fxSide"></aside></div></div>`,true);
+ $('#xq').onclick=()=>{hideToast();finish()};const sk=$('#skip');if(sk)sk.onclick=done;
+ sessSide();
  ({professor:mProf,aventura:mAdv,exercicis:mEx,comprovacio:mChk,escriptura:mWrite})[mode]($('#stage'),done);
 }
-function finish(){const c=CUR;endSession();
- const pc=c&&c.tot?Math.round(c.ok/c.tot*100):0;
- app(`<div class="card" style="text-align:center;padding:36px 24px;max-width:620px;margin:0 auto 18px">${OWL(90)}<h2 style="margin:10px 0 4px">Sessió acabada!</h2><p class="muted" style="margin-top:0">Bona feina. Equivocar-se també és aprendre.</p>
- ${c&&c.tot?`<div class="ring" style="--p:${pc}"><div>${pc}%</div></div><p style="margin-top:0">Has resolt <b>${c.ok}</b> de <b>${c.tot}</b> exercicis.</p>`:''}
- <div style="text-align:left;margin:18px 0">${(c?c.skills:[]).map(k=>`<div class="sk"><span class="tile" style="${sc(k)}">${SK[k].ic}</span><span><b>${SK[k].nom}</b><small>${SUBJ[matOf(k)].nom}</small></span>${badge(k)}</div>`).join('')}</div>
- <button class="big" onclick="home()">Tornar a l'inici</button></div>`)}
+// Barra superior: k = tema actual, states = segments ('ok' a la primera, 'help' amb ajuda, 'ko' fallat, 'cur' actual, '' pendent)
+const hst=h=>h.ok?(h.help?'help':'ok'):'ko';
+function setBar(k,states,label){const t=$('#tbT');if(!t)return;
+ if(k&&SK[k]){t.style.setProperty('--c',`var(--s-${matOf(k)})`);t.querySelector('span').textContent=`${SUBJ[matOf(k)].nom} · ${plain(SK[k].nom)}`}
+ $('#tbS').innerHTML=(states||[]).map(s=>`<span class="${s}"></span>`).join('');$('#tbN').textContent=label||''}
+const exLbl=k=>`<span class="lbl" style="${sc(k)};color:color-mix(in srgb,var(--c) 80%,#000)">${SUBJ[matOf(k)].nom} · ${SK[k].nom}</span>`;
+// Panell lateral «Aquesta sessió» (ordinador)
+function sessSide(){const el=$('#fxSide');if(!el||!CUR)return;const h=CUR.hist||[],first=h.filter(x=>x.ok&&!x.help).length,help=h.filter(x=>x.ok&&x.help).length,min=Math.floor((Date.now()-CUR.t0)/60000);
+ const how={comprovacio:'Exercicis nous, <b>sense pistes</b> i amb un sol intent. Així sabrem què ja domines i què cal reforçar.',aventura:'Cada prova té un <b>segell</b>: el mateix exercici amb dades noves i <b>sense pistes</b>. Les gemmes només s\'aconsegueixen sense ajuda.',
+  professor:'Primer llegeix l\'explicació, després mira un exemple resolt pas a pas i al final practica amb ajuda.',escriptura:'Escriu al quadern amb la teva millor lletra. Quan acabis, fes una foto i corregeix-ho.'}[CUR.cm]
+  ||'Si falles <b>2 vegades</b>, et mostrarem la solució pas a pas i després en faràs un de <b>nou</b>, amb altres nombres.';
+ el.innerHTML=`<div class="card"><span class="lbl">Aquesta sessió</span><div class="sess5"><div><b style="color:#23885A">${first}</b><span>a la primera</span></div><div><b style="color:#B07A00">${help}</b><span>amb ajuda</span></div><div><b>${min}</b><span>${min===1?'minut':'minuts'}</span></div><div><b>${CUR.hints||0}</b><span>${CUR.hints===1?'pista usada':'pistes usades'}</span></div></div></div>
+ <div class="card howto5"><span class="lbl">Com funciona</span>${how}</div>`}
+// Què li falta per pujar de nivell (mateixos criteris que level() a nucli.js)
+function nextStep(k){const p=S.prog[k],l=level(k);
+ if(l<0)return'Comença practicant aquest tema.';
+ if(l===0){const need=Math.max(0,3-(p.sense||0)),low=p.ok/p.att<.6;return`Per arribar a <b>Comprèn</b>: ${need?`encerta ${need} ${need===1?'exercici':'exercicis'} més sense ajuda${low?' i':''}`:''}${low?' puja els encerts per sobre del 60%':''}.`}
+ if(l===1)return'Per arribar a <b>Domina</b>: fes la comprovació final sense pistes (75% o més).';
+ return'Ho domines! Fes una comprovació de tant en tant perquè no se t\'oblidi.'}
+function finish(){const c=CUR;endSession();hideToast();if(!c)return home();
+ const h=c.hist||[],tot=c.tot,pc=tot?Math.round(c.ok/tot*100):0,first=h.filter(x=>x.ok&&!x.help).length,min=Math.max(1,Math.round((Date.now()-c.t0)/60000));
+ const ks=c.skills.filter(k=>SK[k]),m=ks.length?matOf(ks[0]):'mates',one=ks.length===1;
+ const R=70,C=2*Math.PI*R,ringR=`<svg width="170" height="170" viewBox="0 0 170 170" role="img" aria-label="${c.ok} de ${tot} encerts"><circle cx="85" cy="85" r="${R}" fill="none" stroke="#E2E7EF" stroke-width="16"/><circle cx="85" cy="85" r="${R}" fill="none" stroke="#2BA36B" stroke-width="16" stroke-dasharray="${(C*pc/100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 85 85)"/><text x="85" y="86" text-anchor="middle" font-family="Lexend,system-ui" font-weight="800" font-size="44" fill="#14213D">${c.ok}/${tot}</text><text x="85" y="110" text-anchor="middle" font-family="Lexend,system-ui" font-size="14" fill="#64708A">encerts</text></svg>`;
+ const lvB=k=>{const l=level(k);return`<div class="lvl5"><div class="lvl5-h"><span>${one?'El teu nivell en aquest tema':SK[k].nom}</span><em>Ara: ${LV_TXT[l+1]}</em></div><div class="lvl5-b">${[0,1,2].map(j=>`<i class="${l>=j?'l'+(j+1):''}"></i>`).join('')}</div><div class="lvl5-l"><span>En procés${l>=0?' ✓':''}</span><span>Comprèn${l>=1?' ✓':''}</span><span>Domina${l>=2?' ✓':''}</span></div><p>${nextStep(k)}</p></div>`};
+ // errors típics d'aquesta sessió i punts forts
+ const ec={};(c.errs||[]).forEach(e=>{const id=e.k+'|'+e.t;ec[id]=(ec[id]||0)+1});
+ const errs=Object.entries(ec).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([id,n])=>{const[k,t]=id.split('|');return`<div class="res5-i"><span class="w">!</span><div><b>${SK[k].nom}.</b> ${t==='massa_rapid'?'Has respost massa de pressa: llegeix amb calma i pensa abans de respondre.':ERR[t].kid}${n>1?` <span class="muted">(${n} vegades)</span>`:''}</div></div>`});
+ const good=ks.filter(k=>{const hk=h.filter(x=>x.k===k);return hk.length&&hk.every(x=>x.ok&&!x.help)}).slice(0,3).map(k=>`<div class="res5-i"><span class="g">✓</span><div><b>${SK[k].nom}.</b> Tot bé a la primera.</div></div>`);
+ if(!good.length&&first)good.push(`<div class="res5-i"><span class="g">✓</span><div>Has encertat <b>${first}</b> ${first===1?'exercici':'exercicis'} a la primera.</div></div>`);
+ // següent pas: el mateix tema si encara costa, o el tema següent de la unitat
+ let nx=null;if(one){const lk=ks[0],U=unitsOf(m),all=U.flatMap(u=>u[1]),i=all.indexOf(lk);
+  nx=level(lk)<1&&tot?{k:lk,mode:'exercicis',txt:`Torna a practicar: ${plain(SK[lk].nom)}`}:i>=0&&all[i+1]?{k:all[i+1],mode:level(all[i+1])<0?'professor':'exercicis',txt:`Continua: ${plain(SK[all[i+1]].nom)} →`}:null}
+ const title=!tot?'Sessió acabada!':pc>=80?'Molt bona feina!':pc>=50?'Bona feina!':'Equivocar-se també és aprendre!';
+ app(`<div class="res5" style="--c:var(--s-${m})"><div class="res5-in">
+  <div class="res5-h"><small>${one?`${SUBJ[m].nom} · ${SK[ks[0]].nom}`:MODES[c.mode].nom}</small><h1>${title}</h1></div>
+  <div class="card res5-top">${tot?ringR:OWL(110)}<div class="res5-r">
+   <div class="res5-st"><div><b>${first}</b><span>a la primera</span></div><div><b>${min} min</b><span>de feina</span></div><div><b>${tot?pc+'%':'—'}</b><span>de precisió</span></div></div>
+   ${ks.slice(0,4).map(lvB).join('')}</div></div>
+  ${tot?`<div class="res5-2"><div class="card"><span class="lbl">Què has de vigilar</span>${errs.join('')||'<div class="res5-i"><span class="g">✓</span><div>Cap error típic en aquesta sessió.</div></div>'}</div>
+   <div class="card"><span class="lbl">El que ja fas molt bé</span>${good.join('')||'<div class="res5-i"><span class="w">·</span><div>Continua practicant: cada exercici t\'ajuda a aprendre.</div></div>'}</div></div>`:''}
+  <div class="res5-btn"><button class="${nx?'sec':''}" onclick="home()">Tornar a l'inici</button>${nx?`<button id="rNx">${esc(nx.txt)}</button>`:''}</div></div></div>`,true);
+ if(nx)$('#rNx').onclick=()=>start(nx.mode,[nx.k],15)}
 
 /* ---------- Mode 1: professor particular ---------- */
 function mProf(el,done){const ks=CUR.skills;let i=0;
  el.innerHTML='<div id="pa"></div><div id="chatbox"></div>';chatUI($('#chatbox'));const pa=$('#pa');
  function theory(){if(i>=ks.length)return end();const s=SK[ks[i]];
   const extra=i===0&&S.sessio.explicacio?`<div class="fb info"><b>Del teu llibre:</b> ${esc(S.sessio.explicacio)}</div>`:'';
-  pa.innerHTML=`<div class="card subj" style="${sc(ks[i])}"><div class="exhead"><span class="chip" style="${sc(ks[i])}">${s.ic} ${s.nom}</span><span class="muted">Tema ${i+1} de ${ks.length}</span></div><div class="owl" style="margin-top:14px"><div class="ic">${OWL(44)}</div><div class="bub">${s.teoria.map(t=>`<p>${t}</p>`).join('')}${extra}</div></div>${s.fig?`<div class="fig" style="margin-top:16px">${s.fig()}</div>`:''}
-  <div class="row" style="margin-top:18px;justify-content:flex-end"><button class="sec" id="spk"><svg class="ic" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg> Escolta</button><button id="go">Ho he llegit → Veure un exemple</button></div></div>`;
+  const pb=()=>setBar(ks[i],ks.map((_,j)=>j<i?"ok":j===i?"cur":""),`Tema ${i+1} de ${ks.length}`);pb();
+  pa.innerHTML=`<div class="card">${exLbl(ks[i])}<h2 style="margin:6px 0 0">${s.nom}</h2><div class="owl" style="margin-top:16px"><div class="ic">${OWL(44)}</div><div class="bub">${s.teoria.map(t=>`<p>${t}</p>`).join('')}${extra}</div></div>${s.fig?`<div class="fig" style="margin-top:16px">${s.fig()}</div>`:''}
+  <div class="row" style="margin-top:18px;justify-content:flex-end"><button class="sec" id="spk">${IC.speaker} Llegeix-m'ho</button><button id="go">Ho he llegit → Veure un exemple</button></div></div>`;
   $('#spk').onclick=()=>say(s.teoria.join(' ')+' '+(i===0?S.sessio.explicacio:''));$('#go').onclick=example}
  function example(){const p=genP(ks[i]);let j=0;
-  const draw=()=>{pa.innerHTML=`<div class="card"><h3 style="margin-top:0">Exemple resolt</h3><div class="prob">${p.text}</div><ol class="steps">${p.steps.slice(0,j).map(s=>`<li>${s}</li>`).join('')}</ol>
+  const draw=()=>{pa.innerHTML=`<div class="card">${exLbl(ks[i])}<h3 style="margin:6px 0 0">Exemple resolt</h3><div class="prob">${p.text}</div><ol class="steps">${p.steps.slice(0,j).map(s=>`<li>${s}</li>`).join('')}</ol>
    ${j<p.steps.length?`<p class="muted">Abans de mirar-ho: què creus que toca fer ara?</p><button id="nx">Mostra el pas ${j+1}</button>`:'<button id="nx">Ara tu! </button>'}</div>`;
    $('#nx').onclick=()=>{if(j<p.steps.length){j++;draw()}else practice(2)}};draw()}
- function practice(n){let c=0;pa.innerHTML='<div class="card"><h3 style="margin-top:0">Practica amb ajuda</h3><div id="ex"></div></div>';
+ function practice(n){let c=0;pa.innerHTML=`<div class="card">${exLbl(ks[i])}<h3 style="margin:6px 0 0">Practica amb ajuda</h3><div id="ex"></div></div>`;
   const next=()=>{if(c>=n){i++;return theory()}c++;exercise($('#ex'),ks[i],{mode:'prac',onDone:next})};next()}
- function end(){pa.innerHTML='<div class="card"><h3 style="margin-top:0">Molt bé! Has repassat tots els temes. </h3><button id="fin">Continuar →</button></div>';$('#fin').onclick=done}
+ function end(){setBar(null,ks.map(()=>'ok'),'');pa.innerHTML='<div class="card"><h3 style="margin-top:0">Molt bé! Has repassat tots els temes.</h3><button id="fin">Continuar →</button></div>';$('#fin').onclick=done}
  theory();
 }
 function chatUI(el){
@@ -118,17 +161,17 @@ function chatUI(el){
 function mAdv(el,done){const ks=CUR.skills;
  const mins=phaseEnd?(phaseEnd-Date.now())/60000:S.sessio.minuts;const n=Math.max(3,Math.min(STAGES.length,Math.round(mins/2.5)));
  let st=0,gems=0;
- function stage(){if(st>=n||(st>0&&timeUp()))return win();const s0=STAGES[st],k=ks[st%ks.length];
+ function stage(){if(st>=n||(st>0&&timeUp()))return win();const s0=STAGES[st],k=ks[st%ks.length];setBar(k,STAGES.slice(0,n).map((x,j)=>j<st?"ok":j===st?"cur":""),`Prova ${st+1} de ${n}`);
   el.innerHTML=`<div class="card adv"><div class="advtop"><span>L'Illa dels Nombres Perduts</span><span class="gems">Gemmes: ${gems}</span></div><div class="path">${STAGES.slice(0,n).map((x,j)=>`<div class="st ${j<st?'done':j===st?'cur':''}">${j<st?IC.check:j+1}</div>`).join('')}</div>
-  <div class="eyebrow">Prova ${st+1} de ${n}</div><h3 style="margin:0 0 4px">${s0.nom}</h3><p style="margin:0;color:#E0E3FF">${s0.txt}</p><div id="ex" class="advbox"></div></div>`;
+  <div class="eyebrow">Prova ${st+1} de ${n}</div><h3 style="margin:0 0 4px">${s0.nom}</h3><p class="muted" style="margin:0">${s0.txt}</p><div id="ex" class="advbox"></div></div>`;
   exercise($('#ex'),k,{mode:'adv',onDone:()=>seal(k)})}
  function seal(k){$('#ex').innerHTML='<div class="fb info"><b>Segell del guardià:</b> la porta només s\'obre del tot si ho tornes a fer amb dades noves i <b>sense pistes</b>.</div><div id="ex2" style="margin-top:12px"></div>';
   exercise($('#ex2'),k,{mode:'seal',onDone:r=>{if(!r.help)gems++;const nx=()=>{st++;stage()};(st===1||st===3)?justify(el,k,r.p,nx):nx()}})}
- function win(){el.innerHTML=`<div class="card adv" style="text-align:center"><div style="font-size:64px"></div><h2>Has superat l'aventura!</h2><p>Gemmes: ${gems} gemmes (les gemmes només s'aconsegueixen sense ajuda)</p><p>Superar l'aventura és un gran pas. Per saber si ho domines de veritat, cal fer exercicis nous sense pistes.</p><button id="c">Continuar →</button></div>`;$('#c').onclick=done}
+ function win(){setBar(null,STAGES.slice(0,n).map(()=>"ok"),"");el.innerHTML=`<div class="card adv" style="text-align:center">${OWLM(64,"#F26B1D","#14213D")}<h2>Has superat l'aventura!</h2><p>Has aconseguit <b>${gems}</b> ${gems===1?'gemma':'gemmes'} (només s'aconsegueixen sense ajuda).</p><p>Superar l'aventura és un gran pas. Per saber si ho domines de veritat, cal fer exercicis nous sense pistes.</p><button id="c">Continuar →</button></div>`;$('#c').onclick=done}
  stage();
 }
 function justify(el,k,p,next){
- el.innerHTML=`<div class="card"><div class="owl"><div class="ic"></div><div><b>El guardià vol saber com ho has pensat.</b><p>Explica amb les teves paraules els passos que has fet per resoldre:</p><div style="font-size:20px">${p.text}</div></div></div>
+ el.innerHTML=`<div class="card"><div class="owl"><div class="ic">${OWL(40)}</div><div><b>El guardià vol saber com ho has pensat.</b><p>Explica amb les teves paraules els passos que has fet per resoldre:</p><div style="font-size:20px">${p.text}</div></div></div>
  <textarea id="jt" rows="3" placeholder="Primer he..." style="margin-top:12px"></textarea><div class="row" style="margin-top:10px"><button id="js">Enviar explicació</button>${micBtn('jt')}</div><div id="jf"></div></div>`;
  $('#js').onclick=async()=>{const t=$('#jt').value.trim();
   if(t.length<15){$('#jf').innerHTML='<div class="fb warn">Explica-ho una mica més: què has fet primer? I després?</div>';return}
@@ -144,7 +187,7 @@ function justify(el,k,p,next){
 /* ---------- Mode 3: exercicis interactius ---------- */
 function mEx(el,done){const ks=CUR.skills;let r=0;
  function next(){if(r>0&&timeUp()){el.innerHTML='<div class="card"><p>S\'ha acabat el temps d\'exercicis. Bona feina!</p><button id="c">Continuar →</button></div>';$('#c').onclick=done;return}
-  const k=ks[r%ks.length];r++;el.innerHTML=`<div class="card subj" style="${sc(k)}"><div class="exhead"><span class="chip" style="${sc(k)}">${SK[k].ic} ${SK[k].nom}</span><span class="muted">Repte ${r}</span></div><div id="ex"></div></div>`;
+  const k=ks[r%ks.length];r++;{const sg=[...(CUR.hist||[]).slice(-7).map(hst),"cur"];while(sg.length<8)sg.push("");setBar(k,sg,`Repte ${r}`)}el.innerHTML=`<div class="card ex5">${exLbl(k)}<div id="ex"></div></div>`;
   if(r%2===1&&(k==='frac_equiv'||k==='frac_de_nombre'||k==='ci_ecosis'))manip($('#ex'),k,next);else exercise($('#ex'),k,{mode:'prac',showVis:true,onDone:next})}
  next();
 }
@@ -152,14 +195,14 @@ function mEx(el,done){const ks=CUR.skills;let r=0;
 /* ---------- Comprovació ---------- */
 function mChk(el,done){const ks=CUR.skills,n=Math.min(8,Math.max(4,ks.length*2));let i=0;const res=[];
  el.innerHTML='<div class="card"><p style="margin-top:0">Exercicis nous, <b>sense pistes</b>. Així sabrem què ja domines i què cal reforçar.</p><div id="ex"></div></div>';
- const nx=()=>{if(i>=n)return show();const k=ks[i%ks.length];i++;$('#ex').innerHTML=`<div class="exhead" style="margin-top:12px"><span class="chip" style="${sc(k)}">${SK[k].ic} ${SK[k].nom}</span><span class="muted">Pregunta ${i} de ${n}</span></div><div id="ex2"></div>`;exercise($('#ex2'),k,{mode:'chk',onDone:r=>{res.push(r.ok);nx()}})};
- function show(){el.innerHTML=`<div class="card"><h3 style="margin-top:0">Resultat: ${res.filter(x=>x).length} de ${n}</h3>${ks.map(k=>`<p>${SK[k].ic} ${SK[k].nom}: ${badge(k)}</p>`).join('')}<button id="c">Continuar →</button></div>`;$('#c').onclick=done}
+ const nx=()=>{if(i>=n)return show();const k=ks[i%ks.length];i++;setBar(k,Array.from({length:n},(_,j)=>j<res.length?(res[j]?"ok":"ko"):j===res.length?"cur":""),`${i} de ${n}`);$('#ex').innerHTML=`<div style="margin-top:14px">${exLbl(k)}</div><div id="ex2"></div>`;exercise($('#ex2'),k,{mode:'chk',onDone:r=>{res.push(r.ok);nx()}})};
+ function show(){setBar(null,res.map(x=>x?"ok":"ko"),`${n} de ${n}`);el.innerHTML=`<div class="card"><h3 style="margin-top:0">Resultat: ${res.filter(x=>x).length} de ${n}</h3>${ks.map(k=>`<div class="topic5" style="${sc(k)}"><span class="ab5">${abOf(k)}</span><span class="tn"><b>${SK[k].nom}</b><small>${SUBJ[matOf(k)].nom}</small></span>${lvTag(k)}</div>`).join('')}<div style="margin-top:16px"></div><button id="c">Continuar →</button></div>`;$('#c').onclick=done}
  nx();
 }
 
 /* ---------- Escriptura a mà ---------- */
 const DICT_EN={5:"My name is Pau. I have got a dog called Max. He is brown and white. We play in the park every day.",6:"Last summer I went to Menorca with my family. We swam in the sea and ate ice cream. It was the best holiday ever!"};
-function mWrite(el,done){const en=S.sessio.dictatLang==='en',D=en?DICT_EN:DICTATS,txt=(S.sessio.dictat||D[S.perfil.curs]||D[5]).trim(),fr=(txt.match(/[^.!?]+[.!?]*/g)||[txt]).map(s=>s.trim()).filter(Boolean);let tipus='dictat';
+function mWrite(el,done){setBar(null,[],"");const en=S.sessio.dictatLang==='en',D=en?DICT_EN:DICTATS,txt=(S.sessio.dictat||D[S.perfil.curs]||D[5]).trim(),fr=(txt.match(/[^.!?]+[.!?]*/g)||[txt]).map(s=>s.trim()).filter(Boolean);let tipus='dictat';
  el.innerHTML='<div class="card"><p style="margin-top:0">Agafa el teu <b>quadern i un llapis</b>. Avui no escriuràs a la pantalla!</p><div class="row"><button id="td">Dictat</button><button class="sec" id="tc">Còpia</button></div><div id="w" style="margin-top:14px"></div></div><div id="res"></div>';
  const show=()=>{$('#td').className=tipus==='dictat'?'':'sec';$('#tc').className=tipus==='copia'?'':'sec';
   $('#w').innerHTML=(tipus==='dictat'?`<p>Escolta cada frase i escriu-la al quadern. La pots escoltar tantes vegades com vulguis.</p><div class="row">${fr.map((f,i)=>`<button class="sec" data-f="${i}"><svg class="ic" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg> Frase ${i+1}</button>`).join('')}</div>`
@@ -189,7 +232,7 @@ Marca "dubtosa" quan no puguis llegir bé la lletra i no estiguis segur de si é
 }
 
 /* ===================== zona pares ===================== */
-function parent(tab){endSession();if(!PARENT_OK)return askPin();const T={sessio:'Sessió d\'avui',prog:'Progrés',tem:'Temari',cfg:'Configuració'};
+function parent(tab){endSession();if(!PARENT_OK)return askPin();nav('families');const T={sessio:'Sessió d\'avui',prog:'Progrés',tem:'Temari',cfg:'Configuració'};
  app(`<div class="row ph" style="justify-content:space-between;align-items:flex-end"><div><h2>Zona famílies</h2><p class="muted">Prepareu la sessió d'avui i seguiu el progrés${S.perfil.nom?' de '+esc(S.perfil.nom):''}.</p></div><button class="ghost" onclick="home()"><svg class="ic" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Sortir</button></div><div class="tabs">${Object.entries(T).map(([k,v])=>`<button class="${k===tab?'on':''}" onclick="parent('${k}')">${v}</button>`).join('')}</div><div id="pz"></div>`);
  ({sessio:pSessio,prog:pProg,tem:el=>temari(true,el),cfg:pCfg})[tab]($('#pz'))}
 
