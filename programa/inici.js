@@ -49,8 +49,8 @@ function drawShell(){const s=$('#side'),t=$('#tabbar');if(!s||!t)return;const on
 // Anell de progrés (Suau): track clar i traç de color arrodonit. col = [traç, track, text]
 function ring(done,goal,sz,col=['#8B6CF0','#D2C4FB','#3B2A8C'],lbl){const big=sz>60,r=big?sz/2-8:sz/2-4,w=big?6:4,c=2*Math.PI*r,p=Math.max(0,Math.min(1,done/(goal||1))),h=sz/2;
  return`<svg class="ring5" width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" role="img" aria-label="${lbl||`${done} de ${goal} minuts`}"><circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="${col[1]}" stroke-width="${w}"/>${p>0?`<circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="${col[0]}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${(c*p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${h} ${h})"/>`:''}${big
-  ?`<text x="${h}" y="${h+6}" text-anchor="middle" font-weight="600" font-size="${Math.round(sz/6)}" fill="${col[2]}">${lbl||done}</text>`
-  :`<text x="${h}" y="${h+4}" text-anchor="middle" font-weight="600" font-size="12" fill="${col[2]}">${done}'</text>`}</svg>`}
+  ?`<text x="${h}" y="${h+6}" text-anchor="middle" font-weight="400" font-size="${Math.round(sz/6)}" fill="${col[2]}">${lbl||done}</text>`
+  :`<text x="${h}" y="${h+4}" text-anchor="middle" font-weight="500" font-size="12" fill="${col[2]}">${done}'</text>`}</svg>`}
 // Les 6 maneres de practicar (ordre del disseny v5, colors pastel del disseny Suau: [fons, icona])
 const MODE5=()=>[['professor','Professor','T\'ho explica','#D6E8FD','#2D6BD8',IC.cap],['exercicis','Exercicis','Practica un tema','#D4F1E4','#1F8A5B',IC.grid],['aventura','Aventura','Proves amb segell','#FBDDEB','#C93D78',IC.map],
  ['combinada','Sessió mixta','Una mica de tot','#E3D9FD','#6E4FE0',IC.layers],['escriptura','Escriptura','Escriu i fes foto','#FDE3B8','#C26A17',IC.pen],['comprovacio','Comprovació','Ja ho domines?','#DDF3C9','#3E7A1E',IC.okc]];

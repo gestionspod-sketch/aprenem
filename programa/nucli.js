@@ -136,7 +136,7 @@ function manip(el,k,onDone){
  if(!p.paint)return exercise(el,k,{mode:'prac',showVis:true,onDone});
  const P=p.paint,sel=new Set(),seq=[],ord=P.kind==='order';let wrong=0;
  el.innerHTML=`<p class="muted">${ord?'Pensa primer qui menja qui. Després toca-ho per ordre.':'Primer calcula quantes en necessites. Després toca-les.'}</p><div class="prob" style="font-size:22px">${P.label}</div>
-  <div class="mz">${ord?`<div class="row">${P.items.map((x,i)=>`<button class="sec" data-i="${i}">${esc(x)}</button>`).join('')}</div><p class="seq" style="font-size:22px;min-height:34px;font-weight:700"></p><button class="ghost clr">↺ Torna a començar</button>`:P.kind==='bar'?barHTML(P.parts,0,true):groupsHTML(P.parts,P.k,0,true)}</div>
+  <div class="mz">${ord?`<div class="row">${P.items.map((x,i)=>`<button class="sec" data-i="${i}">${esc(x)}</button>`).join('')}</div><p class="seq" style="font-size:22px;min-height:34px;font-weight:500"></p><button class="ghost clr">↺ Torna a començar</button>`:P.kind==='bar'?barHTML(P.parts,0,true):groupsHTML(P.parts,P.k,0,true)}</div>
   ${ord?'':'<p class="muted">Seleccionats: <b class="cnt">0</b></p>'}<button class="okb" style="margin-top:10px">Comprova</button><div class="fbx"></div>`;
  const showSeq=()=>el.querySelector('.seq').textContent=seq.map(i=>P.items[i]).join(' → ');
  el.querySelectorAll('.mz [data-i]').forEach(d=>d.onclick=()=>{if(el.querySelector('.okb').disabled)return;const i=+d.dataset.i;
