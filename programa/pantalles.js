@@ -233,9 +233,61 @@ Marca "dubtosa" quan no puguis llegir bé la lletra i no estiguis segur de si é
 }
 
 /* ===================== zona pares ===================== */
-function parent(tab){endSession();if(!PARENT_OK)return askPin();nav('families');const T={sessio:'Sessió d\'avui',prog:'Progrés',tem:'Temari',cfg:'Configuració'};
+function parent(tab){endSession();if(!PARENT_OK)return askPin();nav('families');const T={sessio:'Sessió d\'avui',deures:'Corregir deures',prog:'Progrés',tem:'Temari',cfg:'Configuració'};
  app(`<div class="row ph" style="justify-content:space-between;align-items:flex-end"><div><h2>Zona famílies</h2><p class="muted">Prepareu la sessió d'avui i seguiu el progrés${S.perfil.nom?' de '+esc(S.perfil.nom):''}.</p></div><button class="ghost" onclick="home()"><svg class="ic" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Sortir</button></div><div class="tabs">${Object.entries(T).map(([k,v])=>`<button class="${k===tab?'on':''}" onclick="parent('${k}')">${v}</button>`).join('')}</div><div id="pz"></div>`);
- ({sessio:pSessio,prog:pProg,tem:el=>temari(true,el),cfg:pCfg})[tab]($('#pz'))}
+ ({sessio:pSessio,deures:pDeures,prog:pProg,tem:el=>temari(true,el),cfg:pCfg})[tab]($('#pz'))}
+
+/* ---------- Corregir deures: foto dels exercicis fets → correcció, solucions i com es fa (per estudiar junts) ---------- */
+const DEU_ST={be:['Bé','#D4F1E4','#1F7A52'],malament:['Per revisar','#FFF4DE','#A0661A'],parcial:['Mig bé','#FFF4DE','#A0661A'],en_blanc:['En blanc','#EEF0F5','#5E5B74'],dubtosa:['No es llegeix bé','#E3D9FD','#4B2FB8']};
+function deuView(j){const ex=Array.isArray(j.exercicis)?j.exercicis:[],n=s=>ex.filter(e=>e.estat===s).length,sk=(j.habilitats||[]).filter(k=>SK[k]&&!S.sessio.skills.includes(k));
+ return`<div class="card"><div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="margin:0">${esc(j.titol||'Correcció')}</h3><span class="muted">${j.data?new Date(j.data).toLocaleDateString('ca-ES',{day:'numeric',month:'long'}):''}</span></div>
+ ${j.assignatura?`<p class="muted" style="margin:4px 0 0">${esc(j.assignatura)}</p>`:''}
+ <div class="row" style="gap:8px;margin:12px 0">${[['be','bé'],['malament','per revisar'],['parcial','mig bé'],['en_blanc','en blanc'],['dubtosa','no es llegeixen bé']].filter(([s])=>n(s)).map(([s,t])=>`<span style="background:${DEU_ST[s][1]};color:${DEU_ST[s][2]};padding:6px 12px;border-radius:14px;font-weight:500">${n(s)} ${t}</span>`).join('')}</div>
+ ${j.resum?`<p style="margin:0 0 6px">${esc(j.resum)}</p>`:''}
+ <div class="row" style="gap:8px;margin-top:8px"><button class="sec" id="deuAll">Mostra totes les solucions</button></div>
+ <p class="muted" style="font-size:14px;margin:8px 0 0">Les solucions estan amagades perquè primer ho pugui tornar a provar. La IA es pot equivocar: comproveu-ho, sobretot els marcats «No es llegeix bé».</p></div>
+ ${ex.map(e=>{const st=DEU_ST[e.estat]||DEU_ST.dubtosa;return`<div class="card deu-ex"><div class="row" style="justify-content:space-between;align-items:flex-start;gap:10px"><b style="font-weight:600;flex:1;min-width:0">${esc(e.num?e.num+'. ':'')}${esc(e.enunciat||'')}</b><span style="background:${st[1]};color:${st[2]};padding:4px 10px;border-radius:12px;font-size:13px;font-weight:500;white-space:nowrap">${st[0]}</span></div>
+  ${e.resposta_infant?`<p style="margin:10px 0 0"><span class="muted">Ha respost:</span> ${esc(e.resposta_infant)}</p>`:''}
+  ${e.comentari?`<p style="margin:6px 0 0">${esc(e.comentari)}</p>`:''}
+  <details style="margin-top:10px"><summary style="cursor:pointer;color:var(--accent-d,#6E4FE0);font-weight:500">Mostra la solució i com es fa</summary>
+  <p style="margin:10px 0 0"><span class="muted">Solució:</span> <b style="font-weight:600">${esc(e.solucio||'')}</b></p>
+  ${e.com_es_fa?`<p style="margin:8px 0 0;white-space:pre-line">${esc(e.com_es_fa)}</p>`:''}</details></div>`}).join('')}
+ ${j.consells?`<div class="card"><h3 style="margin-top:0">Per estudiar junts</h3><p style="white-space:pre-line;margin:0">${esc(j.consells)}</p></div>`:''}
+ ${sk.length?`<div class="card"><h3 style="margin-top:0">Practicar-ho a l'app</h3><p class="muted" style="margin-top:0">Temes relacionats amb el que ha fallat: ${sk.map(k=>esc(SK[k].nom)).join(' · ')}.</p><button id="deuAdd" data-sk="${sk.join(',')}">Afegir-los a la sessió d'avui</button> <span id="deuOk" class="muted"></span></div>`:''}`}
+function deuWire(el){const all=el.querySelector('#deuAll');if(all)all.onclick=()=>{const ds=el.querySelectorAll('.deu-ex details'),open=[...ds].some(d=>!d.open);ds.forEach(d=>d.open=open);all.textContent=open?'Amaga les solucions':'Mostra totes les solucions'};
+ const add=el.querySelector('#deuAdd');if(add)add.onclick=()=>{S.sessio.skills=[...new Set([...S.sessio.skills,...add.dataset.sk.split(',')])];save();add.disabled=true;el.querySelector('#deuOk').textContent='Afegits. Els trobareu marcats a «Sessió d\'avui».'}}
+function pDeures(el){const H=S.deures=S.deures||[];
+ el.innerHTML=`<div class="card"><h3 style="margin-top:0">Corregir deures amb foto</h3>
+ <p class="muted" style="margin-top:0">Feu una foto dels exercicis que ha fet (llibre, fitxa o quadern). L'app diu quins estan bé, quins cal revisar, la solució i com es fa, perquè ho pugueu repassar junts abans de corregir-ho a classe.</p>
+ ${S.cfg.key?'':'<div class="fb warn">Per corregir amb foto cal la clau gratuïta de Google AI Studio (pestanya <b>Configuració</b>).</div>'}
+ <label>Fotos dels exercicis (una o més)</label><input type="file" id="dfi" accept="image/*,application/pdf" multiple>
+ <label>Alguna indicació? (opcional)</label><textarea id="dins" rows="2" placeholder="Ex.: Mates, pàgina 45, exercicis 3 a 6. Només els que estan encerclats."></textarea>
+ <div class="row" style="margin-top:10px"><button id="dgo" ${S.cfg.key?'':'disabled'}>Corregeix</button>${micBtn('dins')}</div><div id="dst"></div></div>
+ <div id="dres"></div>
+ ${H.length?`<div class="card"><h3 style="margin-top:0">Correccions anteriors</h3>${H.map((h,i)=>`<button class="sec" data-dh="${i}" style="margin:0 8px 8px 0">${esc(h.titol||'Correcció')} · ${new Date(h.data).toLocaleDateString('ca-ES',{day:'numeric',month:'short'})}</button>`).join('')}</div>`:''}`;
+ const show=j=>{const r=el.querySelector('#dres');r.innerHTML=deuView(j);deuWire(r);r.scrollIntoView({behavior:'smooth',block:'start'})};
+ el.querySelectorAll('[data-dh]').forEach(b=>b.onclick=()=>show(H[+b.dataset.dh]));
+ el.querySelector('#dgo').onclick=async()=>{const st=el.querySelector('#dst'),files=[...el.querySelector('#dfi').files],ins=el.querySelector('#dins').value.trim();
+  if(!files.length){st.innerHTML='<div class="fb warn">Primer feu o trieu una foto dels exercicis.</div>';return}
+  st.innerHTML='<div class="fb info">Llegint els exercicis i corregint... Pot tardar fins a un minut: no tanqueu la pàgina.</div>';el.querySelector('#dgo').disabled=true;
+  try{const parts=await Promise.all(files.map(fileToPart));
+   parts.push({text:`Ets un mestre de Primària de les Illes Balears. Els pares envien ${files.length} foto(s) d'exercicis que el seu fill o filla de ${ORD[S.perfil.curs]} de Primària ja ha fet (deures del llibre, d'una fitxa o del quadern). Indicació dels pares: "${ins||'(cap)'}".
+Volen saber quins exercicis estan bé i quins no, la solució correcta i com es fa, per poder-los repassar junts abans de corregir-los a classe.
+Per a cada exercici o apartat que vegis (si els pares n'indiquen uns de concrets, només aquests):
+- Llegeix l'enunciat i la resposta que hi ha escrita a mà.
+- Resol-lo TU primer, amb cura (a mates, fes els càlculs pas a pas i comprova'ls), i després compara.
+- Estat: "be" (correcte), "malament", "parcial" (en part), "en_blanc" (no hi ha resposta) o "dubtosa" (no pots llegir bé la lletra o l'enunciat i no estàs segur). No t'inventis errors: si dubtes, posa "dubtosa".
+Escriu en català (si l'exercici és d'anglès o de castellà, la solució en aquella llengua i les explicacions en català), amb frases curtes i clares.
+Habilitats de l'app (id: assignatura – nom): ${Object.keys(SK).map(k=>k+': '+SUBJ[matOf(k)].nom+' – '+SK[k].nom).join('; ')}.
+Respon NOMÉS amb JSON:
+{"titol":"títol curt, p. ex. «Mates · pàgina 45»","assignatura":"nom de l'assignatura","resum":"1-2 frases per als pares: com ho ha fet i què li costa","exercicis":[{"num":"número o lletra de l'exercici","enunciat":"enunciat breu","resposta_infant":"el que ha escrit (o cadena buida)","estat":"be|malament|parcial|en_blanc|dubtosa","solucio":"la resposta correcta","com_es_fa":"explicació pas a pas per fer-lo junts (un pas per línia; màxim 6 línies)","comentari":"si no està bé, on s'ha equivocat, en una frase amable; si està bé, cadena buida"}],"consells":"2-4 idees concretes per repassar junts el que ha fallat (una per línia)","habilitats":[ids de la llista relacionats amb el que ha fallat; llista buida si tot està bé]}`});
+   const j=parseJSON(await gemini([{role:'user',parts}],{json:true}));
+   if(!Array.isArray(j.exercicis)||!j.exercicis.length)throw new Error('No he trobat cap exercici a la foto. Proveu-ho amb una foto més clara i de més a prop.');
+   j.data=new Date().toISOString();j.exercicis=j.exercicis.map(e=>({num:String(e.num??''),enunciat:String(e.enunciat||''),resposta_infant:String(e.resposta_infant||''),estat:DEU_ST[e.estat]?e.estat:'dubtosa',solucio:String(e.solucio||''),com_es_fa:String(e.com_es_fa||''),comentari:String(e.comentari||'')}));
+   H.unshift(j);H.length=Math.min(H.length,8);save();
+   st.innerHTML='';el.querySelector('#dgo').disabled=false;show(j);
+  }catch(e){st.innerHTML=`<div class="fb ko">No s'ha pogut corregir: ${esc(e.message)}</div>`;el.querySelector('#dgo').disabled=false}};
+}
 
 function recom(){const L=Object.keys(SK).map(k=>({k,l:level(k),e:Object.values(S.prog[k]?.errs||{}).reduce((a,b)=>a+b,0)}));
  const weak=L.filter(x=>x.l===0).sort((a,b)=>b.e-a.e).map(x=>x.k),comp=L.filter(x=>x.l===1).map(x=>x.k),nous=L.filter(x=>x.l<0).map(x=>x.k);
