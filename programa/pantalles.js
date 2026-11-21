@@ -135,7 +135,7 @@ function finish(){const c=CUR;endSession();hideToast();if(!c)return home();
 function mProf(el,done){const ks=CUR.skills;let i=0;
  el.innerHTML='<div id="pa"></div><div id="chatbox"></div>';chatUI($('#chatbox'));const pa=$('#pa');
  function theory(){if(i>=ks.length)return end();const s=SK[ks[i]];
-  const extra=i===0&&S.sessio.explicacio?`<div class="fb info"><b>Del teu llibre:</b> ${esc(S.sessio.explicacio)}</div>`:'';
+  const extra=i===0&&S.sessio.explicacio?`<div class="fb info" style="white-space:pre-line"><b>Del teu llibre:</b> ${esc(S.sessio.explicacio)}</div>`:'';
   const pb=()=>setBar(ks[i],ks.map((_,j)=>j<i?"ok":j===i?"cur":""),`Tema ${i+1} de ${ks.length}`);pb();
   pa.innerHTML=`<div class="card">${exLbl(ks[i])}<h2 style="margin:6px 0 0">${s.nom}</h2><div class="owl" style="margin-top:16px"><div class="ic">${OWL(44)}</div><div class="bub">${s.teoria.map(t=>`<p>${t}</p>`).join('')}${extra}</div></div>${s.fig?`<div class="fig" style="margin-top:16px">${s.fig()}</div>`:''}
   <div class="row" style="margin-top:18px;justify-content:flex-end"><button class="sec" id="spk">${IC.speaker} Llegeix-m'ho</button><button id="go">Ho he llegit → Veure un exemple</button></div></div>`;
@@ -270,19 +270,25 @@ function pSessio(el){const s=S.sessio,r=recom();let mode=s.mode;
  $('#ap').onclick=()=>{S.sessio={...S.sessio,skills:r.skills,mode:r.mode};save();pSessio(el);$('#svok').textContent='Recomanació aplicada.'};
  $('#ai').onclick=async()=>{const st=$('#aist'),files=[...$('#fi').files],ins=$('#ins').value.trim();
   if(!files.length&&!ins){st.innerHTML='<div class="fb warn">Afegiu alguna foto o escriviu què ha d\'estudiar.</div>';return}
-  st.innerHTML='<div class="fb info">Llegint el material i preparant la sessió...</div>';$('#ai').disabled=true;
+  // es desa el que hi ha marcat al formulari (encara que no s'hagi premut «Desar») i la IA ho respecta
+  collect();const marked=S.sessio.skills.filter(k=>SK[k]);
+  st.innerHTML='<div class="fb info">Llegint el material i preparant la sessió... Pot tardar fins a un minut: no tanqueu la pàgina.</div>';$('#ai').disabled=true;
   try{const parts=await Promise.all(files.map(fileToPart));
-   parts.push({text:`Ets l'assistent pedagògic d'una aplicació d'estudi en català (matemàtiques, anglès i ciències naturals) per a infants de Primària (currículum de les Illes Balears). L'infant fa ${ORD[S.perfil.curs]} de Primària.
+   const nomK=k=>SUBJ[matOf(k)].nom+' – '+SK[k].nom;
+   parts.push({text:`Ets l'assistent pedagògic d'una aplicació d'estudi en català per a infants de Primària (currículum de les Illes Balears). Assignatures de l'app: ${Object.values(SUBJ).map(s=>s.nom).join(', ')}. L'infant fa ${ORD[S.perfil.curs]} de Primària.
 Els pares han enviat ${files.length} foto(s)/document(s) del temari i aquesta instrucció: "${ins||'(cap)'}".
-Habilitats disponibles a l'app (id: nom): ${Object.entries(SK).map(([k,v])=>k+': '+v.nom).join('; ')}.
+${marked.length?`MOLT IMPORTANT: els pares ja han marcat a mà els temes que entren (${marked.map(k=>k+': '+nomK(k)).join('; ')}). Aquests temes es mantenen tots i no se n'hi afegeix cap altre: a "habilitats" posa exactament aquests ids. Centra l'explicació, el resum, el dictat i les preguntes en aquests temes.
+`:''}Habilitats disponibles a l'app (id: assignatura – nom): ${Object.keys(SK).map(k=>k+': '+nomK(k)).join('; ')}.
 Respon NOMÉS amb JSON:
-{"habilitats":[ids de la llista que encaixen amb el temari],"minuts":nombre o null,"mode":"combinada"|"professor"|"aventura"|"exercicis"|"escriptura"|"comprovacio"|null,"resum_pares":"2-3 frases: què has entès del temari i què treballarà la sessió","explicacio_infant":"explicació breu i clara del concepte principal, adaptada a l'infant i basada en el llibre (màxim 120 paraules)","dictat":"si el temari és de llengua (català o anglès) o demanen escriptura, 3-5 frases per dictar en aquella llengua; si no, cadena buida","dictat_idioma":"ca"|"en","vocabulari":[{"en":"paraula anglesa","ca":"traducció catalana","emoji":"un emoji que la representi"}] (si el temari és d'anglès, fins a 20 paraules de la unitat; si no, llista buida),"preguntes":[{"q":"pregunta curta sobre el llibre","a":"resposta curta (1-3 paraules); si hi ha sinònims vàlids, separa'ls amb |","h":"pista que no doni la resposta","ex":"explicació breu per a l'infant"}] (si el temari és de ciències, 8-12 preguntes de resposta curta i inequívoca extretes del llibre, i afegeix "ci_llibre" a habilitats; si no, llista buida),"fora_abast":"si part del temari no encaixa amb cap habilitat disponible, explica-ho breument; si no, cadena buida"}
+{"habilitats":[ids de la llista que encaixen amb el temari],"minuts":nombre o null,"mode":"combinada"|"professor"|"aventura"|"exercicis"|"escriptura"|"comprovacio"|null,"resum_pares":"2-3 frases: què has entès del temari i què treballarà la sessió","explicacio_infant":"explicació breu i clara del concepte principal, adaptada a l'infant i basada en el llibre (màxim 120 paraules; si els pares demanen un resum, fes un resum dels temes en punts curts, un per línia començant per «- », de fins a 220 paraules)","dictat":"si el temari és de llengua (català o anglès) o demanen escriptura, 3-5 frases per dictar en aquella llengua; si no, cadena buida","dictat_idioma":"ca"|"en","vocabulari":[{"en":"paraula anglesa","ca":"traducció catalana","emoji":"un emoji que la representi"}] (si el temari és d'anglès, fins a 20 paraules de la unitat; si no, llista buida),"preguntes":[{"q":"pregunta curta sobre el llibre","a":"resposta curta (1-3 paraules); si hi ha sinònims vàlids, separa'ls amb |","h":"pista que no doni la resposta","ex":"explicació breu per a l'infant"}] (si el temari és de Medi (ciències naturals o socials), 8-12 preguntes de resposta curta i inequívoca extretes del llibre, i afegeix "ci_llibre" a habilitats; si no, llista buida),"fora_abast":"si part del temari no encaixa amb cap habilitat disponible, explica-ho breument; si no, cadena buida"}
 Si hi ha un examen proper, prioritza el mode "combinada" (acaba amb comprovació).`});
    const j=parseJSON(await gemini([{role:'user',parts}],{json:true})),sk=(j.habilitats||[]).filter(k=>SK[k]);
-   S.sessio={...S.sessio,skills:sk.length?sk:S.sessio.skills,minuts:+j.minuts||S.sessio.minuts,mode:MODES[j.mode]?j.mode:S.sessio.mode,explicacio:j.explicacio_infant||'',dictat:j.dictat||S.sessio.dictat,dictatLang:j.dictat?(j.dictat_idioma==='en'?'en':'ca'):S.sessio.dictatLang,
+   // amb temes marcats, la IA no els canvia (només hi pot sumar «Preguntes del llibre» si n'ha generat)
+   const skills=marked.length?[...new Set([...marked,...(sk.includes('ci_llibre')&&Array.isArray(j.preguntes)&&j.preguntes.length?['ci_llibre']:[])])]:(sk.length?sk:S.sessio.skills);
+   S.sessio={...S.sessio,skills,minuts:+j.minuts||S.sessio.minuts,mode:MODES[j.mode]?j.mode:S.sessio.mode,explicacio:j.explicacio_infant||'',dictat:j.dictat||S.sessio.dictat,dictatLang:j.dictat?(j.dictat_idioma==='en'?'en':'ca'):S.sessio.dictatLang,
     preguntes:Array.isArray(j.preguntes)&&j.preguntes.length?j.preguntes.filter(x=>x.q&&x.a).map(x=>({q:String(x.q),a:String(x.a),h:x.h||'',ex:x.ex||''})):S.sessio.preguntes,
     vocab:Array.isArray(j.vocabulari)&&j.vocabulari.length?j.vocabulari.filter(w=>w.en&&w.ca).map(w=>({en:String(w.en).trim(),ca:String(w.ca).trim(),em:w.emoji||''})):S.sessio.vocab,resum:(j.resum_pares||'')+(j.fora_abast?' '+j.fora_abast:'')};
-   save();pSessio(el);$('#svok').textContent='Sessió preparada amb IA i desada. Revisau-la si voleu.';
+   save();pSessio(el);$('#svok').textContent=marked.length?`Sessió preparada amb IA i desada. S'han mantingut els ${marked.length} temes que havíeu marcat.`:'Sessió preparada amb IA i desada. Revisau-la si voleu.';
   }catch(e){st.innerHTML=`<div class="fb ko">No s'ha pogut preparar: ${esc(e.message)}</div>`;$('#ai').disabled=false}};
 }
 
