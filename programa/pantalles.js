@@ -95,7 +95,7 @@ function setBar(k,states,label){const t=$('#tbT');if(!t)return;
 const exLbl=k=>`<span class="lbl" style="${sc(k)};color:color-mix(in srgb,var(--c) 80%,#000)">${SUBJ[matOf(k)].nom} · ${SK[k].nom}</span>`;
 // Panell lateral «Aquesta sessió» (ordinador)
 function sessSide(){const el=$('#fxSide');if(!el||!CUR)return;const h=CUR.hist||[],first=h.filter(x=>x.ok&&!x.help).length,help=h.filter(x=>x.ok&&x.help).length,min=Math.floor((Date.now()-CUR.t0)/60000);
- const how={comprovacio:'Exercicis nous, <b>sense pistes</b> i amb un sol intent. Així sabrem què ja domines i què cal reforçar.',aventura:'Cada prova té un <b>segell</b>: el mateix exercici amb dades noves i <b>sense pistes</b>. Les gemmes només s\'aconsegueixen sense ajuda.',
+ const how={comprovacio:'Exercicis nous, <b>sense pistes</b> i amb un sol intent. Així sabrem què ja domines i què cal reforçar.',aventura:(typeof AVENTURA!=='undefined'&&AVENTURA.plan(CUR.skills))?'Recorre l\'illa prova a prova. Al final hi ha el <b>segell</b>: un exercici nou, <b>sense pistes</b> i amb un sol intent. Les gemmes només s\'aconsegueixen a la primera i sense ajuda.':'Cada prova té un <b>segell</b>: el mateix exercici amb dades noves i <b>sense pistes</b>. Les gemmes només s\'aconsegueixen sense ajuda.',
   professor:'Primer llegeix l\'explicació, després mira un exemple resolt pas a pas i al final practica amb ajuda.',escriptura:'Escriu al quadern amb la teva millor lletra. Quan acabis, fes una foto i corregeix-ho.'}[CUR.cm]
   ||'Si falles <b>2 vegades</b>, et mostrarem la solució pas a pas i després en faràs un de <b>nou</b>, amb altres nombres.';
  el.innerHTML=`<div class="card"><span class="lbl">Aquesta sessió</span><div class="sess5"><div><b style="color:#23885A">${first}</b><span>a la primera</span></div><div><b style="color:#B07A00">${help}</b><span>amb ajuda</span></div><div><b>${min}</b><span>${min===1?'minut':'minuts'}</span></div><div><b>${CUR.hints||0}</b><span>${CUR.hints===1?'pista usada':'pistes usades'}</span></div></div></div>
@@ -158,8 +158,8 @@ function chatUI(el){
  $('#cs').onclick=send;$('#cq').onkeydown=e=>{if(e.key==='Enter')send()};
 }
 
-/* ---------- Mode 2: aventura ---------- */
-function mAdv(el,done){const ks=CUR.skills;
+/* ---------- Mode 2: aventura clàssica (assignatures sense illa; el motor nou és a aventura.js) ---------- */
+function mAdvClassic(el,done){const ks=CUR.skills;
  const mins=phaseEnd?(phaseEnd-Date.now())/60000:S.sessio.minuts;const n=Math.max(3,Math.min(STAGES.length,Math.round(mins/2.5)));
  let st=0,gems=0;
  function stage(){if(st>=n||(st>0&&timeUp()))return win();const s0=STAGES[st],k=ks[st%ks.length];setBar(k,STAGES.slice(0,n).map((x,j)=>j<st?"ok":j===st?"cur":""),`Prova ${st+1} de ${n}`);
