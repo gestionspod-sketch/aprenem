@@ -21,6 +21,13 @@
       "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ".claude/serve.ps1", "-port", "8774"],
       "port": 8774,
       "autoPort": false
+    },
+    {
+      "name": "aprenem-aventura",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ".claude/serve.ps1", "-port", "8775"],
+      "port": 8775,
+      "autoPort": false
     }
   ]
 }

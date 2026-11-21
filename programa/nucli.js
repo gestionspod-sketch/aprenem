@@ -78,6 +78,7 @@ function guided(c,steps,then,intro='Sembla que costa una mica. El Mestre Òliba 
   c.querySelector('.gs').onclick=()=>{if(j<steps.length-1){j++;draw()}else then()}};draw()}
 
 // mode: 'prac' (pistes), 'adv' (pistes), 'seal' (sense pistes), 'chk' (sense pistes, un intent)
+// o.one: un sol intent (segell de l'aventura) · o.onWrong(): avís a cada resposta incorrecta (gemmes de l'aventura)
 function exercise(el,k,o){
  let p,t0,wrong,hints,lock=false;const help=o.mode==='prac'||o.mode==='adv';
  const fresh=variant=>{p=genP(k);t0=Date.now();wrong=0;hints=0;lock=false;
@@ -114,7 +115,7 @@ function exercise(el,k,o){
    if(p.pron)fb.querySelector('.pr').onclick=()=>say(p.pron,.8,'en-GB');
    const nb=fb.querySelector('.nx');nb.focus();nb.onclick=goOn(()=>o.onDone({ok:true,help:used,p}));return;
   }
-  wrong++;const et=p.err?p.err(v):null;if(et)recErr(k,et);
+  wrong++;if(o.onWrong)o.onWrong();const et=p.err?p.err(v):null;if(et)recErr(k,et);
   if(o.mode==='chk'){record(k,false,false,true);lockAll();
    fb.innerHTML=`<div class="fb ko">No és correcte. La resposta era <b>${p.fields.map(ansStr).join(' i ')}</b>. Ho repassarem!</div><button class="nx" style="margin-top:10px">Continuar →</button>`;
    fb.querySelector('.nx').onclick=goOn(()=>o.onDone({ok:false,p}));return;
@@ -123,6 +124,8 @@ function exercise(el,k,o){
    const upd=()=>fb.innerHTML=`<div class="fb warn">Has respost molt de pressa. Llegeix l'enunciat amb calma i pensa abans de respondre. (${s})</div>`;upd();
    const iv=setInterval(()=>{s--;if(s<=0){clearInterval(iv);lock=false;t0=Date.now()-5000;fb.innerHTML='<div class="fb info">Ara sí: pensa-ho bé i torna-ho a provar.</div>'}else upd()},1000);return;
   }
+  // o.one (segell de l'aventura): un sol intent; si falla, explicació pas a pas i un exercici nou
+  if(o.one){record(k,false,false,false);lockAll();guided(fb,p.steps,()=>fresh(true),`Aquesta vegada no.${et?' '+ERR[et].kid:''} Mira com es resol i després en tindràs un de nou:`);return}
   if(wrong>=2){record(k,false,true,false);lockAll();guided(fb,p.steps,()=>fresh(true));return}
   fb.innerHTML=et?`<div class="fb err">${OWL(40)}<div>${ERR[et].kid}${help?' Si vols, demana una pista.':''}</div></div>`:`<div class="fb ko">${pick([p.fields[0].txt?'Encara no és correcte. Revisa la resposta.':'Encara no és correcte. Revisa els càlculs.','Gairebé! Torna-ho a mirar amb calma.'])}${help?' Si vols, demana una pista.':''}</div>`;
   t0=Date.now();
