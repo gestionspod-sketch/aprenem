@@ -84,6 +84,8 @@ disseny/suau/                   maquetes aprovades del disseny Suau (referència
 disseny/v5/                     maquetes del disseny v5 (estructura de les pantalles)
 programa/utils.js               utilitats: fraccions, nombres...
 programa/dades-app.js           assignatures, modes, errors típics (ERR), aventura, dictats
+programa/aventura.js            motor de l'AVENTURA: registre ILLES, mapa, gemmes, segell, tresor, ajudes AV (secció 5)
+contingut/aventura-<assig>.js   una illa d'aventura per assignatura (p. ex. aventura-mates.js)
 programa/nucli.js               estat i progrés, rellotge, veu, IA (Gemini), components d'exercici
 programa/pantalles.js           pantalles: inici, assignatura, taula de verbs, temari, modes, zona famílies, PIN
 programa/icones.js              icones de línia i codis de tema (s'aplica al final)
@@ -124,6 +126,41 @@ id_tema:{mat:'ciencies', nom:'Nom visible', ic:'xx', bloc:'(opcional, agrupa tem
 ### Una làmina nova
 Copiar `contingut/lamines/aparell-respiratori.js`: un objecte amb les parts (número, nom, sinònims acceptats, punt, posició de l'etiqueta, funció), una funció que dibuixa l'SVG (`mode:'labels'|'numbers'`, `hi:` part destacada), el tema d'exercicis i la pantalla. Afegir el `<script>` a `index.html` i l'accés a la pàgina de l'assignatura (`subject()` a `pantalles.js`).
 
+### Aventura: motor i illes (una illa nova per assignatura)
+L'**Aventura** és un mapa d'illa: l'òliba salta d'estació en estació i cada estació és un **joc que es fa movent coses** (manipulatiu). El motor és `programa/aventura.js` (no cal tocar-lo); cada assignatura hi afegeix la seva illa des d'un arxiu propi, `contingut/aventura-<assig>.js`, posat **al final del bloc de l'assignatura** a `index.html`. Exemple complet: `contingut/aventura-mates.js` (illa de Mates, 4 estacions). Prototip aprovat: `disseny/aventura/prototip-mates.html`.
+
+**Com tria el motor què es juga** (`AVENTURA.plan`): l'assignatura més present a `CUR.skills` que tingui illa → l'illa amb més estacions que practiquin aquests temes → les estacions que hi toquen (màxim 2-4 segons els minuts). Els temes de la sessió que cap estació practica surten com a **estació d'exercici escrit** (`exercise(..., {mode:'adv'})`, amb pistes); si en surten menys de 3, s'hi afegeixen altres estacions de l'illa. **Sempre** acaba amb el **segell** (el posa el motor: `exercise(..., {mode:'seal', one:true})`, escrit, sense pistes, un sol intent, dades noves, amb un tema de la sessió) i la pantalla del **tresor**. Si cap tema té illa → aventura clàssica (`mAdvClassic`, `pantalles.js`). Si s'acaba el temps de la fase, es salta directament al segell.
+
+**Registrar una illa:**
+```js
+(ILLES.angles=ILLES.angles||[]).push({id:'illa-verbs', nom:'L\'Illa dels Verbs',
+  mapa:{mar:'#BFE6F5', sorra:'#F6E3B4', herba:'#CDE9B5', deco:'<circle .../>'},   // o mapa:pts=>'svg complet 700×340'
+  segell:{nom:'La porta del guardià', desc:'text curt del mapa', txt:'«Frase del guardià»'},
+  estacions:[ estacio1, estacio2, ... ]});
+```
+**Una estació** = `{id, nom, desc, skills:['id_tema',...], minMs?, render(el, api)}`. `render` dibuixa el joc dins `el` (enunciat, SVG, botons; el botó de comprovar és de l'estació) i es torna a cridar amb dades noves quan cal. Els temes de `skills` han d'existir a `SK`.
+
+**L'`api` que rep `render`:**
+| | |
+|---|---|
+| `api.k` | tema on es guarda el resultat (el primer de `skills` que és a la sessió) |
+| `api.ks` | temes de `skills` que són a la sessió · `api.lv` nivell 0-2 del tema (per graduar la dificultat) · `api.curs` |
+| `api.ok({msg, help})` | resposta correcta: desa `record(k, true, ajuda)`, mostra `msg` (HTML) en verd, la gemma si toca i el botó «Continua el camí» |
+| `api.fail({msg, err, steps, k})` | resposta incorrecta. Aplica sol el bloqueig de «massa de pressa» (primer intent), desa l'error típic `err` (codi d'`ERR`, al tema `k` o `api.k`) i compta errors: 1r error → mostra `msg` (o el text d'`ERR`); 2n error → desa el fallat i fa `explain(steps)`. Torna `'lock'` (no ha comptat; no esborris res), `'retry'` (pots treure les peces mal posades) o `'explain'` |
+| `api.explain(steps, intro?)` | explicació guiada pas a pas (`guided`) i, en acabar, `newData()` |
+| `api.newData()` | torna a començar l'estació amb dades noves |
+| `api.tooFast()` | `true` (i bloqueja 6 s amb «Pensa abans de respondre») si respon abans de 3,5 s (`minMs`) i encara no ha fallat |
+| `api.restart()` | torna a posar en marxa aquest rellotge (p. ex. en començar la 2a part d'una estació) |
+| `api.tip(html, 'info'\|'ok'\|'warn'\|'err')` · `api.clear()` | quadre de l'òliba sota el joc |
+| `api.hint(html)` | una ajuda: es mostra i **la gemma es perd** |
+| `api.errors` | errors de la ronda actual |
+
+**Gemmes:** una per estació (i pel segell), només si es fa **sense cap error ni ajuda** (tornar al mapa no esborra els errors). **Progrés:** cada ronda d'una estació és un exercici: un sol `record()` (com `exercise`), errors a `recErr()`, així que el nivell, la zona famílies i el resultat funcionen igual.
+
+**Ajudes `AV`** (per a les estacions): `AV.owl(s)` / `AV.owlG(x,y,s)` òliba en HTML / dins un SVG · `AV.frac(n,d)` fracció HTML simplificada · `AV.dc(x)` decimal amb coma · `AV.num(text)` llegeix «12», «2,5», «3/4» · `AV.shuf(a)` · `AV.pt(svg,e)` coordenades del viewBox · `AV.anim(ms, e=>{...}, fi)` animació per temps · `AV.drag(svg,{items, onDrop, onTap, onTapEmpty, disabled})` arrossegar amb dit/ratolí + «toca per triar i toca per posar» (els grups no poden tenir `transform` propi; després d'`onDrop` cal tornar a dibuixar) · `AV.answer(label)` + `AV.onAnswer(el, fn)` fila de resposta escrita. Classes CSS: `av-stage` (SVG del joc, `touch-action:none`), `av-tray` + `av-chip` (peces/botons), `av-row`, `av-count`, `av-tip`.
+
+**Normes pedagògiques de les estacions (obligatòries):** res d'endevinar — el manipulatiu **amaga la resposta visual** fins que es comprova (p. ex. el forat del pont amb boira i els taulons dibuixats iguals; la recta sense nombres entremig); el feedback **mai diu «massa / poc»**: explica l'error (què ha fet i per què no va); 2 errors → `explain` i dades noves (ho fa `fail`); dades **generades per codi** amb la solució calculada i diferents a cada partida; errors típics amb codi a `ERR` (prefix de l'assignatura, p. ex. `mt_av_...`); que es pugui jugar **amb el dit a l'iPhone** (provar a 390 px: peces i punts prou grans; si cal, un SVG més estret a mòbil, com el riu de Mates) i amb el ratolí.
+
 ## 6. Provar i publicar
 
 - **GitHub:** https://github.com/gestionspod-sketch/aprenem (públic). La branca `main` es publica sola a **GitHub Pages**: https://gestionspod-sketch.github.io/aprenem/ (aquí la IA sí pot funcionar). Cada tasca gran es fa en una branca pròpia i s'ajunta a `main` quan el propietari la dona per bona.
@@ -142,6 +179,8 @@ Copiar `contingut/lamines/aparell-respiratori.js`: un objecte amb les parts (nú
 Fet: 3 assignatures (31 temes), 6 modes, aventura, comprovació, escriptura amb foto, zona famílies amb PIN,
 taula de 68 verbs irregulars i 40 regulars (infinitiu, passat, participi, traducció), temari d'anglès 5è-6è,
 làmina de l'aparell respiratori, rellotge amb avisos i pas automàtic de fase, disseny v2.
+
+Aventura interactiva: motor (`programa/aventura.js`) i illa de Matemàtiques (`contingut/aventura-mates.js`). **Pendent:** una illa per a Català, Castellà, Anglès, Medi i Música (secció 5, «Aventura: motor i illes»; una sessió per assignatura, només amb arxius de la seva assignatura).
 
 Pendent (per ordre):
 1. ~~Decidir si la v3 passa a `main`~~ Fet: la v3 és l'actual. (La v2 queda al commit `8ffe380` i a `versions/aprenem-v2-un-sol-arxiu.html`.)
