@@ -673,3 +673,50 @@ code.k{background:var(--soft);padding:2px 8px;border-radius:8px;font-weight:500}
  .u5-chev{order:2}
  .sh5-t{flex:1 1 100%}
 }
+
+/* ===================== aventura interactiva (programa/aventura.js) ===================== */
+.av .av-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.av .av-hd h2{margin:0;text-wrap:balance}
+.av-gems{display:inline-flex;align-items:center;gap:6px;background:var(--lav);color:var(--pri-dd);border-radius:999px;padding:7px 12px;flex:none;font-size:14px}
+.av-gems i{width:11px;height:11px;border-radius:3px;background:#fff;transform:rotate(45deg);display:inline-block}
+.av-gems i.on{background:#5FD3C4}
+.av-gems b{margin-left:4px}
+.av-map{width:100%;height:auto;display:block;border-radius:22px;touch-action:manipulation}
+.av-st.cur{cursor:pointer}
+.av-st.cur:focus{outline:none}.av-st.cur:focus circle{stroke:#FFD39A}
+.av-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 6px 2px;flex-wrap:wrap}
+.av-foot>div{flex:1;min-width:200px}
+.av-foot b{font-size:18px}
+.av-foot p{margin:2px 0 0;font-size:14px}
+.av-note{font-size:13px;color:var(--muted);margin:10px 6px 0}
+.av-intro{margin:0 0 10px}
+.av-area p{line-height:1.55;margin:0 0 10px}
+.av-stage{width:100%;height:auto;display:block;touch-action:none;user-select:none;-webkit-user-select:none;border-radius:18px}
+.av-tray{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+button.av-chip{background:var(--soft);color:var(--ink);box-shadow:none;border-radius:14px;min-height:52px;padding:0 16px;font-size:17px;border:2px solid transparent}
+button.av-chip.on{border-color:var(--pri);background:var(--pri-l)}
+.av-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.av-count{font-size:14px;color:var(--muted);margin-top:4px}
+.av-tip{display:flex;gap:12px;align-items:flex-start;border-radius:18px;padding:14px 16px;margin-top:14px;line-height:1.5;background:var(--pri-l);color:#3B2A8C}
+.av-tip svg{flex:none}
+.av-tip.ok{background:var(--mint);color:#155C3D}
+.av-tip.warn,.av-tip.err{background:var(--warnbg);color:var(--warn)}
+.av-fb .av-row{margin-top:12px}
+.av-nav{display:flex;justify-content:flex-start;margin-top:16px}
+.av-nav button{min-height:42px;padding:8px 18px;font-size:14px}
+.av-ans{margin-top:14px}
+.av-ans-r{display:flex;gap:10px;align-items:center;margin-top:4px}
+.av-ans input.av-in{flex:1;min-width:0;width:auto;height:58px;border-radius:20px;border:2px solid var(--pri);background:var(--pri-l);font:500 22px var(--font);color:var(--pri-dd);padding:0 18px}
+.av-ans button{height:58px}
+.av-guard{display:flex;gap:14px;align-items:center;background:var(--lav);border-radius:20px;padding:14px 16px;margin-bottom:6px}
+.av-guard p{margin:0}.av-guard .av-q{font-size:17px;font-weight:500;color:var(--pri-dd);margin-bottom:4px}
+.av-tre{text-align:center;background:var(--lav)}
+.av-tre svg{margin:0 auto;display:block}
+.av-tre h2{color:var(--pri-dd);margin:8px 0}
+.av-tre p{color:var(--pri-dd)}
+@media (max-width:767px){
+ .fx5-main .av.av-tre{background:var(--lav)}
+ .av-ans-r{flex-direction:column;align-items:stretch}
+ .av-ans button{width:100%}
+}
+@media (max-width:520px){.av-lab{display:none}.av .av-hd h2{font-size:19px}.av-gems{padding:6px 10px}}
