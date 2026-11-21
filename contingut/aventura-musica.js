@@ -219,6 +219,7 @@ button.av-chip.mu-av-fc svg{flex:none}
  const TEMG=[['Largo'],['Lento','Adagio'],['Andante'],['Moderato'],['Allegro'],['Presto']];
  const DINR=MU_DIN.slice(0,6).map(muDinRow);   // pp p mp mf f ff
  const TEMR=t=>MU_TEMPO.find(r=>r[0]===t);
+ const deT=t=>(/^[aeiouàèéíòóú]/i.test(t)?`d'<i>${esc(t)}</i>`:`de <i>${esc(t)}</i>`);
  const taula={id:'taula',nom:'La taula de so',desc:'Ordena els termes de dinàmica o de tempo a la taula de so i digues què volen dir.',
   skills:['mu_dinamica','mu_tempo','lm_termes'],
   render(el,api){const L=api.lv;
@@ -230,20 +231,23 @@ button.av-chip.mu-av-fc svg{flex:none}
    its.sort((x,y)=>x.rank-y.rank);
    const ord=AV.shuf(its.map((_,i)=>i));let slot=[null,null,null,null],sel=null,phase=0;
    const lab=dyn?['més fluix','més fort']:['més lent','més ràpid'];
-   el.innerHTML=`<p>Abans del concert cal preparar la taula de so. Posa els quatre ${dyn?'signes de <b>dinàmica</b>':'termes de <b>tempo</b>'} als controls, del ${lab[0]} al ${lab[1]}: arrossega cada targeta (o toca una targeta i després el control).</p>
-    <svg class="av-stage" viewBox="0 0 600 270" role="img" aria-label="Taula de so amb quatre controls"></svg>
+   const nar=(el.clientWidth||700)<520,VW=nar?340:600,VH=nar?470:270;   // al mòbil, els controls van en columna
+   el.innerHTML=`<p>Abans del concert cal preparar la taula de so. Posa els quatre ${dyn?'signes de <b>dinàmica</b>':'termes de <b>tempo</b>'} als controls, del ${lab[0]} al ${lab[1]}${nar?' (de dalt a baix)':''}: arrossega cada targeta (o toca una targeta i després el control).</p>
+    <svg class="av-stage" viewBox="0 0 ${VW} ${VH}" style="max-width:${nar?380:640}px;margin:0 auto" role="img" aria-label="Taula de so amb quatre controls"></svg>
     <div class="av-row"><button class="av-chk" disabled>Prova el so</button><button class="sec av-clr">Treu-les totes</button></div><div class="av-q2"></div>`;
    const svg=el.querySelector('svg'),chk=el.querySelector('.av-chk'),q=el.querySelector('.av-q2');
-   const SX=i=>75+i*150,TX_=i=>75+ord.indexOf(i)*150;
-   const card=(i,x,y,big)=>{const it=its[i],w=128,h=54,on=sel===i;return`<g class="mu-tc" data-i="${i}" style="cursor:grab"><rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="14" fill="${on?'#8B6CF0':'#fff'}" stroke="${on?'#6E4FE0':'#D9D6E4'}" stroke-width="2"/>
+   const SP=i=>nar?{x:95,y:80+i*98}:{x:75+i*150,y:124},TP=i=>{const k=ord.indexOf(i);return nar?{x:262,y:80+k*98}:{x:75+k*150,y:220}};
+   const card=(i,c)=>{const it=its[i],w=nar?120:128,h=54,on=sel===i,x=c.x,y=c.y;return`<g class="mu-tc" data-i="${i}" style="cursor:grab"><rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="14" fill="${on?'#8B6CF0':'#fff'}" stroke="${on?'#6E4FE0':'#D9D6E4'}" stroke-width="2"/>
      <text x="${x}" y="${y+(dyn?10:8)}" text-anchor="middle" font-size="${dyn?30:21}" font-style="italic" font-weight="700" font-family="${dyn?"Georgia,'Times New Roman',serif":'inherit'}" fill="${on?'#fff':'#1E1B3A'}">${esc(it.t)}</text></g>`};
-   const draw=()=>{let s=`<rect width="600" height="270" rx="22" fill="#2E2A4F"/><rect x="14" y="14" width="572" height="150" rx="16" fill="#3B3664"/>
-     <text x="30" y="40" font-size="14" fill="#C9C3F0">← ${lab[0]}</text><text x="570" y="40" text-anchor="end" font-size="14" fill="#C9C3F0">${lab[1]} →</text>`;
-    for(let i=0;i<4;i++){const x=SX(i);s+=`<g class="slot" data-s="${i}"><rect x="${x-68}" y="54" width="136" height="98" rx="14" fill="#4A4478"/><line x1="${x}" y1="66" x2="${x}" y2="96" stroke="#6D66A6" stroke-width="6" stroke-linecap="round"/><circle cx="${x}" cy="81" r="9" fill="#9C93D8"/></g>`}
-    slot.forEach((it,i)=>{if(it!==null)s+=card(it,SX(i),124)});
-    its.forEach((_,i)=>{if(!slot.includes(i))s+=card(i,TX_(i),220)});
+   const draw=()=>{let s=`<rect width="${VW}" height="${VH}" rx="22" fill="#2E2A4F"/>`;
+    s+=nar?`<rect x="10" y="10" width="170" height="${VH-20}" rx="16" fill="#3B3664"/><text x="95" y="30" text-anchor="middle" font-size="14" fill="#C9C3F0">↑ ${lab[0]}</text><text x="95" y="${VH-18}" text-anchor="middle" font-size="14" fill="#C9C3F0">↓ ${lab[1]}</text>`
+     :`<rect x="14" y="14" width="572" height="150" rx="16" fill="#3B3664"/><text x="30" y="40" font-size="14" fill="#C9C3F0">← ${lab[0]}</text><text x="570" y="40" text-anchor="end" font-size="14" fill="#C9C3F0">${lab[1]} →</text>`;
+    for(let i=0;i<4;i++){const c=SP(i);s+=nar?`<g class="slot"><rect x="${c.x-74}" y="${c.y-40}" width="148" height="80" rx="14" fill="#4A4478"/><circle cx="${c.x-68}" cy="${c.y}" r="5" fill="#9C93D8"/></g>`
+     :`<g class="slot"><rect x="${c.x-68}" y="54" width="136" height="98" rx="14" fill="#4A4478"/><line x1="${c.x}" y1="66" x2="${c.x}" y2="90" stroke="#6D66A6" stroke-width="6" stroke-linecap="round"/><circle cx="${c.x}" cy="78" r="8" fill="#9C93D8"/></g>`}
+    slot.forEach((it,i)=>{if(it!==null)s+=card(it,SP(i))});
+    its.forEach((_,i)=>{if(!slot.includes(i))s+=card(i,TP(i))});
     svg.innerHTML=s;chk.disabled=phase!==0||slot.includes(null)};
-   const slotAt=p=>p.y>40&&p.y<175?Math.max(0,Math.min(3,Math.round((p.x-75)/150))):null;
+   const slotAt=p=>nar?(p.x<185&&p.y>30&&p.y<VH-25?Math.max(0,Math.min(3,Math.round((p.y-80)/98))):null):(p.y>40&&p.y<175?Math.max(0,Math.min(3,Math.round((p.x-75)/150))):null);
    const putIn=(i,s)=>{const was=slot.indexOf(i);if(s===null){if(was>=0)slot[was]=null}else{const other=slot[s];if(was>=0)slot[was]=other;else if(other!==null)slot[s]=null;slot[s]=i}sel=null;draw()};
    AV.drag(svg,{items:'.mu-tc',disabled:()=>phase!==0,onDrop(g,p){putIn(+g.dataset.i,slotAt(p))},
     onTap(g){const i=+g.dataset.i;if(slot.includes(i)){slot[slot.indexOf(i)]=null;sel=i}else sel=sel===i?null:i;draw()},
@@ -260,18 +264,18 @@ button.av-chip.mu-av-fc svg{flex:none}
     let j=0;while(j<3&&rk[j]<rk[j+1])j++;const A=its[slot[j]],B=its[slot[j+1]];seen.add(A.t);seen.add(B.t);
     const rev=rk.every((x,i)=>!i||x<rk[i-1]),cross=dyn&&A.rank>=3&&B.rank<=2;
     const err=rev?(dyn?'mu_dinamica':'mu_tempo'):cross?'mu_dinamica':dyn?null:'mu_tempo';
-    const r=api.fail({err,steps,msg:`<b>Sona estrany!</b> Has posat <i>${esc(A.t)}</i> abans de <i>${esc(B.t)}</i>, però <i>${esc(A.t)}</i> vol dir «${A.mean}» i <i>${esc(B.t)}</i> vol dir «${B.mean}». ${err&&rev?ERR[err].kid:`Pensa què vol dir cada ${dyn?'signe':'terme'} abans de posar-lo.`}`});
+    const r=api.fail({err,steps,msg:`<b>Sona estrany!</b> Has posat <i>${esc(A.t)}</i> abans ${deT(B.t)}, però <i>${esc(A.t)}</i> vol dir «${A.mean}» i <i>${esc(B.t)}</i> vol dir «${B.mean}». ${err&&rev?ERR[err].kid:`Pensa què vol dir cada ${dyn?'signe':'terme'} abans de posar-lo.`}`});
     if(r==='retry'){slot=[null,null,null,null];sel=null;draw()}};
    function mean(v,X){if(muIs(v,X.ok)){phase=2;api.ok({msg:`<b>So perfecte!</b> <i>${esc(X.t)}</i> vol dir «${X.mean}». Ordre: ${its.map(x=>`<i>${esc(x.t)}</i>`).join(' → ')}.`});return}
     let err=null;
     if(dyn){const c=DINR.find(r=>r.s===X.row.c);if(c&&muIs(v,c.m))err='mu_dinamica';else if(MU_TEMPO.some(r=>muIs(v,r[1].split('|'))))err='mu_din_tempo'}
     else{if(MU_DIN.some(r=>muIs(v,r[2].split('|'))))err='mu_tempo_din';else if(MU_TEMPO.some(r=>r!==X.row&&muIs(v,r[1].split('|'))))err='mu_tempo'}
     const i=its.indexOf(X);
-    api.fail({err,steps:steps.concat([`<i>${esc(X.t)}</i> vol dir <b>${X.mean}</b>.`]),msg:`<b>No és ben bé això.</b> ${err?ERR[err].kid:''} Fixa't on l'has posat a la taula: ${i>0?`després de <i>${esc(its[i-1].t)}</i>`:'és el primer'}${i<3?` i abans de <i>${esc(its[i+1].t)}</i>`:' i és el darrer'}.`})}
+    api.fail({err,steps:steps.concat([`<i>${esc(X.t)}</i> vol dir <b>${X.mean}</b>.`]),msg:`<b>No és ben bé això.</b> ${err?ERR[err].kid:''} Fixa't on l'has posat a la taula: ${i>0?`després ${deT(its[i-1].t)}`:'és el primer'}${i<3?` i abans ${deT(its[i+1].t)}`:' i és el darrer'}.`})}
    draw()}};
 
  /* ---------- 5. Les campanes (intervals) ---------- */
- const numOf=v=>{const s=lmStrip(norm(v)).replace(/^una? /,'').trim(),m=s.match(/^(\d)/);if(m)return+m[1];return LM_NUMW[s.split(/\s+/)[0]]||null};
+ const numOf=v=>{const s=lmStrip(norm(v)).replace(/^una? /,'').trim(),m=s.match(/^(\d)/);if(m)return+m[1];const w=s.split(/\s+/)[0];return LM_NUMW[w]||{segon:2,tercer:3,quart:4,cinque:5,sise:6,sete:7,vuite:8}[w]||null};
  const qualOf=v=>{for(const w of lmStrip(norm(v)).split(/\s+/)){if(/^maj/.test(w))return'M';if(/^men/.test(w))return'm';if(/^(just|perf)/.test(w)||w==='j')return'J';if(/^aug/.test(w))return'A';if(/^dim|^dism/.test(w))return'd'}return null};
  function kbd(lo,hi,marks){const ws=[];for(let l=lo;l<=hi;l++)ws.push(l);const w=40,H=150;let s='';
   ws.forEach((l,i)=>{const on=marks.has(`${l}:0`);s+=`<g class="key" data-k="${l}:0" style="cursor:pointer"><rect x="${i*w+1}" y="1" width="${w-2}" height="${H-2}" rx="6" fill="${on?'#C9B8FA':'#fff'}" stroke="#B5B3C4" stroke-width="2"/><text x="${i*w+w/2}" y="${H-12}" text-anchor="middle" font-size="13" fill="#8A879E">${LM_L[lmMod(l,7)]}</text></g>`});
@@ -363,7 +367,7 @@ button.av-chip.mu-av-fc svg{flex:none}
   mapa:{mar:'#C4E3F6',sorra:'#F6E3B4',herba:'#D6ECC2',
    deco:`<path d="M150 26Q260 52 370 26T590 26" fill="none" stroke="#fff" stroke-width="2"/>${[175,215,255,300,345,395,440,485,530,570].map((x,i)=>`<path d="M${x-7} ${26+Math.sin((x-150)/440*Math.PI*2)*-9+3}l7 14 7 -14Z" fill="${['#F2853A','#8B6CF0','#5FD3C4','#F7C948','#F28BB5'][i%5]}"/>`).join('')}
     <text x="38" y="80" font-size="30" fill="#fff" opacity=".85">♪</text><text x="640" y="300" font-size="34" fill="#fff" opacity=".85">♫</text><text x="660" y="60" font-size="26" fill="#fff" opacity=".7">♪</text><text x="20" y="300" font-size="26" fill="#fff" opacity=".7">♫</text>
-    <path d="M376 330v-22h88v22Z" fill="#8B6CF0"/><path d="M368 308h104l-10 -12h-84Z" fill="#6E4FE0"/><circle cx="398" cy="302" r="3" fill="#F7C948"/><circle cx="420" cy="302" r="3" fill="#F7C948"/><circle cx="442" cy="302" r="3" fill="#F7C948"/>`},
+    <path d="M376 340v-20h88v20Z" fill="#8B6CF0"/><path d="M368 320h104l-10 -11h-84Z" fill="#6E4FE0"/><circle cx="398" cy="315" r="2.6" fill="#F7C948"/><circle cx="420" cy="315" r="2.6" fill="#F7C948"/><circle cx="442" cy="315" r="2.6" fill="#F7C948"/>`},
   segell:{nom:'L\'assaig general',desc:'Un repte escrit, sense pistes i amb un sol intent.',txt:'«Toca-ho sense ajuda i el concert del festival començarà.»'},
   estacions:[faristol,taller,batucada,taula,campanes,armari]});
 })();
