@@ -59,10 +59,30 @@ async function gemini(contents,{json=false,system=''}={}){
  const body={contents,generationConfig:{temperature:.4}};
  if(json)body.generationConfig.responseMimeType='application/json';
  if(system)body.systemInstruction={parts:[{text:system}]};
- const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(S.cfg.model)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':S.cfg.key},body:JSON.stringify(body)});
- const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error?.message||('Error '+r.status));
- return(d.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');
+ const BASE='https://generativelanguage.googleapis.com/v1beta/models/',H={'Content-Type':'application/json','x-goog-api-key':S.cfg.key};
+ const call=async m=>{let r,d;try{r=await fetch(`${BASE}${encodeURIComponent(m)}:generateContent`,{method:'POST',headers:H,body:JSON.stringify(body)});d=await r.json().catch(()=>({}))}
+  catch(e){return{busy:true,net:true}}   // sense connexió o tallada: es reintenta
+  if(r.ok)return{text:(d.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('')};
+  return{status:r.status,msg:d.error?.message||('Error '+r.status),busy:[429,500,502,503,504].includes(r.status)}};
+ const wait=ms=>new Promise(res=>setTimeout(res,ms));
+ // 1) el model triat, fins a 3 intents si Google està saturat
+ let last;for(const ms of [0,2500,6000]){if(ms)await wait(ms);last=await call(S.cfg.model);if(last.text!=null)return last.text;if(!last.busy)break}
+ // 2) si continua saturat, es prova amb altres models «flash» del mateix compte
+ if(last.busy){for(const m of (await geminiAlts()).slice(0,3)){const x=await call(m);if(x.text!=null)return x.text;if(!x.busy){last=x;break}last=x;await wait(1500)}}
+ if(last.net)throw new Error('No hi ha connexió amb la IA. Comproveu Internet i torneu-ho a provar.');
+ if(last.status===429)throw new Error('S\'ha arribat al límit d\'ús gratuït de la IA per ara. Torneu-ho a provar d\'aquí a una estona (el límit es renova cada dia).');
+ if(last.busy)throw new Error('Els servidors de la IA de Google estan saturats ara mateix. Ho hem provat diverses vegades i amb altres models. Torneu-ho a provar d\'aquí a uns minuts.');
+ throw new Error(last.msg);
 }
+// Altres models de Gemini disponibles per a la clau (per si el triat està saturat). Es desa la llista una vegada per sessió.
+let GEM_ALTS=null;
+async function geminiAlts(){if(GEM_ALTS)return GEM_ALTS;
+ try{const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200',{headers:{'x-goog-api-key':S.cfg.key}});if(!r.ok)return[];const d=await r.json();
+  const v=n=>parseFloat((n.match(/gemini-(\d+(?:\.\d+)?)/)||[])[1]||0);
+  GEM_ALTS=(d.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')).map(m=>m.name.replace(/^models\//,''))
+   .filter(n=>/^gemini-/.test(n)&&/flash/.test(n)&&!/image|tts|audio|live|embed|thinking|exp/.test(n)&&n!==S.cfg.model)
+   .sort((a,b)=>v(b)-v(a)||(/preview/.test(a)-/preview/.test(b))||a.length-b.length)}
+ catch(e){GEM_ALTS=[]}return GEM_ALTS}
 const parseJSON=t=>JSON.parse(t.slice(t.indexOf('{'),t.lastIndexOf('}')+1));
 function fileToPart(f){return new Promise((res,rej)=>{const rd=new FileReader();rd.onerror=rej;rd.onload=()=>{const url=rd.result;
  if(!f.type.startsWith('image/'))return res({inline_data:{mime_type:f.type||'application/pdf',data:url.split(',')[1]}});
