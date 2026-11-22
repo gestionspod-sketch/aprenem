@@ -169,7 +169,7 @@ Object.assign(SK,{
      err:v=>s.startsWith("s'")&&[s.replace("s'",'sa '),s.replace("s'",'es ')].includes(v[0])?'ca_article_salat':null})}
    const vb=pick(BALV),st=vb.slice(0,-2),pi=pick([0,3,4]),std=[st+'o',,,(vb==='jugar'?'juguem':vb==='menjar'?'mengem':st+'em'),(vb==='jugar'?'jugueu':vb==='menjar'?'mengeu':st+'eu')][pi],bal=[st,,,st+'am',st+'au'][pi];
    return caEx(`Escriu la forma <b>balear</b> del present:<br><b>${['jo',,,'nosaltres','vosaltres'][pi]} ${std}</b>`,[bal],{label:'Forma balear',
-    hints:['En balear, la primera persona del present no porta -o: jo cant.','Nosaltres i vosaltres: -am, -au (cantam, cantau).'],steps:[`${['jo',,,'nosaltres','vosaltres'][pi]} ${std} → <b>${bal}</b> (en balear).`]})}}
+    hints:(e=>[`En balear, la primera persona del present no porta -o: jo ${e}.`,`Nosaltres i vosaltres: -am, -au (${e}am, ${e}au).`])(vb==='cantar'?'parl':'cant'),steps:[`${['jo',,,'nosaltres','vosaltres'][pi]} ${std} → <b>${bal}</b> (en balear).`]})}}
 });
 
 Object.assign(ERR,{
