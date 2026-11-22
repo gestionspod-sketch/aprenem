@@ -28,10 +28,10 @@ lamReg('solar',{nom:'El sistema solar',desc:'El Sol, els vuit planetes i els ast
 function md_universGen(lv){const t=Math.random();
  if(t<.4){const i=rnd(0,7),P=PLANETES[i];
   if(Math.random()<.5)return{text:`Quin planeta ocupa el lloc número <b>${i+1}</b> començant a comptar des del Sol?`,fields:[{label:'Planeta',txt:[P[1]],loose:true,wide:true}],vis:null,
-   hints:['Recorda l\'ordre: Mercuri, Venus, Terra, Mart, Júpiter, Saturn, Urà, Neptú.',`Comença per «${P[1][0]}».`],steps:[PLANETES.map((p,j)=>`${j+1}. ${j===i?'<b>'+p[1]+'</b>':p[1]}`).join(', '),`El número ${i+1} és <b>${P[1]}</b>.`],
+   hints:['Els quatre primers planetes són petits i rocosos; els quatre darrers, gegants de gas.',`Comença per «${P[1][0]}».`],steps:[PLANETES.map((p,j)=>`${j+1}. ${j===i?'<b>'+p[1]+'</b>':p[1]}`).join(', '),`El número ${i+1} és <b>${P[1]}</b>.`],
    err:v=>PLANETES.some(p=>p!==P&&fold(p[1])===fold(v[0]))?'md_planetes':null};
   return{text:`Quin lloc ocupa <b>${P[1]}</b> en l'ordre dels planetes, començant a comptar des del Sol?`,fields:[{label:'Lloc (nombre)',ans:R(i+1)}],vis:null,
-   hints:['Recorda l\'ordre: Mercuri, Venus, Terra, Mart, Júpiter, Saturn, Urà, Neptú.','Compta amb els dits des de Mercuri.'],steps:[PLANETES.map((p,j)=>`${j+1}. ${j===i?'<b>'+p[1]+'</b>':p[1]}`).join(', '),`${P[1]} és el planeta número <b>${i+1}</b>.`]}}
+   hints:['Els quatre primers planetes són petits i rocosos; els quatre darrers, gegants de gas.','Compta amb els dits des de Mercuri, el més proper al Sol.'],steps:[PLANETES.map((p,j)=>`${j+1}. ${j===i?'<b>'+p[1]+'</b>':p[1]}`).join(', '),`${P[1]} és el planeta número <b>${i+1}</b>.`]}}
  if(t<.7){const n=lv>0?rnd(3,12):rnd(2,7);
   return{text:`La Terra tarda <b>24 hores</b> a fer una volta sobre si mateixa (rotació). Quantes hores tarda a fer-ne <b>${n}</b>?`,fields:[{label:'Hores',ans:R(24*n)}],vis:null,
    hints:['Cada volta sobre si mateixa és un dia: 24 hores.',`Multiplica 24 × ${n}.`],steps:[`Una rotació = 24 hores.`,`24 × ${n} = ${24*n}.`,`${n} rotacions són <b>${24*n} hores</b>, és a dir, ${n} dies.`],err:v=>req(v[0],R(24+n))?'md_rotacio':null}}

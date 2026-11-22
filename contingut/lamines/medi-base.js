@@ -23,13 +23,16 @@ function lamSVG(id,o={}){const L=LAM[id],mode=o.mode||'labels',hi=o.hi||null,H=p
 // Pregunta d'una làmina: «com es diu la part número N?» o «quina part ... ?» (resposta escrita)
 function lamQ(id,lv,errT){const L=LAM[id],ids=Object.keys(L.parts).filter(k=>lv>0||!L.parts[k].lv);
  const err=k=>v=>Object.entries(L.parts).some(([o,r])=>o!==k&&lamAns(r).map(fold).includes(fold(v[0])))?errT:null;
- const dq=ids.filter(k=>L.parts[k].q),len=r=>[...r.nom.replace(/[ ·'’-]/g,'')].length;
+ const dq=ids.filter(k=>L.parts[k].q);
+ // 2a pista: el «recorda» de la làmina amb la resposta amagada (si hi surt) o només la inicial. Mai inicial + nombre de lletres.
+ const h2=r=>{const rc=L.recorda||'',t=lamHide(rc,r);return rc&&t!==rc?t:`Comença per «${r.nom[0].toUpperCase()}».`};
  if(!dq.length||Math.random()<.6){const k=pick(ids),r=L.parts[k];
   return{text:`Observa la làmina. Com es diu ${L.que||'la part'} número <b>${r.n}</b>?`,fig:lamSVG(id,{mode:'numbers',hi:k}),fields:[{label:L.camp||'Nom',txt:lamAns(r),loose:true,wide:true}],vis:null,
-   hints:[`Pista: ${lamHide(r.f,r)}`,`Comença per «${r.nom[0].toUpperCase()}» i té ${len(r)} lletres.`],steps:[`El número ${r.n} és: <b>${r.nom}</b>.`,r.f],err:err(k)}}
+   hints:[`Pista: ${lamHide(r.f,r)}`,h2(r)],steps:[`El número ${r.n} és: <b>${r.nom}</b>.`,r.f],err:err(k)}}
  const k=pick(dq),r=L.parts[k];
- return{text:`${L.pregunta||'Quina part'} ${r.q}?`,fields:[{label:L.camp||'Nom',txt:lamAns(r),loose:true,wide:true}],vis:null,
-  hints:[L.recorda||'Repassa la làmina de la teoria.',`Comença per «${r.nom[0].toUpperCase()}» i té ${len(r)} lletres.`],steps:[`És: <b>${r.nom}</b>.`,r.f],err:err(k)}}
+ // La 1a pista mostra la làmina (sense noms) amb la part destacada: dona la posició, no el nom
+ return{text:`${L.pregunta||'Quina part'} ${r.q}?`,fields:[{label:L.camp||'Nom',txt:lamAns(r),loose:true,wide:true}],vis:lamSVG(id,{mode:'numbers',hi:k}),
+  hints:[`Mira la làmina: és la part número ${r.n}, la destacada.`,h2(r)],steps:[`És: <b>${r.nom}</b>.`,r.f],err:err(k)}}
 // Tema amb làmina: barreja preguntes de la làmina, del banc i (opcional) d'un generador propi
 function lamSkill(id,o){return{mat:'ciencies',curs:[6],ab:o.ab,nom:o.nom,ic:'',teoria:o.teoria,fig:()=>lamSVG(id),bank:o.bank||[],
  gen(lv){if(o.gen&&Math.random()<(o.pGen||.25)){const g=o.gen(lv);if(g)return g}

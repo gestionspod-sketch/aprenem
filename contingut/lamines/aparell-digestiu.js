@@ -5,7 +5,7 @@ lamReg('digestiu',{nom:'L\'aparell digestiu',desc:'El camí dels aliments',ic:'s
  pregunta:'Quin òrgan de l\'aparell digestiu',recorda:'Recorda el camí: boca, faringe, esòfag, estómac, intestí prim, intestí gros, recte i anus.',
  parts:{
   boca:{n:1,nom:'Boca',p:[300,134],l:[150,128],s:'l',f:'Hi comença la digestió: les dents trossegen els aliments i la saliva els humiteja. La llengua els mou i forma el bol alimentari.',q:'té les dents i la llengua, i és on comença la digestió'},
-  salivals:{n:2,nom:'Glàndules salivals',a:'glàndula salival|salivals',p:[262,124],l:[150,86],s:'l',lv:1,f:'Fabriquen la saliva, que humiteja els aliments i comença a digerir el midó (el del pa o l\'arròs).',q:'fabriquen la saliva'},
+  salivals:{n:2,nom:'Glàndules salivals',a:'glàndula salival|salivals',p:[262,124],l:[150,86],s:'l',lv:1,f:'Fabriquen la saliva, que humiteja els aliments i comença a digerir el midó (el del pa o l\'arròs).',q:'fabrica la saliva'},
   faringe:{n:3,nom:'Faringe',p:[300,162],l:[150,170],s:'l',f:'Tub que comparteixen l\'aparell digestiu i el respiratori. Quan empassam, l\'epiglotis tapa la laringe perquè el menjar no vagi cap als pulmons.',q:'és el tub que comparteixen l\'aparell digestiu i el respiratori'},
   esofag:{n:4,nom:'Esòfag',p:[300,240],l:[450,240],s:'r',f:'Tub musculós que porta el bol alimentari de la faringe fins a l\'estómac amb moviments que l\'empenyen (moviments peristàltics).',q:'és el tub que porta el menjar de la faringe a l\'estómac'},
   estomac:{n:5,nom:'Estómac',p:[372,340],l:[450,320],s:'r',f:'Bossa musculosa on els aliments es barregen amb els sucs gàstrics i es transformen en una pasta que es diu quim.',q:'és la bossa on els aliments es barregen amb els sucs gàstrics'},
@@ -36,7 +36,7 @@ SK.md_digestiu=lamSkill('digestiu',{nom:'L\'aparell digestiu',ab:'Dg',errT:'md_d
  bank:mkBank([['Com es diu la fase en què els nutrients passen de l\'intestí prim a la sang?','absorció','Els nutrients «s\'absorbeixen».','A l\'intestí prim, els nutrients travessen la paret (vellositats) i passen a la sang: és l\'<b>absorció</b>.','digestió|egestió|ingestió'],
   ['Com es diu la fase en què expulsam les restes que no s\'han digerit?','egestió','És la darrera fase.','L\'<b>egestió</b> és l\'expulsió de la femta per l\'anus.','excreció|absorció|ingestió'],
   ['Com es diu la fase en què introduïm els aliments a la boca?','ingestió','És la primera fase.','La <b>ingestió</b> és l\'entrada dels aliments per la boca.','digestió|egestió'],
-  ['Quin líquid de la boca humiteja els aliments?','saliva','La fabriquen les glàndules salivals.','La <b>saliva</b> humiteja els aliments i comença a digerir el midó.','bilis|suc gàstric'],
+  ['Quin líquid de la boca humiteja els aliments?','saliva','La fabriquen unes glàndules que tenim a la boca.','La <b>saliva</b> humiteja els aliments i comença a digerir el midó.','bilis|suc gàstric'],
   ['Quin líquid fabrica el fetge per ajudar a digerir els greixos?','bilis','Es guarda a la vesícula biliar.','El fetge fabrica la <b>bilis</b>, que trosseja els greixos en gotetes.','saliva|suc pancreàtic|suc gàstric'],
   ['Com es diu la bola d\'aliment mastegat i humitejat que empassam?','bol alimentari|bol','Es forma a la boca.','Les dents i la saliva formen el <b>bol alimentari</b>, que baixa per l\'esòfag.','quim'],
   ['Quantes dents té una persona adulta?','32|trenta-dos','Són més que les dents de llet (20).','La dentició definitiva té <b>32 dents</b>: incisives, canines, premolars i molars.','20'],

@@ -32,6 +32,10 @@ function respSVG({mode='labels',hi=null}={}){const H=id=>hi===id?' hi':'',show=m
  ${show?'<text x="110" y="652" text-anchor="middle" class="cap">Ampliació: alvèols i capil·lars</text>':'<text x="110" y="652" text-anchor="middle" class="cap">Ampliació</text>'}
  ${lab}</svg>`}
 const RESP_Q=[['té les cordes vocals, que vibren quan parlam','laringe'],['és el tub amb anells de cartílag que porta l\'aire fins als bronquis','traquea'],['és el múscul que fa entrar i sortir l\'aire dels pulmons','diafragma'],['són els saquets on l\'oxigen passa a la sang','alveols'],['és per on entra l\'aire i on es filtra la pols','fosses'],['comparteixen l\'aparell respiratori i el digestiu','faringe'],['són les dues branques en què es divideix la tràquea','bronquis'],['són els òrgans esponjosos on es fa l\'intercanvi de gasos','pulmons']];
+// Pista del camí de l'aire amb la resposta amagada (si la part no hi surt, només la inicial). Mai inicial + nombre de lletres.
+const respCami=r=>{const c='Recorda el camí de l\'aire: nas, faringe, laringe, tràquea, bronquis, bronquíols, alvèols.',
+ t=r.a.split('|').sort((a,b)=>b.length-a.length).reduce((s,x)=>s.replace(new RegExp('([ :,]|^)'+x+'(?=[,.])','gi'),'$1 …'),c);
+ return t!==c?t.replace(/  …/g,' …'):`Comença per «${r.nom[0]}».`};
 SK.ci_respiratori={mat:'ciencies',nom:'L\'aparell respiratori',ic:'Rs',fig:()=>respSVG(),
  teoria:['Respiram per agafar <b>oxigen</b> de l\'aire, que les cèl·lules necessiten per obtenir energia, i per expulsar el <b>diòxid de carboni</b>, que és un residu.','Camí de l\'aire: <b>fosses nasals → faringe → laringe → tràquea → bronquis → bronquíols → alvèols</b>, dins els <b>pulmons</b>.','La respiració té dues fases: la <b>inspiració</b> (el diafragma baixa i l\'aire entra) i l\'<b>espiració</b> (el diafragma puja i l\'aire surt). Mira la làmina:'],
  gen(lv){const ids=Object.keys(RESP).filter(id=>lv>0||!RESP[id].lv);
@@ -40,11 +44,11 @@ SK.ci_respiratori={mat:'ciencies',nom:'L\'aparell respiratori',ic:'Rs',fig:()=>r
    hints:['Pensa en el diafragma: baixa o puja?',`Comença per «${ins?'I':'E'}».`],steps:[ins?'Quan el diafragma es contreu i baixa, els pulmons s\'omplen d\'aire.':'Quan el diafragma es relaxa i puja, l\'aire surt dels pulmons.',`Aquesta fase és l'<b>${ins?'inspiració':'espiració'}</b>.`]}}
   if(Math.random()<.65){const id=pick(ids),r=RESP[id];
    return{text:`Observa la làmina. Com es diu la part número <b>${r.n}</b>?`,fig:respSVG({mode:'numbers',hi:id}),fields:[{label:'Nom de la part',txt:r.a.split('|'),loose:true,wide:true}],vis:null,
-    hints:[`Pista: ${r.f.replace(new RegExp(r.nom,'gi'),'…')}`,`Comença per «${r.nom[0]}» i té ${[...r.nom.replace(/ /g,'')].length} lletres.`],
+    hints:[`Pista: ${r.f.replace(new RegExp(r.nom,'gi'),'…')}`,respCami(r)],
     steps:[`El número ${r.n} és: <b>${r.nom}</b>.`,r.f],err:err(id)}}
   const[q,id]=pick(RESP_Q.filter(x=>ids.includes(x[1]))),r=RESP[id];
-  return{text:`Quina part de l'aparell respiratori ${q}?`,fields:[{label:'Part',txt:r.a.split('|'),loose:true,wide:true}],vis:null,
-   hints:['Recorda el camí de l\'aire: nas, faringe, laringe, tràquea, bronquis, bronquíols, alvèols.',`Comença per «${r.nom[0]}».`],steps:[`És ${/s$/.test(r.nom)?'els':'la'} <b>${r.nom}</b>.`,r.f],err:err(id)}}};
+  return{text:`Quina part de l'aparell respiratori ${q}?`,fields:[{label:'Part',txt:r.a.split('|'),loose:true,wide:true}],vis:respSVG({mode:'numbers',hi:id}),
+   hints:[`Mira la làmina: és la part número ${r.n}, la destacada.`,respCami(r)],steps:[`És ${/s$/.test(r.nom)?'els':'la'} <b>${r.nom}</b>.`,r.f],err:err(id)}}};
 function lamina(){endSession();let mode='labels',hi=null;
  app(`<div class="row ph" style="justify-content:space-between;align-items:flex-end"><div><div class="eyebrow" style="color:var(--s-ciencies)">Làmina · Medi</div><h2>L'aparell respiratori</h2><p class="muted">Toca cada part del dibuix per saber què fa.</p></div><button class="ghost" onclick="subject('ciencies')">← Tornar</button></div>
  <div class="lam"><div class="card lam-fig"><div class="tabs" style="margin:0 0 12px"><button id="lm1" class="on">Amb noms</button><button id="lm2">Sense noms (posa't a prova)</button></div><div id="lsvg"></div></div>
