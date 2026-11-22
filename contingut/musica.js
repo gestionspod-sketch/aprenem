@@ -161,11 +161,11 @@ const muSubTxt=s=>{const[f,n]=MU_SUB[s],F=MU_FAM[f];
  return s==='afinada'?['percussió afinada','percussió de so determinat','de percussió afinada','percussió determinada','afinada']:['percussió no afinada','percussió de so indeterminat','de percussió no afinada','percussió indeterminada','no afinada']};
 const muFamTxt=s=>{const f=MU_SUB[s][0];return[MU_FAM[f],`de ${MU_FAM[f]}`,`instruments de ${MU_FAM[f]}`,`instrument de ${MU_FAM[f]}`,...muSubTxt(s)]};
 const MU_INS=[ // [nom (amb article), subfamília, nivell, com sona]
- ['el violí','fregada',0,'les cordes vibren quan les fregues amb l\'arc'],['la viola','fregada',1,'és una mica més gran i greu que el violí; es toca amb arc'],['el violoncel','fregada',0,'es toca assegut, amb l\'arc, i recolzat a terra'],['el contrabaix','fregada',0,'és el més gran i greu de la corda fregada'],
+ ['el violí','fregada',0,'les cordes vibren quan les fregues amb l\'arc'],['la viola','fregada',1,'és una mica més gran i greu que el violí; es toca amb arc'],['el violoncel','fregada',0,'es toca assegut, amb l\'arc, i recolzat a terra'],['el contrabaix','fregada',0,'és el més gran i greu dels instruments que es toquen amb arc'],
  ['la guitarra','pincada',0,'les cordes es pincen amb els dits'],['l\'arpa','pincada',0,'té moltes cordes que es pincen amb els dits'],['la bandúrria','pincada',2,'les cordes es pincen amb una pua'],['el llaüt','pincada',2,'les cordes es pincen amb una pua'],
  ['el piano','percudida',1,'en tocar una tecla, un martellet colpeja les cordes'],
- ['la flauta dolça','fusta',0,'bufam per un bisell'],['la flauta travessera','fusta',1,'tot i ser de metall, el so es produeix bufant per un bisell, com les flautes de fusta'],['el clarinet','fusta',0,'té una canya simple'],['l\'oboè','fusta',1,'té una canya doble'],['el fagot','fusta',1,'té una canya doble i és el més greu de la fusta'],['el saxòfon','fusta',2,'tot i ser de metall, té una canya com el clarinet'],
- ['la trompeta','metall',0,'els llavis vibren dins una boquilla'],['el trombó','metall',0,'té una vara que s\'allarga i s\'escurça'],['la trompa','metall',1,'té el tub enrotllat en espiral'],['la tuba','metall',1,'és la més greu del metall'],
+ ['la flauta dolça','fusta',0,'bufam per un bisell'],['la flauta travessera','fusta',1,'tot i ser de metall, el so es produeix bufant per un bisell, com a la flauta dolça'],['el clarinet','fusta',0,'té una canya simple'],['l\'oboè','fusta',1,'té una canya doble'],['el fagot','fusta',1,'té una canya doble i és el més greu dels instruments de canya'],['el saxòfon','fusta',2,'tot i ser de metall, té una canya com el clarinet'],
+ ['la trompeta','metall',0,'els llavis vibren dins una boquilla'],['el trombó','metall',0,'té una vara que s\'allarga i s\'escurça'],['la trompa','metall',1,'té el tub enrotllat en espiral'],['la tuba','metall',1,'és la més greu dels instruments amb boquilla'],
  ['el xilòfon','afinada',0,'té làmines de fusta que fan notes diferents'],['el metal·lòfon','afinada',1,'té làmines de metall que fan notes diferents'],['els timbals','afinada',2,'són tambors grans que es poden afinar en una nota'],
  ['el bombo','noafinada',0,'és un tambor gran que no fa una nota concreta'],['la caixa','noafinada',0,'és un tambor petit amb bordons'],['els plats','noafinada',0,'són dos discs de metall que es piquen'],['el triangle','noafinada',0,'és una barra de metall doblegada'],['les castanyoles','noafinada',0,'són dues peces de fusta que es piquen'],['la pandereta','noafinada',0,'té pell i sonalls'],['les maraques','noafinada',1,'se sacsegen']];
 const muInsNom=n=>n.replace(/^(el|la|els|les) /,'').replace(/^l'/,'');
@@ -187,7 +187,24 @@ mu_qualitats:{mat:'musica',curs:[6],ab:'Qs',nom:'Les qualitats del so',
   ['Amb quina figura s\'escriu la durada a la partitura: amb notes o amb figures?','figures|amb figures|figura','Les notes indiquen una altra qualitat.','La durada s\'escriu amb les <b>figures</b> (rodona, blanca, negra...). Les <b>notes</b> (do, re, mi...) indiquen l\'altura.','notes|nota'],
   ['Què es posa a vibrar perquè el so arribi a les nostres orelles?','aire|l\'aire','Ho respiram.','El so és una vibració que viatja per l\'<b>aire</b>.','',1],
   ['En quina unitat es mesura la intensitat del so?','decibels|decibel|db','Comença per «deci...».','La intensitat es mesura en <b>decibels</b> (dB). Els sons de més de 85 dB poden fer mal a les orelles.','',1],
-  ['Com es diu el soroll molest que hi ha en alguns llocs, com una ciutat amb molt de trànsit?','contaminació acústica|contaminacio acustica','És una mena de contaminació.','La <b>contaminació acústica</b> és l\'excés de soroll; és dolenta per a la salut.','',2]]),
+  ['Com es diu el soroll molest que hi ha en alguns llocs, com una ciutat amb molt de trànsit?','contaminació acústica|contaminacio acustica','És una mena de contaminació.','La <b>contaminació acústica</b> és l\'excés de soroll; és dolenta per a la salut.','',2],
+  ['Quina qualitat del so canvia quan passes de cantar fluix a cantar fort?','intensitat|la intensitat|volum','No canvia la nota ni el temps que dura.','Fort o fluix és la <b>intensitat</b>.','altura|durada|timbre'],
+  ['Quina qualitat del so canvia si toques una tecla més a la dreta del piano?','altura|l\'altura|to','La nota es torna més aguda.','Més agut o més greu és l\'<b>altura</b>.','intensitat|durada|timbre'],
+  ['Una rodona i una corxera de la mateixa nota, en quina qualitat del so es diferencien?','durada|la durada|temps','Una sona molta estona i l\'altra, poca.','Les figures indiquen la <b>durada</b>.','altura|intensitat|timbre'],
+  ['Els signes <i>p</i> i <i>f</i> de la partitura, quina qualitat del so indiquen?','intensitat|la intensitat|volum','<i>p</i> ve de <i>piano</i> i <i>f</i> de <i>forte</i>.','Els signes de dinàmica indiquen la <b>intensitat</b>.','altura|durada|timbre'],
+  ['Les notes do, re, mi..., quina qualitat del so indiquen?','altura|l\'altura|to','Pensa en una escala que puja i baixa.','Les notes indiquen l\'<b>altura</b>.','durada|intensitat|timbre'],
+  ['Quina qualitat del so ens permet reconèixer la veu d\'un amic per telèfon, sense veure\'l?','timbre|el timbre','Cada persona té la veu d\'un «color» diferent.','El <b>timbre</b> ens permet saber qui parla o canta.','altura|intensitat|durada'],
+  ['Com diem d\'un so que dura molta estona?','llarg|llarga','És el contrari de curt.','Un so de molta durada és <b>llarg</b>.','curt|curta'],
+  ['Com diem d\'un so que dura molt poc?','curt|curta','És el contrari de llarg.','Un so de poca durada és <b>curt</b>.','llarg|llarga'],
+  ['Com diem d\'un so de molta intensitat, com un tro?','fort|forta','És el contrari de fluix.','Un so de molta intensitat és <b>fort</b>.','fluix|fluixa|suau|agut'],
+  ['Com diem d\'un so de poca intensitat, com un xiuxiueig?','fluix|fluixa|suau|feble','És el contrari de fort.','Un so de poca intensitat és <b>fluix</b>.','fort|forta|greu'],
+  ['Quin òrgan del cos rep el so?','orella|l\'orella|orelles|oïda|oida','N\'hi ha dues, una a cada costat del cap.','El so arriba a l\'<b>orella</b>.',''],
+  ['Com es diu un so desagradable i sense notes clares, com el d\'una moto?','soroll|un soroll','No és música, però també és so.','És un <b>soroll</b>.','',1],
+  ['Com es diu el so que rebota contra una paret o una muntanya i el tornam a sentir?','eco|ressò|resso','Passa quan crides dins una cova.','És l\'<b>eco</b> (o ressò).','',1],
+  ['Com es diu la membrana de dins l\'orella que vibra quan hi arriba el so?','timpà|timpa','Funciona com la pell d\'un tambor.','És el <b>timpà</b>.','',1],
+  ['Si un violí i una trompeta toquen la mateixa nota, igual de fort i igual de llarga, què les fa sonar diferent?','timbre|el timbre','No és ni l\'altura, ni la intensitat, ni la durada.','És el <b>timbre</b>.','altura|intensitat|durada',1],
+  ['Quin aparell mesura la intensitat del so en decibels?','sonòmetre|sonometre','Comença per «son...».','És el <b>sonòmetre</b>.','',2],
+  ['Per on viatja el so fins a les orelles, a més de per l\'aire: per l\'aigua o pel buit?','aigua|per l\'aigua|l\'aigua','Al buit no hi ha res que pugui vibrar.','El so viatja per l\'<b>aigua</b> (i pels sòlids), però no pel buit.','buit|el buit',2]]),
  gen(lv){return muFromBank(this.bank,'mu_qualitats',lv)}},
 
 mu_escolta:{mat:'musica',curs:[6],ab:'Es',nom:'Escoltar: altura, durada i intensitat',
@@ -210,7 +227,7 @@ mu_escolta:{mat:'musica',curs:[6],ab:'Es',nom:'Escoltar: altura, durada i intens
    const fig=['','negra','blanca','blanca amb puntet','rodona'][d],fields=[{label:'Temps',ans:R(d)}];
    if(lv)fields.push({label:'Quina figura és?',txt:muFigFor(R(d)),loose:true});
    return{text:`Escolta el pols (clics) i el so llarg. Quants <b>temps</b> dura el so?${lv?' I quina <b>figura</b> el representa?':''}<br>${muSndBtn(ev)}`,fields,
-    hints:['El so comença al segon clic. Compta els clics mentre sona: 1, 2...','1 temps = negra · 2 temps = blanca · 3 temps = blanca amb puntet · 4 temps = rodona.'],
+    hints:['El so comença al segon clic. Compta els clics mentre sona: 1, 2...',lv?'Recorda: cada figura més llarga val el doble que l\'anterior, i el puntet hi afegeix la meitat.':'Atura\'t a comptar just quan el so s\'acaba.'],
     steps:['El so comença al segon clic del pols.',`Mentre sona passen <b>${d}</b> clics: dura ${d} ${d===1?'temps':'temps'}.`,lv?`Una figura de ${d} temps és la <b>${fig}</b>.`:'Escolta-ho una altra vegada comptant.']}}
   const vols=[.05,.14,.32,.6].slice(0,3).sort(()=>Math.random()-.5),hi=vols.indexOf(Math.max(...vols))+1,f=muFreq(rnd(2,7));
   return{text:'Escoltaràs <b>3 sons</b> amb la mateixa nota. Quin és el <b>més fort</b>? Escriu-ne el número.<br>'+muSndBtn(vols.map((v,i)=>({at:i*1.05,f,dur:.7,vol:v}))),fields:[{label:'Número del so',ans:R(hi)}],
@@ -236,11 +253,11 @@ mu_ordre:{mat:'musica',curs:[6],ab:'On',nom:'L\'ordre de les notes',
  gen(lv){const t=pick(lv?['salt','salt','lloc','entre']:['salt','lloc','lloc']);
   if(t==='lloc'){const line=Math.random()<.6,k=line?rnd(1,5):rnd(1,4),p=line?2*k:2*k-1;
    return{text:`Quina nota s'escriu ${line?`a la <b>${MU_ORDF[k]} línia</b>`:`al <b>${MU_ORDM[k]} espai</b>`} del pentagrama (clau de sol)?`,fields:[muA([muNom(p)],'Nota')],
-    hints:['Les línies i els espais es compten de baix a dalt.','La clau de sol marca el sol a la segona línia.'],
+    hints:['Les línies i els espais es compten de baix a dalt.',line&&k===2?'La primera línia és mi. Puja nota a nota, alternant espai i línia.':'La clau de sol marca el sol a la segona línia.'],
     steps:['Línies (de baix a dalt): mi, sol, si, re, fa. Espais: fa, la, do, mi.',`${line?`La ${MU_ORDF[k]} línia`:`El ${MU_ORDM[k]} espai`} és <b>${muNom(p)}</b>.`],
     err:v=>muIs(v[0],[muNom(p-1),muNom(p+1),muNom(p-2),muNom(p+2)])?'mu_linia_espai':null}}
   if(t==='entre'){const s=rnd(0,9);return{text:`Quina nota hi ha entre <b>${muNom(s)}</b> i <b>${muNom(s+2)}</b>?`,fields:[muA([muNom(s+1)],'Nota')],
-   hints:['Digues les notes en ordre: do, re, mi, fa, sol, la, si.','Busca la que queda just al mig.'],steps:[`${muNom(s)} → <b>${muNom(s+1)}</b> → ${muNom(s+2)}.`],err:null}}
+   hints:[`Digues les notes en ordre a partir de ${muNom(s)}.`,'Busca la que queda just al mig.'],steps:[`${muNom(s)} → <b>${muNom(s+1)}</b> → ${muNom(s+2)}.`],err:null}}
   const s=rnd(0,10),k=rnd(2,lv?6:4),down=lv>0&&Math.random()<.5,e=down?s-k:s+k,ch=Array.from({length:k+1},(_,i)=>muNom(down?s-i:s+i));
   return{text:`Comença a <b>${muNom(s)}</b> i ${down?'baixa':'puja'} <b>${k} notes</b>, d'una en una. A quina nota arribes?`,fields:[muA([muNom(e)],'Nota')],
    hints:[`Recita les notes ${down?'cap enrere':'en ordre'} a partir de ${muNom(s)}.`,'No comptis la nota de sortida: el primer pas ja és la nota següent.'],
@@ -254,7 +271,20 @@ mu_figures:{mat:'musica',curs:[6],ab:'Fg',nom:'Les figures musicals',
  gen(lv){const ds=lv?['r','b','n','c','s']:['r','b','n','c'],d=pick(ds),nom=MU_F[d].nom;
   const desc={r:'té el cap blanc i no té plica',b:'té el cap blanc i plica',n:'té el cap negre i plica, sense corxets',c:'té el cap negre, plica i un corxet',s:'té el cap negre, plica i dos corxets'};
   const err=v=>muIs(v[0],Object.values(MU_F).map(f=>f.nom).filter(n=>n!==nom))?'mu_figura':null;
-  if(lv&&Math.random()<.45)return{text:`Com es diu la figura que ${desc[d]}?`,fields:[muA([nom],'Figura')],
+  const t=pick(lv?['dib','dib','desc','rel','dura','corx']:['dib','dib','rel','dura','corx']),ord=['r','b','n','c','s'];
+  if(t==='corx'){const k={r:0,b:0,n:0,c:1,s:2}[d];return{text:`Quants <b>corxets</b> (banderetes) té una <b>${nom}</b>? (Si no en té cap, escriu 0.)`,fig:null,fields:[{label:'Corxets',ans:R(k)}],
+   hints:['Imagina la figura: té el cap blanc o negre? Té plica?','Com més curta és la figura, més corxets té.'],steps:[`La ${nom} ${desc[d]}.`,`Té <b>${k}</b> corxet${k===1?'':'s'}.`],err:null}}
+  if(t==='rel'){const dbl=Math.random()<.5,i=dbl?rnd(1,lv?4:3):rnd(0,lv?3:2),j=dbl?i-1:i+1,x=MU_F[ord[i]].nom,y=MU_F[ord[j]].nom;
+   return{text:`Quina figura dura ${dbl?'el <b>doble</b>':'la <b>meitat</b>'} que una <b>${x}</b>?`,fields:[muA([y],'Figura')],
+    hints:['Ordena les figures de la més llarga a la més curta.',`Cada figura dura la meitat que l'anterior. Busca la que va just ${dbl?'abans':'després'} de la ${x} en aquest ordre.`],
+    steps:['De més llarga a més curta: rodona, blanca, negra, corxera, semicorxera. Cada una dura la meitat que l\'anterior.',`${dbl?'El doble':'La meitat'} d'una ${x} és una <b>${y}</b>.`],
+    err:v=>{const z=ord[dbl?i+1:i-1];return z&&muIs(v[0],[MU_F[z].nom])?'mu_durada':null}}}
+  if(t==='dura'){const opts=[[R(4),'r'],[R(2),'b'],[R(1,2),'c']].concat(lv?[[R(1,4),'s'],[R(3),'b',1],[R(3,2),'n',1]]:[]),[v,dd,dot]=pick(opts),ok=muFigFor(v);
+   return{text:`Si la negra val 1 temps, quina figura dura <b>${muFmt(v)} temps</b>?`,fields:[muA(ok,'Figura')],
+    hints:['Parteix de la figura que val 1 temps i fes el doble o la meitat les vegades que calgui.',dot?'Cap figura sola fa aquests temps: prova amb un puntet, que afegeix la meitat.':'Cada figura val el doble que la següent.'],
+    steps:['Rodona 4 · blanca 2 · negra 1 · corxera ½ · semicorxera ¼. El puntet afegeix la meitat.',`${muFmt(v)} temps és una <b>${ok[0]}</b>.`],
+    err:null}}
+  if(t==='desc')return{text:`Com es diu la figura que ${desc[d]}?`,fields:[muA([nom],'Figura')],
    hints:['Fixa\'t en el cap, la plica i els corxets.','Cada corxet que afegim fa la figura més curta.'],steps:[`La figura que ${desc[d]} és la <b>${nom}</b>.`],err};
   const p=rnd(3,9);
   return{text:'Com es diu aquesta figura?',fig:muStaff([{n:p,d,hi:1}]),fields:[muA([nom],'Figura')],
@@ -288,7 +318,21 @@ mu_durades:{mat:'musica',curs:[6],ab:'Du',nom:'Quant dura cada figura',
 mu_silencis:{mat:'musica',curs:[6],ab:'Si',nom:'Els silencis',
  teoria:['Els <b>silencis</b> indiquen quant de temps <b>no sona</b> res. Cada figura té el seu silenci, que dura el mateix.','<b>Silenci de rodona</b> (4 temps): un rectangle que <b>penja</b> de la quarta línia. <b>Silenci de blanca</b> (2 temps): un rectangle <b>assegut</b> damunt la tercera línia.','Truc: la rodona «pesa» més, per això el seu silenci penja de la línia.','<b>Silenci de negra</b> (1 temps): una línia en ziga-zaga. <b>Silenci de corxera</b> (½): una línia amb un punt. <b>Silenci de semicorxera</b> (¼): dos punts.'],
  fig:()=>muStaff(['r','b','n','c','s'].map(d=>({r:d,lab:MU_F[d].nom,w:84})),{clef:false,aria:'Els silencis'}),
- gen(lv){const t=pick(lv?['nom','nom','dura','suma']:['nom','nom','dura']);
+ gen(lv){const t=pick(lv?['nom','nom','dura','suma','quin','caben','rel']:['nom','nom','dura','quin','rel']),ord=['r','b','n','c','s'];
+  if(t==='rel'){const dbl=Math.random()<.5,i=dbl?rnd(1,lv?4:2):rnd(0,lv?3:1),j=dbl?i-1:i+1,x=MU_F[ord[i]].nom,y=MU_F[ord[j]].nom;
+   return{text:`Quin silenci dura ${dbl?'el <b>doble</b>':'la <b>meitat</b>'} que un <b>silenci de ${x}</b>?`,fields:[muA([`silenci de ${y}`,`de ${y}`,y],'Silenci')],
+    hints:['Els silencis duren el mateix que les seves figures.',`Pensa quina figura dura ${dbl?'el doble':'la meitat'} que la ${x}: el silenci en porta el nom.`],
+    steps:[`Una ${x} dura ${muFmt(MU_F[ord[i]].v)} temps; ${dbl?'el doble':'la meitat'} és ${muFmt(MU_F[ord[j]].v)} temps.`,`És el <b>silenci de ${y}</b>.`],err:null}}
+  if(t==='quin'){const d=pick(lv?ord:['r','b','n']),v=MU_F[d].v,nom=MU_F[d].nom;
+   return{text:`Si la negra val 1 temps, quin <b>silenci</b> dura <b>${muFmt(v)} temps</b>?`,fields:[muA([`silenci de ${nom}`,`de ${nom}`,nom],'Silenci')],
+    hints:['Primer pensa quina figura dura aquests temps.','Cada silenci porta el nom de la figura que dura el mateix.'],
+    steps:[`La figura que dura ${muFmt(v)} temps és la ${nom}.`,`El seu silenci és el <b>silenci de ${nom}</b>.`],
+    err:null}}
+  if(t==='caben'){const i=rnd(0,2),j=rnd(i+1,Math.min(4,i+2)),a=MU_F[ord[i]],b=MU_F[ord[j]],k=R(a.v.n*b.v.d,a.v.d*b.v.n);
+   return{text:`Quants <b>silencis de ${b.nom}</b> duren el mateix que un <b>silenci de ${a.nom}</b>?`,fields:[{label:'Quants',ans:k}],
+    hints:['Un silenci dura el mateix que la seva figura.',`Escriu quants temps dura cada silenci i mira quantes vegades cap el de ${b.nom} dins el de ${a.nom}.`],
+    steps:[`Silenci de ${a.nom} = ${muFmt(a.v)} temps · silenci de ${b.nom} = ${muFmt(b.v)} temps.`,`${muFmt(a.v)} : ${muFmt(b.v)} = <b>${fmtR(k)}</b>.`],
+    err:x=>req(x[0],R(k.d,k.n))?'mu_durada':null}}
   if(t==='suma'){let fs;do fs=muFill(R(rnd(3,4)),muOpts(lv,true));while(!fs.some(f=>f.rest)||fs.every(f=>f.rest));const s=muSum(fs),sn=muSum(fs.filter(f=>!f.rest));
    return{text:'Quants temps dura aquest fragment? (Els silencis també compten!)',fig:muStaff(muNotesOf(fs)),fields:[{label:'Temps',ans:s}],
     hints:['Suma el valor de totes les figures i de tots els silencis.','Un silenci dura el mateix que la seva figura.'],
@@ -300,7 +344,7 @@ mu_silencis:{mat:'musica',curs:[6],ab:'Si',nom:'Els silencis',
    err:x=>(d==='r'&&req(x[0],R(2)))||(d==='b'&&req(x[0],R(4)))?'mu_silenci_rb':null};
   const others=Object.values(MU_F).map(f=>f.nom).filter(n=>n!==nom);
   return{text:'Com es diu aquest silenci?',fig:muStaff([{r:d,hi:1}]),fields:[muA([`silenci de ${nom}`,`de ${nom}`,nom],'Silenci')],
-   hints:[d==='r'||d==='b'?'Mira si el rectangle penja de la línia o hi està assegut.':'Fixa\'t en la forma: ziga-zaga, un punt o dos punts?','Silenci de rodona: penja · de blanca: assegut · de negra: ziga-zaga · de corxera: 1 punt · de semicorxera: 2 punts.'],
+   hints:[d==='r'||d==='b'?'Mira si el rectangle penja de la línia o hi està assegut.':'Fixa\'t en la forma: ziga-zaga, un punt o dos punts?',d==='r'||d==='b'?'La figura més llarga «pesa» més: per això el seu silenci penja de la línia.':'Com més punts té, més curt és el silenci, igual que passa amb els corxets de les figures.'],
    steps:[{r:'El rectangle <b>penja</b> de la quarta línia.',b:'El rectangle està <b>assegut</b> damunt la tercera línia.',n:'És una línia en ziga-zaga.',c:'Té un punt i una línia.',s:'Té dos punts.'}[d],`És el <b>silenci de ${nom}</b>.`],
    err:v=>{const x=fold(v[0]).replace(/^(silenci )?de /,'');return(d==='r'&&x==='blanca')||(d==='b'&&x==='rodona')?'mu_silenci_rb':others.includes(x)?'mu_figura':null}}}},
 
@@ -308,8 +352,19 @@ mu_silencis:{mat:'musica',curs:[6],ab:'Si',nom:'Els silencis',
 mu_compas:{mat:'musica',curs:[6],ab:'Cp',nom:'El compàs: 2/4, 3/4 i 4/4',
  teoria:['La música es divideix en <b>compassos</b>, separats per <b>línies divisòries</b>. Tots els compassos d\'una peça tenen els mateixos temps. Al final hi ha una <b>doble barra</b>.','La xifra del principi és el <b>compàs</b>. El número de <b>dalt</b> diu quants temps té cada compàs; el <b>4</b> de baix vol dir que cada temps és una <b>negra</b>.','<b>2/4</b>: 2 temps (binari, com una marxa) · <b>3/4</b>: 3 temps (ternari, com un vals) · <b>4/4</b>: 4 temps (quaternari).','El <b>primer temps</b> de cada compàs és el temps <b>fort</b> (s\'accentua).'],
  fig:()=>muStaff([{n:4,d:'n',lab:'1'},{n:5,d:'n',lab:'2'},{n:6,d:'n',lab:'3'},{bar:1},{n:7,d:'b',lab:'1 - 2'},{n:5,d:'n',lab:'3'},{end:1}],{ts:'3/4',aria:'Exemple de compàs de 3/4'}),
- gen(lv){const t=pick(lv?['temps','quin','quin','tipus','omple']:['temps','temps','tipus','fort']);
+ gen(lv){const t=pick(lv?['temps','quin','quin','tipus','omple','total','quants','corx']:['temps','tipus','fort','total','xifra']);
   const ts=pick(muTs),a=+ts[0];
+  if(t==='total'){const n=rnd(2,lv?12:6);return{text:`Una cançó en compàs de <b>${ts}</b> té <b>${n} compassos</b>. Quants temps té en total?`,fields:[{label:'Temps',ans:R(a*n)}],
+   hints:[`Primer: quants temps té cada compàs de ${ts}?`,'Cada compàs té els mateixos temps: multiplica.'],steps:[`Cada compàs de ${ts} té ${a} temps.`,`${n} × ${a} = <b>${a*n}</b> temps.`],
+   err:x=>req(x[0],R(4*n))&&a!==4?'mu_compas_num':null}}
+  if(t==='quants'){const n=rnd(2,8);return{text:`Una melodia en compàs de <b>${ts}</b> dura <b>${a*n} temps</b>. Quants compassos té?`,fields:[{label:'Compassos',ans:R(n)}],
+   hints:[`Quants temps hi caben en un compàs de ${ts}?`,'Reparteix els temps totals en grups d\'aquesta mida: divideix.'],steps:[`Cada compàs té ${a} temps.`,`${a*n} : ${a} = <b>${n}</b> compassos.`],
+   err:x=>a!==4&&(a*n)%4===0&&req(x[0],R(a*n/4))?'mu_compas_num':null}}
+  if(t==='corx'){const k=rnd(0,1)?'corxeres':'negres',v=k==='corxeres'?a*2:a;return{text:`Quantes <b>${k}</b> caben en un compàs de <b>${ts}</b>?`,fields:[{label:muCap(k),ans:R(v)}],
+   hints:[`Un compàs de ${ts} té ${a} temps de negra.`,k==='corxeres'?'Quantes corxeres valen una negra?':'Cada temps és una negra.'],steps:[`${a} temps${k==='corxeres'?' × 2 corxeres':''} = <b>${v}</b> ${k}.`],err:null}}
+  if(t==='xifra')return{text:`Quin compàs té <b>${a} temps</b> i cada temps és una <b>negra</b>? Escriu-lo com a fracció (p. ex. 5/4).`,fields:[{label:'Compàs',txt:muTsTxt(ts),loose:true}],
+   hints:['El número de dalt diu quants temps té el compàs.','El número de baix diu quina figura és un temps: per a la negra, s\'hi posa un 4.'],steps:[`Dalt: ${a} temps. Baix: 4 (negra).`,`És el compàs de <b>${ts}</b>.`],
+   err:v=>muIs(v[0],[`4/${a}`])&&a!==4?'mu_compas_num':null};
   if(t==='temps')return{text:`Quants temps té cada compàs de <b>${ts}</b>?`,fields:[{label:'Temps',ans:R(a)}],
    hints:['Mira els dos números del compàs: quin diu quants temps hi ha?','El número de baix (4) diu quina figura és un temps.'],steps:[`El número de dalt indica els temps: <b>${a}</b>.`,'El 4 de baix vol dir que cada temps és una negra.'],
    err:x=>a!==4&&req(x[0],R(4))?'mu_compas_num':null};
@@ -320,7 +375,7 @@ mu_compas:{mat:'musica',curs:[6],ab:'Cp',nom:'El compàs: 2/4, 3/4 i 4/4',
    hints:['És el que va just després de la línia divisòria.','Quan comptam «1, 2, 3», quin número deim més fort?'],steps:['El temps fort és sempre el <b>primer</b> temps del compàs.'],err:null};
   if(t==='omple'){const f={2:['blanca'],3:['blanca amb puntet','blanca amb punt'],4:['rodona']}[a];
    return{text:`Quina figura <b>sola</b> omple tot un compàs de <b>${ts}</b>?`,fields:[muA(f,'Figura')],
-    hints:[`Un compàs de ${ts} té ${a} temps.`,'Rodona 4 · blanca 2 · negra 1. El puntet afegeix la meitat.'],steps:[`Necessitam una figura de ${a} temps.`,`És la <b>${f[0]}</b>.`],
+    hints:[`Un compàs de ${ts} té ${a} temps. Quina figura dura exactament això?`,a===3?'Cap figura sola sense puntet dura 3 temps. Recorda que el puntet afegeix la meitat del valor.':'Parteix de la negra (1 temps) i fes el doble les vegades que calgui.'],steps:[`Necessitam una figura de ${a} temps.`,`És la <b>${f[0]}</b>.`],
     err:v=>muIs(v[0],['rodona','blanca','negra','corxera','blanca amb puntet'].filter(x=>!f.includes(x)))?'mu_compas_omple':null}}
   const fs1=muFill(R(a),muOpts(lv)),fs2=muFill(R(a),muOpts(lv));
   return{text:'Aquesta partitura no té escrit el compàs. Quin compàs és: 2/4, 3/4 o 4/4?',fig:muStaff([...muNotesOf(fs1),{bar:1},...muNotesOf(fs2),{end:1}]),fields:[{label:'Compàs',txt:muTsTxt(ts),loose:true}],
@@ -335,6 +390,11 @@ mu_completar:{mat:'musica',curs:[6],ab:'Cc',nom:'Completar compassos',
   const m=pick(ms.filter(x=>muLt(x,R(a)))),fs=muFill(muSub(R(a),m),muOpts(lv,lv>0)),had=muSum(fs);
   const fig=muStaff([...muNotesOf(fs),{n:6,q:1},{end:1}],{ts});
   const sumTxt=`${fs.map(f=>muFmt(muV(f.d,f.dot))).join(' + ')} = ${muFmt(had)}`;
+  if(Math.random()<.4){const art=f=>(f.rest?'un silenci de ':'una ')+muFigName(f.d,f.dot),ls=fs.map(art),lst=ls.length>1?ls.slice(0,-1).join(', ')+' i '+ls[ls.length-1]:ls[0];
+   return{text:`Un compàs de <b>${ts}</b> ja té ${lst}. Quants temps hi falten?`,fields:[{label:'Temps que falten',ans:m}],
+    hints:[`Quants temps ha de tenir un compàs de ${ts}?`,'Escriu quant val cada figura (i cada silenci), suma-ho i resta.'],
+    steps:[`El compàs de ${ts} té ${a} temps.`,`Ja hi ha: ${sumTxt} temps.`,`Falten ${a} − ${muFmt(had)} = <b>${muFmt(m)}</b> temps.`],
+    err:x=>!req(x[0],m)&&(req(x[0],had)||req(x[0],R(a)))?'mu_compas_falta':null}}
   if(lv&&Math.random()<.5){const ok=[...muFigFor(m),...muFigFor(m,true)];
    return{text:'Escriu <b>una sola figura</b> (o un silenci) que completi el compàs.',fig,fields:[muA(ok,'Figura')],
     hints:['Suma els temps que ja hi ha al compàs.',`El compàs és de ${ts}: té ${a} temps. Quant falta?`],
@@ -361,7 +421,7 @@ mu_intervals:{mat:'musica',curs:[6],ab:'In',nom:'Els intervals',
   if(t==='nom')return{text:`Quin interval hi ha de <b>${muNom(p1)}</b> a <b>${muNom(p2)}</b>, ${down?'baixant':'pujant'}?`,fields:[muA(muIntTxt(k),'Interval')],
    hints:[`Digues les notes ${down?'cap enrere':'en ordre'} des de ${muNom(p1)} fins a ${muNom(p2)}.`,'Compta-les totes, també la primera i la darrera.'],steps:st,err:bad};
   return{text:'Quin interval formen aquestes dues notes? (Pots escriure el nom o el número, p. ex. «tercera» o «3a».)',fig:muStaff([{n:p1,d:'r'},{n:p2,d:'r'}]),fields:[muA(muIntTxt(k),'Interval')],
-   hints:['Esbrina primer quines notes són.','Compta les notes que hi ha de la primera a la segona, incloent-hi les dues.'],steps:st,err:bad}}},
+   hints:['Esbrina primer quines notes són.','Compta totes les notes que hi ha d\'una a l\'altra, incloent-hi les dues dibuixades.'],steps:st,err:bad}}},
 
 mu_alteracions:{mat:'musica',curs:[6],ab:'Al',nom:'Les alteracions',
  teoria:['Les <b>alteracions</b> són signes que es posen <b>davant</b> d\'una nota per canviar-ne l\'altura.','<b>Sostingut</b> (♯): <b>puja</b> la nota mig to (un semitò). <b>Bemoll</b> (♭): la <b>baixa</b> mig to. <b>Becaire</b> (♮): <b>anul·la</b> l\'alteració i la nota torna a ser natural.','Un <b>to</b> té <b>dos semitons</b>. Al piano, les tecles negres són les notes alterades: do♯ i re♭ són la mateixa tecla.','Compte: entre <b>mi i fa</b> i entre <b>si i do</b> només hi ha un semitò; per això no hi ha tecla negra entre elles.'],
@@ -370,7 +430,7 @@ mu_alteracions:{mat:'musica',curs:[6],ab:'Al',nom:'Les alteracions',
   if(t==='signe'){const a=pick([1,-1,2]),nm={1:'sostingut',[-1]:'bemoll',2:'becaire'}[a],what={1:'<b>puja</b> una nota mig to',[-1]:'<b>baixa</b> una nota mig to',2:'<b>anul·la</b> una alteració'}[a];
    const fig=lv?null:muStaff([{n:5,d:'r',acc:a,hi:1}],{clef:false,minW:100});
    return{text:lv?`Com es diu l'alteració que ${what}?`:`Com es diu aquesta alteració? (Pista per recordar: ${what.replace(/<\/?b>/g,'')}.)`,fig,fields:[muA([nm],'Alteració')],
-    hints:['Les tres alteracions són sostingut, bemoll i becaire.','Sostingut ♯ (com un coixinet) · bemoll ♭ (com una b) · becaire ♮.'],steps:[`L'alteració que ${what} és el <b>${nm}</b> (${{1:'♯',[-1]:'♭',2:'♮'}[a]}).`],
+    hints:[lv?'Les tres alteracions són sostingut, bemoll i becaire.':'Recorda les tres alteracions que has estudiat i el signe de cadascuna.',lv?'Una puja la nota, una altra la baixa i la tercera la deixa natural. Quina fa el que diu l\'enunciat?':'Mira la forma del signe: s\'assembla a un coixinet (#), a una b petita o a un quadradet amb dos pals?'],steps:[`L'alteració que ${what} és el <b>${nm}</b> (${{1:'♯',[-1]:'♭',2:'♮'}[a]}).`],
     err:v=>muIs(v[0],['sostingut','bemoll','becaire'].filter(x=>x!==nm))?'mu_alteracio':null}}
   if(t==='tons')return{text:'Quants <b>semitons</b> té un to?',fields:[{label:'Semitons',ans:R(2)}],hints:['Semi- vol dir «mig».','Si un semitò és mig to, quants en necessites per fer-ne un de sencer?'],steps:['Un semitò és mig to.','Un to = <b>2</b> semitons.'],err:null};
   if(t==='semi'){const up=Math.random()<.5,b=pick([0,2,4,5,7,9,11]),idx=b+(up?1:-1),name=MU_CHROM[b][0],ok=muChromTxt(idx);if(!up&&ok.length>4)ok.push(...ok.splice(0,4));
@@ -393,7 +453,7 @@ mu_escala:{mat:'musica',curs:[6],ab:'Ec',nom:'L\'escala de do',
   if(t==='falta'){const down=lv>1,sc=[0,1,2,3,4,5,6,7].map(muNom);if(down)sc.reverse();const n=lv?2:1,miss=[];
    while(miss.length<n){const i=rnd(1,6);if(!miss.includes(i)&&!miss.some(j=>Math.abs(j-i)<2))miss.push(i)}miss.sort((a,b)=>a-b);
    return{text:`Completa l'escala de do ${down?'<b>baixant</b>':'pujant'}:<br><span style="letter-spacing:.5px">${sc.map((x,i)=>miss.includes(i)?'<b style="color:#E8590C">___</b>':x).join(' – ')}</span>`,
-    fields:miss.map((i,j)=>({label:n>1?`Nota ${j+1}`:'Nota',txt:[sc[i]]})),hints:['Recita l\'escala en veu alta: do, re, mi, fa, sol, la, si, do.',down?'Baixant, l\'ordre va al revés.':'Mira la nota d\'abans i la de després del buit.'],
+    fields:miss.map((i,j)=>({label:n>1?`Nota ${j+1}`:'Nota',txt:[sc[i]]})),hints:[`Recita l'escala en veu alta ${down?'des del do de dalt, baixant':'des de do, pujant'}.`,down?'Baixant, l\'ordre va al revés.':'Mira la nota d\'abans i la de després del buit.'],
     steps:[`L'escala ${down?'baixant':'pujant'} és: ${sc.join(' – ')}.`,`Falten: <b>${miss.map(i=>sc[i]).join('</b> i <b>')}</b>.`],
     err:v=>miss.some((i,j)=>muIs(v[j],[sc[i-1],sc[i+1]]))?'mu_nota_veina':null}}
   if(t==='grau'){const g=rnd(1,7);return{text:`Quina nota és el <b>grau ${MU_ROM[g-1]}</b> de l'escala de do?`,fields:[muA([muNom(g-1)],'Nota')],
@@ -419,7 +479,7 @@ mu_tempo:{mat:'musica',curs:[6],ab:'Tm',nom:'El tempo (termes italians)',
     hints:['Un minut té 60 segons.',sec===60?'Quantes pulsacions hi ha en un minut?':'30 segons és la meitat d\'un minut.'],steps:[`${bpm} temps en 60 segons.`,sec===60?`En 60 segons: <b>${ans}</b> temps.`:`En 30 segons, la meitat: ${bpm} : 2 = <b>${ans}</b> temps.`],err:null}}
   const toMean=Math.random()<.5;
   if(toMean)return{text:`Què vol dir el terme <b><i>${term}</i></b> a una partitura?`,fields:[muA(ms,'Significat')],
-   hints:['Aquest terme indica la velocitat (el tempo).','Recorda l\'ordre: Largo, Lento/Adagio, Andante, Moderato, Allegro, Presto.'],steps:[`<i>${term}</i> vol dir <b>${r[2]}</b>.`],err:null};
+   hints:['Aquest terme indica la velocitat (el tempo).','Pensa si s\'assembla a alguna paraula catalana, o recorda si és dels termes de poca velocitat o dels de molta.'],steps:[`<i>${term}</i> vol dir <b>${r[2]}</b>.`],err:null};
   const ok=MU_TEMPO.filter(x=>fold(x[1].split('|')[0])===fold(ms[0])).map(x=>x[0]);
   return{text:`Quin terme italià indica un tempo <b>${r[2]}</b>?`,fields:[muA(ok,'Terme')],
    hints:['És una paraula italiana que s\'escriu al principi de la partitura.',`Comença per «${term[0]}».`],steps:[`Un tempo ${r[2]} és <b><i>${term}</i></b>.`],
@@ -454,7 +514,7 @@ mu_families:{mat:'musica',curs:[6],ab:'Fi',nom:'Les famílies d\'instruments',
    const fam=Object.keys(MU_FAM).find(k=>muIs(v[0],[MU_FAM[k],`de ${MU_FAM[k]}`]));if(fam&&fam!==f)return'mu_familia';
    const sb=Object.keys(MU_SUB).find(k=>muIs(v[0],muSubTxt(k)));if(sb&&sb!==s)return MU_SUB[sb][0]===f?'mu_subfamilia':'mu_familia';return null};
   if(t==='fam')return{text:`A quina família d'instruments pertany <b>${nom}</b>: corda, vent o percussió?`,fields:[muA(muFamTxt(s),'Família')],
-   hints:['Pensa com es produeix el so: vibra una corda, bufam, o el picam?',`Pista: ${how}.`],steps:[`${muCap(nom)}: ${how}.`,`És de la família de <b>${MU_FAM[f]}</b> (${MU_FAM[f]} ${n}).`],err:errF};
+   hints:['Pensa com es produeix el so: vibra una corda, bufam, o el picam?',`Pista: ${how.replace(/cordes?/g,'…')}.`],steps:[`${muCap(nom)}: ${how}.`,`És de la família de <b>${MU_FAM[f]}</b> (${MU_FAM[f]} ${n}).`],err:errF};
   return{text:`A quina família i subfamília pertany <b>${nom}</b>? (Per exemple: «corda pinçada», «vent metall», «percussió afinada».)`,fields:[muA(muSubTxt(s),'Família i subfamília')],
    hints:['Primer pensa la família: corda, vent o percussió.',`Pista: ${how}.`],steps:[`${muCap(nom)}: ${how}.`,`És de <b>${MU_FAM[f]} ${n}</b>.`],err:errF}}},
 
@@ -519,7 +579,20 @@ mu_tradicio:{mat:'musica',curs:[6],ab:'Tr',nom:'Música tradicional de les Illes
   ['A Eivissa, quins dos instruments toca alhora un mateix músic al ball pagès?','flaüta i tambor|flauta i tambor|tambor i flaüta|tambor i flauta','Un és de vent i l\'altre de percussió.','El músic toca la <b>flaüta</b> amb una mà i el <b>tambor</b> amb l\'altra.','',1],
   ['Com es diu l\'instrument eivissenc de metall en forma d\'espasa?','espasí|espasi','Recorda la paraula «espasa».','És l\'<b>espasí</b>, que es pica amb una vareta de metall.','',2],
   ['Com es diuen els balladors de Mallorca que fan danses antigues amb una dama i un dimoni, com a Algaida o Montuïri?','cossiers|cossier','Comença per «C».','Són els <b>cossiers</b>.','',2],
-  ['En quin any la UNESCO va declarar el Cant de la Sibil·la Patrimoni de la Humanitat?','2010','És un any del segle XXI.','Va ser l\'any <b>2010</b>.','',2]]),
+  ['En quin any la UNESCO va declarar el Cant de la Sibil·la Patrimoni de la Humanitat?','2010','És un any del segle XXI.','Va ser l\'any <b>2010</b>.','',2],
+  ['Com es diu el músic que toca les xeremies?','xeremier|xeremiers|el xeremier','Es forma amb el nom de l\'instrument, com «flautista» o «pianista».','És el <b>xeremier</b>. Sovint van en parella: un toca les xeremies i l\'altre, el flabiol i el tamborí.','',0],
+  ['Com es diu la persona que improvisa versos cantats?','glosador|glosadora|glosadors','Es forma a partir del nom dels versos que improvisa.','És el <b>glosador</b> o la <b>glosadora</b>.','',0],
+  ['Quin instrument de fusta, que es pica amb els dits, porten els balladors de ball de bot?','castanyetes|castanyoles|castanyeta','Són dues peces còncaves lligades amb un cordó.','Són les <b>castanyetes</b> (castanyoles).','',0],
+  ['En quina nit es canta el Cant de la Sibil·la?','nit de nadal|nadal|la nit de nadal|matines|nit de matines','És una nit de desembre molt especial.','Es canta la <b>nit de Nadal</b>, a les Matines.','',0],
+  ['Quin personatge amb banyes i coa corre i balla a les festes de Sant Antoni?','dimoni|dimonis|el dimoni','Al final sempre el venç el sant.','És el <b>dimoni</b>.','',0],
+  ['Com es diuen les fogueres que s\'encenen la vetlla de Sant Antoni a Mallorca?','foguerons|fogueró|fogueres','És una paraula de la família de «foc».','Són els <b>foguerons</b>.','',0],
+  ['A quina illa es fan les festes de Sant Joan amb cavalls i el jaleo?','menorca','És l\'illa de Ciutadella i Maó.','A <b>Menorca</b> (Ciutadella).','mallorca|eivissa',0],
+  ['Com es diuen les cançons que es canten per adormir els infants?','cançons de bressol|cançó de bressol|de bressol|vou-veri-vou','El bressol és el llit dels nadons.','Són les <b>cançons de bressol</b>.','',0],
+  ['Com es diuen les cançons tradicionals que es cantaven mentre es treballava al camp, per exemple en collir olives?','cançons de feina|cançó de feina|de feina','Acompanyaven el treball.','Són les <b>cançons de feina</b>.','',1],
+  ['Quin ball de bot, de ritme ràpid i compàs ternari, té el mateix nom que un ball típic d\'Aragó?','jota|jotes|la jota','Comença per «J».','És la <b>jota</b>.','mateixes|bolero',1],
+  ['Quin dia de gener se celebra la festa de Sant Antoni? Escriu-ne el número.','17|disset','És a la segona quinzena de gener.','Sant Antoni és el <b>17 de gener</b>; la vetlla, el 16, es fan els foguerons.','16',1],
+  ['Quin instrument de corda pinçada amb pua sol acompanyar la guitarra al ball de bot?','llaüt|llaut|bandúrria|bandurria|guitarró','Les cordes es pincen amb una pua.','El <b>llaüt</b> o la <b>bandúrria</b>, juntament amb la guitarra (i, de vegades, el guitarró).','',1],
+  ['Com es diu el recull de cançons populars de Mallorca que va fer el pare Rafel Ginard?','cançoner|el cançoner|cançoner popular de mallorca','És un llibre ple de cançons.','És el <b>Cançoner popular de Mallorca</b>.','',2]]),
  gen(lv){return muFromBank(this.bank,'mu_tradicio',lv)}}
 });
 

@@ -33,13 +33,13 @@ SK.mu_orquestra={mat:'musica',curs:[6],ab:'Oq',nom:'L\'orquestra simfònica',fig
   const errOf=id=>v=>Object.entries(ORQ).some(([o,r])=>o!==id&&r.a.split('|').map(fold).includes(fold(v[0]))&&!ORQ[id].a.split('|').map(fold).includes(fold(v[0])))?'mu_orquestra':null;
   if(lv>0&&Math.random()<.3){const id=pick(ids.filter(i=>i!=='dir')),o=ORQ[id],F=ORQ_FAM[o.fam],fam=o.fam==='corda'?['corda','instruments de corda','de corda']:o.fam==='perc'?['percussió','de percussió']:[F.nom,`de ${F.nom}`];
    return{text:`Observa el plànol. A quina família d'instruments pertany el grup número <b>${o.n}</b>?`,fig:orqSVG({mode:'numbers',hi:id}),fields:[muA(fam,'Família')],
-    hints:['Fixa\'t en el color del grup i en el lloc on seu.','Corda davant, vent fusta al centre, vent metall darrere i percussió al fons.'],steps:[`El número ${o.n} són els/les <b>${o.nom.toLowerCase()}</b>.`,`Són de la família de <b>${F.nom}</b>.`],err:null}}
+    hints:['Fixa\'t en el color del grup i en el lloc on seu.','Els instruments que sonen més fort se situen més enrere, i la família amb més músics va just davant del director.'],steps:[`El número ${o.n} són els/les <b>${o.nom.toLowerCase()}</b>.`,`Són de la família de <b>${F.nom}</b>.`],err:null}}
   if(Math.random()<.65){const id=pick(ids),o=ORQ[id];
    return{text:`Observa el plànol de l'orquestra. Qui seu al lloc número <b>${o.n}</b>?`,fig:orqSVG({mode:'numbers',hi:id}),fields:[muA(o.a.split('|'),'Grup d\'instruments')],
-    hints:[`Pista: ${o.f.replace(/<\/?b>/g,'')}`.replace(new RegExp(o.nom,'gi'),'…'),`Comença per «${o.nom[0]}».`],steps:[`El número ${o.n} és: <b>${o.nom}</b>.`,o.f],err:errOf(id)}}
+    hints:[[o.nom,...o.a.split('|')].sort((x,y)=>y.length-x.length).reduce((h,w)=>h.replace(new RegExp(w,'gi'),'…'),`Pista: ${o.f.replace(/<\/?b>/g,'')}`),`Comença per «${o.nom[0]}».`],steps:[`El número ${o.n} és: <b>${o.nom}</b>.`,o.f],err:errOf(id)}}
   const[q,id]=pick(ORQ_Q.filter(x=>ids.includes(x[1]))),o=ORQ[id];
   return{text:`Quin grup de l'orquestra ${q}?`,fields:[muA(o.a.split('|'),'Grup')],
-   hints:['Recorda: corda davant, vent fusta al centre, vent metall darrere i percussió al fons.',`Comença per «${o.nom[0]}».`],steps:[`És: <b>${o.nom}</b>.`,o.f],err:errOf(id)}}};
+   hints:[o.fam==='corda'||id==='dir'?'Pensa en la mida de l\'instrument i en com es toca.':'Pensa com produeixen el so aquests instruments: bufant o picant? I de quin material són?',`Comença per «${o.nom[0]}».`],steps:[`És: <b>${o.nom}</b>.`,o.f],err:errOf(id)}}};
 Object.assign(ERR,{mu_orquestra:{kid:'Compte! Aquest és un altre grup de l\'orquestra. Fixa\'t en el lloc on seu i en el color de la família.',par:'Confon els grups d\'instruments de l\'orquestra'}});
 function laminaOrquestra(){endSession();let mode='labels',hi=null;
  app(`<div class="row ph" style="justify-content:space-between;align-items:flex-end"><div><div class="eyebrow" style="color:var(--s-musica)">Làmina · Música</div><h2>L'orquestra simfònica</h2><p class="muted">Toca cada grup del plànol per saber qui hi seu.</p></div><button class="ghost" onclick="subject('musica')">← Tornar</button></div>

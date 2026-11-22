@@ -253,7 +253,7 @@ lm_termes:{mat:'musica',ab:'Ag',nom:'Agògica, dinàmica i articulació',
   ['Què vol dir <i>a tempo</i>?','tornar al tempo|tornar al tempo d\'abans|tempo inicial|recuperar el tempo|torna al tempo|al tempo d\'abans|tornar al tempo inicial','Sol aparèixer després d\'un ritardando.','<i>A tempo</i>: <b>tornar al tempo d\'abans</b>.','',0],
   ['Què vol dir <i>rallentando</i> (rall.)?','cada vegada més lent|alentint|frenant|més lent|cada cop més lent','Vol dir el mateix que <i>ritardando</i>.','<i>Rallentando</i>: <b>cada vegada més lent</b>.','cada vegada més ràpid|accelerant',1],
   ['Què vol dir <i>allegretto</i>?','una mica ràpid|bastant ràpid|menys ràpid que allegro|moderadament ràpid|un poc ràpid','És el diminutiu d\'<i>allegro</i>.','<i>Allegretto</i>: <b>una mica ràpid</b>, menys que l\'allegro.','',1],
-  ['Què vol dir <i>vivace</i>?','viu|ràpid|amb vivacitat|animat|molt viu','S\'assembla a la paraula «viu».','<i>Vivace</i>: <b>viu</b>, ràpid i animat.','',1],
+  ['Què vol dir <i>vivace</i>?','viu|ràpid|amb vivacitat|animat|molt viu','Pensa en una persona plena d\'energia i alegria.','<i>Vivace</i>: <b>viu</b>, ràpid i animat.','',1],
   ['Què vol dir <i>rubato</i>?','tempo flexible|amb llibertat|lliure|flexible|tempo lliure','El músic «roba» una mica de temps i després el retorna.','<i>Rubato</i>: <b>tempo flexible</b>, amb llibertat expressiva.','',2],
   ['Què vol dir <i>meno mosso</i>?','menys moviment|més lent|menys ràpid|amb menys moviment','<i>Meno</i> vol dir «menys».','<i>Meno mosso</i>: <b>amb menys moviment</b> (més lent).','més ràpid|més moviment',2],
   ['Què vol dir <i>più mosso</i>?','més moviment|més ràpid|amb més moviment','<i>Più</i> vol dir «més».','<i>Più mosso</i>: <b>amb més moviment</b> (més ràpid).','més lent|menys moviment',2],
@@ -285,17 +285,17 @@ lm_compassos:{mat:'musica',ab:'Cs',nom:'Compassos simples i compostos',
   const tys=['tipus','temps','unitat','classe'];if(lv)tys.push('subdiv','quantes');if(lv>1&&T.f)tys.push('omple');const ty=pick(tys);
   const tn=T.t==='s'?'simple':'compost';
   if(ty==='tipus')return{text:`El compàs de <b>${ts}</b>, és simple o compost?`,fields:[lmF([tn,`compàs ${tn}`,`${tn}s`])],
-   hints:['Mira el número de dalt: als compostos és 6, 9 o 12.','Als compostos cada temps es divideix en 3 parts i dura una figura amb puntet.'],
+   hints:['Pensa en com es divideix cada temps: en 2 parts o en 3?','Si el número de dalt és 6, 9 o 12, cada temps té 3 parts i dura una figura amb puntet.'],
    steps:[T.t==='s'?`Cada temps es divideix en 2 parts → <b>simple</b>.`:`El ${a} de dalt és múltiple de 3 (≥ 6): cada temps té 3 parts → <b>compost</b>.`],err:v=>lmIn(v[0],[T.t==='s'?'compost':'simple'])?'lm_compost':null};
   if(ty==='temps')return{text:`Quants <b>temps</b> (pulsacions) té cada compàs de <b>${ts}</b>?`,fields:[{label:'Temps',ans:R(T.p)}],
    hints:['Primer decideix si és simple o compost.','Als compostos, el número de dalt són parts: divideix-lo entre 3.'],
    steps:[T.t==='s'?`És simple: el número de dalt són els temps → <b>${T.p}</b>.`:`És compost: ${a} parts : 3 = <b>${T.p}</b> temps.`],err:x=>T.t==='c'&&req(x[0],R(a))?'lm_compost':null};
   if(ty==='unitat')return{text:`Quina figura dura <b>un temps</b> al compàs de <b>${ts}</b>?`,fields:[lmF(T.u,'Figura')],
-   hints:['Als simples, el número de baix diu la figura del temps (4 negra, 2 blanca, 8 corxera).','Als compostos, un temps són 3 figures de les de baix: una figura amb puntet.'],
+   hints:['Mira el número de baix: indica en quantes parts es divideix la rodona (2 meitats, 4 quarts, 8 vuitens).',T.t==='s'?'És un compàs simple: la figura del número de baix fa un temps.':'És un compàs compost: un temps són 3 figures de les de baix, és a dir, una figura amb puntet.'],
    steps:[T.t==='s'?`El ${b} de baix és la ${['','','blanca','','negra','','','','corxera'][b]}: un temps = <b>${T.u[0]}</b>.`:`El ${b} de baix és la ${b===8?'corxera':'negra'}; un temps = 3 ${b===8?'corxeres':'negres'} = <b>${T.u[0]}</b>.`],
    err:v=>T.t==='c'&&lmIn(v[0],[b===8?'corxera':'negra'])?'lm_compost':null};
   if(ty==='classe'){const nm=LM_CLS[T.p];return{text:`El compàs de <b>${ts}</b>, és binari, ternari o quaternari?`,fields:[lmF([nm,`compàs ${nm}`,`${tn} ${nm}`,`${nm} ${tn}`])],
-   hints:['Depèn del nombre de temps (no de parts).','Binari 2 temps · ternari 3 · quaternari 4.'],steps:[`El ${ts} té ${T.p} temps → <b>${nm}</b>${T.t==='c'?' (és un '+nm+' compost)':''}.`],
+   hints:['Depèn del nombre de temps (no de parts). Als compostos, divideix el número de dalt entre 3.','Compta els temps i pensa en el prefix: bi- (dos), ter- (tres), quater- (quatre).'],steps:[`El ${ts} té ${T.p} temps → <b>${nm}</b>${T.t==='c'?' (és un '+nm+' compost)':''}.`],
    err:v=>T.t==='c'&&a===6&&lmIn(v[0],['ternari'])||T.t==='c'&&a===12&&lmIn(v[0],['ternari'])?'lm_compost':null}}
   if(ty==='subdiv')return{text:`En quantes parts es divideix cada temps del compàs de <b>${ts}</b>?`,fields:[{label:'Parts',ans:R(T.t==='s'?2:3)}],
    hints:['És simple o compost?','Simple: subdivisió binària · compost: subdivisió ternària.'],steps:[`És ${tn}: cada temps es divideix en <b>${T.t==='s'?2:3}</b> parts.`],err:null};
@@ -331,11 +331,18 @@ lm_sincopa:{mat:'musica',ab:'Sn',nom:'Síncopes i contratemps',
  gen(lv){if(lv===0&&Math.random()<.3){const s=Math.random()<.5;
    return{text:s?'Com es diu una nota que comença en part feble i es prolonga fins a la part forta següent?':'Com es diu una nota que comença en part feble després d\'un silenci a la part forta?',fields:[lmF(s?['síncope','sincopa','una síncope']:['contratemps','contratemp','un contratemps'])],
     hints:['A una la nota continua sonant a la part forta; a l\'altra hi ha un silenci.','Les dues desplacen l\'accent.'],steps:[s?'La nota es prolonga fins a la part forta: és una <b>síncope</b>.':'Silenci a la part forta i nota a la feble: és un <b>contratemps</b>.'],err:v=>lmIn(v[0],[s?'contratemps':'síncope'])?'lm_sincopa':null}}
+  if(Math.random()<.35){const C=[['corxera – negra – corxera','2/4',1],['silenci de corxera – corxera','2/4',0],['corxera – corxera lligada a una altra corxera – corxera','2/4',1],['negra – blanca – negra','4/4',1],['silenci de negra – negra','2/4',0],['negra – negra lligada a una altra negra – negra','4/4',1],['silenci de negra – negra – silenci de negra – negra','4/4',0]];
+   if(lv)C.push(['semicorxera – corxera – semicorxera','2/4',1],['silenci de semicorxera – semicorxera – corxera','2/4',0],['silenci de corxera – corxera – silenci de corxera – corxera','2/4',0]);
+   const[ds,ts,s]=pick(C),ans=s?['síncope','sincopa','una síncope']:['contratemps','contratemp','un contratemps'];
+   return{text:`En un compàs de <b>${ts}</b>, apareix aquest ritme: <b>${ds}</b>. És una síncope o un contratemps?`,fields:[lmF(ans)],
+    hints:['Mira què passa a la part forta del temps: hi sona una nota que ve d\'abans, o hi ha un silenci?','Si la part forta és un silenci, la nota entra després; si no, mira si alguna nota es prolonga per damunt de la part forta.'],
+    steps:[s?'Una nota comença a la part feble i continua sonant a la part forta següent: és una <b>síncope</b>.':'A la part forta hi ha un silenci i la nota sona a la part feble: és un <b>contratemps</b>.'],
+    err:v=>lmIn(v[0],[s?'contratemps':'síncope'])?'lm_sincopa':null}}
   const one=[['n',[{d:'n'}],0,0],['cc',[{d:'c'},{d:'c'}],0,0],['ct',[{d:'c',rest:true},{d:'c'}],0,1]];if(lv>1)one.push(['ss',[{d:'s'},{d:'c'},{d:'s'}],1,0],['st',[{d:'s',rest:true},{d:'s'},{d:'c'}],0,1]);
   const two=[['sin',[{d:'c'},{d:'n'},{d:'c'}],1,0]];if(lv)two.push(['sinl',[{d:'c'},{d:'c',tie:1},{d:'c'},{d:'c'}],1,0],['ctl',[{d:'c',rest:true},{d:'c'},{d:'c',rest:true},{d:'c'}],0,2]);
-  let cells,S,C,g=0;do{cells=[];S=0;C=0;for(let b=0;b<2;b++){const bar=Math.random()<.55?[pick(two)]:[pick(one),pick(one)];bar.forEach(x=>{S+=x[2];C+=x[3]});cells.push(bar)}}while((S+C===0||S===C&&g<5)&&g++<30);
-  const items=[];cells.forEach((bar,bi)=>{bar.forEach(x=>x[1].forEach(f=>items.push(f.rest?{r:f.d}:{n:5,d:f.d,tie:f.tie})));items.push(bi?{end:1}:{bar:1})});
-  return{text:'Quantes <b>síncopes</b> i quants <b>contratemps</b> hi ha en aquest fragment?',fig:lmStaff(items,{ts:'2/4'})+muSndBtn((()=>{let t=0;const ev=[];cells.flat().forEach(x=>x[1].forEach((f,i,arr)=>{const v=muV(f.d).n/muV(f.d).d*.5;if(!f.rest&&!(i>0&&arr[i-1].tie))ev.push({at:t,f:440,dur:(f.tie?v+muV(arr[i+1].d).n/muV(arr[i+1].d).d*.5:v)*.9});t+=v}));return ev})(),'Escolta el ritme'),
+  const nb=lv?rnd(2,3):2;let cells,S,C,g=0;do{cells=[];S=0;C=0;for(let b=0;b<nb;b++){const bar=Math.random()<.55?[pick(two)]:[pick(one),pick(one)];bar.forEach(x=>{S+=x[2];C+=x[3]});cells.push(bar)}}while((S+C===0||S===C&&g<5)&&g++<30);
+  const items=[];cells.forEach((bar,bi)=>{bar.forEach(x=>x[1].forEach(f=>items.push(f.rest?{r:f.d}:{n:5,d:f.d,tie:f.tie})));items.push(bi===nb-1?{end:1}:{bar:1})});
+  return{text:`Quantes <b>síncopes</b> i quants <b>contratemps</b> hi ha en aquest fragment de <b>${nb} compassos</b>?`,fig:lmStaff(items,{ts:'2/4'})+muSndBtn((()=>{let t=0;const ev=[];cells.flat().forEach(x=>x[1].forEach((f,i,arr)=>{const v=muV(f.d).n/muV(f.d).d*.5;if(!f.rest&&!(i>0&&arr[i-1].tie))ev.push({at:t,f:440,dur:(f.tie?v+muV(arr[i+1].d).n/muV(arr[i+1].d).d*.5:v)*.9});t+=v}));return ev})(),'Escolta el ritme'),
    fields:[{label:'Síncopes',ans:R(S)},{label:'Contratemps',ans:R(C)}],
    hints:['Busca notes que comencen a la segona meitat d\'un temps.','Si la part forta anterior és un silenci → contratemps. Si la nota continua sonant per damunt del temps fort → síncope.'],
    steps:[...cells.flat().filter(x=>x[2]||x[3]).map(x=>x[2]?`${x[0]==='sinl'?'Corxera lligada':x[0]==='ss'?'Semicorxera – corxera – semicorxera':'Corxera – negra – corxera'}: <b>síncope</b>.`:`Silenci${x[0]==='ctl'?'s':''} a la part forta i nota a la feble: <b>contratemps</b>${x[3]>1?' (dos)':''}.`),`Total: <b>${S}</b> síncope${S===1?'':'s'} i <b>${C}</b> contratemps.`],
@@ -344,15 +351,21 @@ lm_sincopa:{mat:'musica',ab:'Sn',nom:'Síncopes i contratemps',
 lm_grups:{mat:'musica',ab:'Gi',nom:'Grups irregulars: treset, doset, cinquet',
  teoria:['Un <b>grup irregular</b> té més (o menys) notes de les que li tocarien. S\'indica amb un número damunt.','<b>Treset</b> (3): tres notes en el temps de dues. Un treset de corxeres dura com 2 corxeres, és a dir, <b>1 temps</b> de negra. Cada corxera del treset val ⅓.','<b>Doset</b> (2): als compassos compostos, dues notes en el temps de tres (un doset de corxeres dura com 3 corxeres).','<b>Cinquet</b> (5): cinc notes en el temps de quatre. <b>Seisillo</b> (6): sis en el temps de quatre.'],
  fig:()=>lmStaff([{n:4,d:'c',tri:1},{n:5,d:'c'},{n:6,d:'c'},{n:7,d:'n'},{end:1}],{ts:'2/4',aria:'Treset de corxeres'}),
- gen(lv){const ty=pick(lv>1?['quantes','temps','suma','cada']:lv?['quantes','temps','suma']:['quantes','temps']);
-  const G=[['treset de corxeres','corxeres',2,R(1),'c'],['treset de negres','negres',2,R(2),'n'],['treset de semicorxeres','semicorxeres',2,R(1,2),'s']];if(lv)G.push(['doset de corxeres (en 6/8)','corxeres',3,R(3,2),'c'],['cinquet de semicorxeres','semicorxeres',4,R(1),'s']);
-  const [nm,un,k,t,d]=pick(ty==='temps'?G.filter(x=>!/doset/.test(x[0])):G);
+ gen(lv){const ty=pick(lv>1?['quantes','temps','suma','cada','nom']:lv?['quantes','temps','suma','cada','nom']:['quantes','temps','nom']);
+  // [nom, figura normal (plural), quantes normals ocupa, temps que dura, figura, notes del grup]
+  const G=[['treset de corxeres','corxeres',2,R(1),'c',3],['treset de negres','negres',2,R(2),'n',3],['treset de semicorxeres','semicorxeres',2,R(1,2),'s',3]];
+  if(lv)G.push(['doset de corxeres (en 6/8)','corxeres',3,R(3,2),'c',2],['cinquet de semicorxeres','semicorxeres',4,R(1),'s',5],['treset de blanques','blanques',2,R(4),'b',3],['seisillo de semicorxeres','semicorxeres',4,R(1),'s',6]);
+  if(lv>1)G.push(['cinquet de corxeres','corxeres',4,R(2),'c',5]);
+  const [nm,un,k,t,d,cnt]=pick(ty==='temps'||ty==='cada'?G.filter(x=>!/doset/.test(x[0])):G),sg={corxeres:'corxera',negres:'negra',semicorxeres:'semicorxera',blanques:'blanca'}[un],gn=nm.split(' ')[0];
+  if(ty==='nom'){const N=[['treset',3,2,'corxeres','treset|tresillo'],['doset',2,3,'corxeres','doset|dosillo']].concat(lv?[['cinquet',5,4,'semicorxeres','cinquet|quintillo'],['seisillo',6,4,'semicorxeres','seisillo|sisillo']]:[]),[g1,a1,b1,u1,ok]=pick(N);
+   return{text:`Com es diu el grup irregular de <b>${a1} ${u1}</b> que ocupen el temps de <b>${b1}</b>?`,fields:[lmF(ok.split('|'))],
+    hints:['Fixa\'t en el nombre de notes que té el grup, no en el temps que ocupa.','El nom de cada grup s\'assembla al número de notes que té.'],steps:[`${a1} notes en el temps de ${b1}: és un <b>${g1}</b>.`],err:null}}
   if(ty==='quantes')return{text:`Un <b>${nm}</b> dura el mateix que quantes ${un} normals?`,fields:[{label:'Quantes',ans:R(k)}],
-   hints:['Treset: 3 en el temps de 2. Doset: 2 en el temps de 3. Cinquet: 5 en el temps de 4.','El número indica quantes notes hi ha, no quant dura.'],steps:[`El ${nm.replace(/ \(.*\)/,'')} ocupa el temps de <b>${k}</b> ${un}.`],err:null};
+   hints:['El número del grup diu quantes notes té, no quant dura.',`Pensa en quin espai ocupa un ${gn}: en aquest espai, quantes ${un} hi cabrien normalment?`],steps:[`El ${nm.replace(/ \(.*\)/,'')} té ${cnt} notes i ocupa el temps de <b>${k}</b> ${un}.`],err:x=>req(x[0],R(cnt))?'lm_treset':null};
   if(ty==='temps')return{text:`Quants <b>temps</b> dura un <b>${nm}</b> (negra = 1 temps)?`,fields:[{label:'Temps',ans:t}],
-   hints:['Primer: quantes figures normals val el grup?','Després passa-ho a temps.'],steps:[`El ${nm} val ${k} ${un} normals.`,`${k} ${un} = <b>${muFmt(t)}</b> temps.`],err:x=>req(x[0],R(t.n*(k+1),t.d*k))?'lm_treset':null};
-  if(ty==='cada')return{text:'Quant dura cada corxera d\'un <b>treset de corxeres</b> (negra = 1 temps)?',fields:[{label:'Temps',ans:R(1,3)}],
-   hints:['Tot el treset dura 1 temps.','Reparteix 1 temps entre 3 notes.'],steps:['El treset dura 1 temps.','1 : 3 = <b>1/3</b> de temps cada corxera.'],err:x=>req(x[0],R(1,2))?'lm_treset':null};
+   hints:['Primer: quantes figures normals val el grup?','Després passa-ho a temps.'],steps:[`El ${nm} val ${k} ${un} normals.`,`${k} ${un} = <b>${muFmt(t)}</b> temps.`],err:x=>req(x[0],R(t.n*cnt,t.d*k))?'lm_treset':null};
+  if(ty==='cada'){const v=R(t.n,t.d*cnt),norm=R(t.n,t.d*k);return{text:`Quant dura cada ${sg} d'un <b>${nm}</b> (negra = 1 temps)?`,fields:[{label:'Temps',ans:v}],
+   hints:[`Primer: quants temps dura tot el ${gn}?`,`Reparteix aquest temps entre les ${cnt} notes del grup.`],steps:[`El ${nm} dura ${muFmt(t)} temps.`,`${muFmt(t)} : ${cnt} = <b>${fmtR(v)}</b> de temps cada ${sg}.`],err:x=>req(x[0],norm)?'lm_treset':null}}
   const ts=pick(['2/4','3/4']),a=+ts[0],fs=muFill(R(a-1),[{d:'n'},{d:'n'},{d:'c'},{d:'c'}].concat(lv>1?[{d:'s'}]:[])),pos=rnd(0,fs.length),p=rnd(3,7),items=fs.map(f=>({n:rnd(3,8),d:f.d}));
   items.splice(pos,0,{n:p,d:'c',tri:1},{n:p+1,d:'c'},{n:p+2,d:'c'});
   return{text:'Quants temps sumen aquestes figures? Compte amb el treset!',fig:lmStaff(items,{noClef:true}),fields:[{label:'Temps',ans:R(a)}],
@@ -374,7 +387,7 @@ lm_enharmonia:{mat:'musica',ab:'Eh',nom:'Alteracions, semitons i enharmonia',
    if(chrom){n1={l,a:pick([0,-1])};n2={l,a:n1.a+1}}else{n1={l,a:pick(LM_SEMI[lmMod(l+1,7)]-LM_SEMI[l]===1||l===6?[0]:[1])};n2={l:l+1,a:0};if(lmS(n2)-lmS(n1)!==1)n2={l:l+1,a:lmS(n1)+1-lmS({l:l+1,a:0})}}
    const ans=chrom?'cromàtic':'diatònic';
    return{text:`De <b>${lmNom(n1)}</b> a <b>${lmNom(n2)}</b> hi ha un semitò. És <b>cromàtic</b> o <b>diatònic</b>?`,fields:[lmF([ans,`semitò ${ans}`,ans.replace('à','a').replace('ò','o')])],
-    hints:['Mira el nom de les dues notes (sense l\'alteració).','Mateix nom → cromàtic · nom diferent → diatònic.'],steps:[chrom?`Les dues notes es diuen ${LM_L[lmMod(l,7)]}: és un semitò <b>cromàtic</b>.`:`Les notes tenen nom diferent (${LM_L[lmMod(n1.l,7)]} i ${LM_L[lmMod(n2.l,7)]}): és un semitò <b>diatònic</b>.`],
+    hints:['Mira el nom de les dues notes (sense l\'alteració): és el mateix o és diferent?','Recorda la teoria: un tipus de semitò uneix dues notes amb el mateix nom; l\'altre, dues notes de nom diferent.'],steps:[chrom?`Les dues notes es diuen ${LM_L[lmMod(l,7)]}: és un semitò <b>cromàtic</b>.`:`Les notes tenen nom diferent (${LM_L[lmMod(n1.l,7)]} i ${LM_L[lmMod(n2.l,7)]}): és un semitò <b>diatònic</b>.`],
     err:v=>lmIn(v[0],[chrom?'diatònic':'cromàtic'])?'lm_semito_tipus':null}}
   const n1={l:rnd(0,6),a:pick([0,0,1,-1])},k=rnd(2,lv>1?8:6);let n2;do n2={l:n1.l+k-1,a:pick([0,0,1,-1])};while(lmS(n2)-lmS(n1)<1||lmS(n2)-lmS(n1)>12);const s=lmS(n2)-lmS(n1);
   return{text:`Quants <b>semitons</b> hi ha de <b>${lmNom(n1)}</b> a <b>${lmNom(n2)}</b> (pujant)?`,fields:[{label:'Semitons',ans:R(s)}],
@@ -415,17 +428,17 @@ lm_armadura:{mat:'musica',ab:'Ar',nom:'Armadures de les tonalitats majors',
   const ty=pick(lv?['major','major','quines','ordre']:['major','major','ordre']);const sf=n>0?'sostingut':'bemoll';
   const rule=n>0?`El darrer sostingut és ${lmNom(last)}; un semitò per damunt → <b>${lmNom(t)}</b>.`:n===-1?'Un sol bemoll (si♭) → <b>fa major</b>.':`El penúltim bemoll és <b>${lmNom(acc[acc.length-2])}</b> → ${lmKey(t,'major')}.`;
   if(ty==='major')return{text:'Quina tonalitat <b>major</b> té aquesta armadura?',fig:lmStaff([],{ks:n,clef,minW:190}),fields:[lmF(lmKeyTxt(t,'major',true),'Tonalitat')],
-   hints:[n>0?'Ordre dels sostinguts: fa, do, sol, re, la, mi, si. Quin és el darrer?':'Ordre dels bemolls: si, mi, la, re, sol, do, fa. Quin és el penúltim?',n>0?'Puja un semitò des del darrer sostingut.':'La tonalitat és el penúltim bemoll (amb un sol bemoll: fa major).'],
+   hints:[n>0?'Ordre dels sostinguts: fa, do, sol, re, la, mi, si. Quin és el darrer?':'Ordre dels bemolls: si, mi, la, re, sol, do, fa. Quin és el penúltim?',n>0?'Puja un semitò des del darrer sostingut.':n===-1?'Amb un sol bemoll no hi ha penúltim: és el cas especial que cal saber de memòria (és una 5a per davall de do).':'La tonalitat té el nom del penúltim bemoll.'],
    steps:[`L'armadura té ${lmAltTxt(n)}: ${acc.map(lmNom).join(', ')}.`,rule,`És <b>${lmKey(t,'major')}</b>.`],
    err:v=>lmIn(v[0],lmKeyTxt(lmMinor(n),'menor',false))?'lm_relativa':lmIn(v[0],lmKeyTxt(last,'major',true))&&!lmSame(last,t)?'lm_armadura_regla':null};
   if(ty==='ordre'){const i=rnd(1,lv?7:4),nn=n>0?{l:LM_SH[i-1],a:1}:{l:LM_FL[i-1],a:-1};
    return{text:`Quin és el <b>${MU_ORDM[i]||(i===6?'sisè':'setè')}</b> ${sf} de l'ordre de les alteracions?`,fields:[lmNF(nn,'Alteració')],
-    hints:[n>0?'Fa, do, sol, re, la, mi, si (van de 5a en 5a cap amunt).':'Si, mi, la, re, sol, do, fa (és l\'ordre dels sostinguts al revés).','Compta a partir del primer.'],
+    hints:[n>0?'Cada sostingut nou és una 5a per damunt de l\'anterior.':'Cada bemoll nou és una 5a per davall de l\'anterior (l\'ordre dels bemolls és el dels sostinguts al revés).',i===1?(n>0?'Pensa en sol major: quina nota hi porta sostingut?':'Pensa en fa major: quina nota hi porta bemoll?'):(n>0?'El primer és el fa: compta a partir d\'aquí.':'El primer és el si: compta a partir d\'aquí.')],
     steps:[`Ordre dels ${sf}s: ${(n>0?LM_SH:LM_FL).map(l=>LM_L[l]).join(', ')}.`,`El número ${i} és <b>${lmNom(nn)}</b>.`],
     err:v=>LM_SH[i-1]!==LM_FL[i-1]&&lmIn(v[0],lmNoteTxt(n>0?{l:LM_FL[i-1],a:1}:{l:LM_SH[i-1],a:-1}))||lmIn(v[0],[LM_L[n>0?LM_FL[i-1]:LM_SH[i-1]]])?'lm_ordre_alt':lmLetterOnly(v[0],nn)?'mu_alteracio_oblida':null}}
   let m=n;if(Math.abs(m)>4)m=Math.sign(m)*rnd(2,4);const t2=lmMajor(m),a2=lmKsAcc(m);
   return{text:`Escriu, <b>en ordre</b>, les alteracions de l'armadura de <b>${lmKey(t2,'major')}</b>.`,fields:a2.map((z,i)=>lmNF(z,`${i+1}a alteració`)),
-   hints:['Primer decideix si són sostinguts o bemolls i quants n\'hi ha.','Ordre dels sostinguts: fa, do, sol, re, la, mi, si · ordre dels bemolls: si, mi, la, re, sol, do, fa.'],
+   hints:['Primer decideix si són sostinguts o bemolls i quants n\'hi ha.',m>0?'El primer sostingut és el fa i cada un dels següents és una 5a més amunt.':'El primer bemoll és el si i cada un dels següents és una 5a més avall.'],
    steps:[`${muCap(lmKey(t2,'major'))} té ${lmAltTxt(m)}.`,`En ordre: <b>${a2.map(lmNom).join(', ')}</b>.`],
    err:v=>{const set=a2.map(z=>z.l);if(v.every((x,i)=>a2.some(z=>lmIn(x,lmNoteTxt(z))))&&!v.every((x,i)=>lmIn(x,lmNoteTxt(a2[i]))))return'lm_ordre_alt';if(v.some((x,i)=>lmLetterOnly(x,a2[i])))return'mu_alteracio_oblida';return null}}}},
 
@@ -471,10 +484,10 @@ lm_cercle:{mat:'musica',ab:'C5',nom:'El cercle de quintes',
     err:v=>lmIn(v[0],lmKeyTxt(lmMajor(n+(up?-1:1)),'major',true))?'lm_cercle_dir':null}}
   const mode=ty==='n2km'?'menor':'major',t=mode==='menor'?lmMinor(n):lmMajor(n);
   if(ty==='k2n')return{text:`Quantes alteracions té <b>${lmKey(t,'major')}</b>?`+(n?' Són sostinguts o bemolls?':''),fields:[{label:'Alteracions',ans:R(Math.abs(n))},...(n?[lmF([n>0?'sostinguts':'bemolls',n>0?'sostingut':'bemoll'],'Sostinguts o bemolls',false)]:[])],
-   hints:['Recorre el cercle: do, sol, re, la, mi, si... (sostinguts) o do, fa, si♭, mi♭... (bemolls).','Les tonalitats amb bemoll al nom (si♭, mi♭...) i fa major tenen bemolls.'],steps:[`Al cercle de quintes, ${lmKey(t,'major')} és a ${Math.abs(n)} pas${Math.abs(n)===1?'':'sos'} de do.`,`Té <b>${n?lmAltTxt(n):'cap alteració'}</b>.`],err:null};
+   hints:['Al cercle de quintes, cada 5a amunt des de do afegeix un sostingut i cada 5a avall, un bemoll.',`Compta quantes 5es hi ha entre do i ${lmNom(t)}, i en quin sentit.`],steps:[`Al cercle de quintes, ${lmKey(t,'major')} és a ${Math.abs(n)} pas${Math.abs(n)===1?'':'sos'} de do.`,`Té <b>${n?lmAltTxt(n):'cap alteració'}</b>.`],err:null};
   if(n===0)n=pick([2,-2,3,-3]);const t3=mode==='menor'?lmMinor(n):lmMajor(n);
   return{text:`Quina tonalitat <b>${mode}</b> té <b>${lmAltTxt(n)}</b>?`,fields:[lmF(lmKeyTxt(t3,mode,true),'Tonalitat')],
-   hints:[n>0?'Sostinguts: un semitò per damunt del darrer sostingut.':'Bemolls: el penúltim bemoll (1 bemoll = fa major).',mode==='menor'?'Troba la major i baixa una 3a menor.':'O recorre el cercle de quintes.'],
+   hints:[n>0?'Sostinguts: un semitò per damunt del darrer sostingut.':n===-1?'Amb un sol bemoll no hi ha penúltim: és el cas especial, una 5a per davall de do.':'Bemolls: la tonalitat té el nom del penúltim bemoll.',mode==='menor'?'Troba la major i baixa una 3a menor.':'O recorre el cercle de quintes.'],
    steps:[`Armadura: ${lmKsAcc(n).map(lmNom).join(', ')}.`,`Major: ${lmKey(lmMajor(n),'major')}${mode==='menor'?` → relativa menor: <b>${lmKey(t3,'menor')}</b>`:''}.`,`Resposta: <b>${lmKey(t3,mode)}</b>.`],
    err:v=>mode==='menor'&&lmIn(v[0],lmKeyTxt(lmMajor(n),'menor',true))?'lm_relativa':mode==='major'&&lmIn(v[0],lmKeyTxt(lmKsAcc(n).slice(-1)[0],'major',true))?'lm_armadura_regla':null}}},
 
@@ -485,12 +498,12 @@ lm_menors:{mat:'musica',ab:'Mn',nom:'Escales menors: natural, harmònica i melò
  gen(lv){const n=lmNRange(lv>1?1:0),t=lmMinor(n),ty=pick(lv?['grau','quin','canvi']:['grau','grau','canvi']);
   if(ty==='grau'){const tp=pick(lv?['nat','har','mel']:['har','har','nat']),g=pick(tp==='nat'?[3,6,7]:[6,7]),z=lmScale(t,tp)[g-1];
    return{text:`A l'escala de <b>${lmKey(t,'menor')} ${LM_SCN[tp]}</b>${tp==='mel'?' (pujant)':''}, quina nota és el <b>grau ${MU_ROM[g-1]}</b>?`,fields:[lmNF(z)],
-    hints:[`La relativa major és ${lmKey(lmMajor(n),'major')}: l'armadura té ${n?lmAltTxt(n):'cap alteració'}.`,'Harmònica: puja el VII. Melòdica pujant: puja el VI i el VII.'],
+    hints:[g===3?`L'armadura té ${n?lmAltTxt(n):'cap alteració'}. Escriu l'escala a partir de ${lmNom(t)}.`:`La relativa major és ${lmKey(lmMajor(n),'major')}: l'armadura té ${n?lmAltTxt(n):'cap alteració'}.`,'Harmònica: puja el VII. Melòdica pujant: puja el VI i el VII.'],
     steps:[`${muCap(lmKey(t,'menor'))} natural: ${lmScale(t,'nat').map(lmNom).join(', ')}.`,tp==='nat'?'A la natural no es canvia res.':tp==='har'?'A l\'harmònica es puja el grau VII.':'A la melòdica pujant es pugen els graus VI i VII.',`Grau ${MU_ROM[g-1]}: <b>${lmNom(z)}</b>.`],
     err:v=>{for(const o of ['nat','har','mel'])if(o!==tp){const w=lmScale(t,o)[g-1];if(!lmSame(w,z)&&lmIn(v[0],lmNoteTxt(w)))return'lm_menor_tipus'}return null}}}
   if(ty==='quin'){const tp=pick(['nat','har','mel']),sc=[...lmScale(t,tp),{l:t.l+7,a:t.a}];
    return{text:`Quin tipus d'escala menor és aquesta (pujant)?<br><b style="letter-spacing:.5px">${sc.map(lmNom).join(' – ')}</b>`,fields:[lmF([LM_SCN[tp],`menor ${LM_SCN[tp]}`,`escala menor ${LM_SCN[tp]}`])],
-    hints:[`Compara-la amb la natural de ${lmKey(t,'menor')}, que té les alteracions de l'armadura (${n?lmAltTxt(n):'cap'}).`,'Mira els graus VI i VII: n\'hi ha cap de pujat?'],
+    hints:[`Compara-la amb l'escala de ${lmKey(t,'menor')} que només porta les alteracions de l'armadura (${n?lmAltTxt(n):'cap'}).`,'Mira els graus VI i VII: n\'hi ha cap de pujat? Quants?'],
     steps:[`Natural: ${lmScale(t,'nat').map(lmNom).join(', ')}.`,tp==='nat'?'Cap grau pujat → <b>natural</b>.':tp==='har'?'Només el VII pujat → <b>harmònica</b>.':'VI i VII pujats → <b>melòdica</b>.'],
     err:v=>['natural','harmònica','melòdica','harmonica','melodica'].some(x=>lmIn(v[0],[x])&&lmStrip(x)!==lmStrip(LM_SCN[tp]))?'lm_menor_tipus':null}}
   const sc=lmScale(t,'mel');
@@ -505,10 +518,10 @@ lm_graus:{mat:'musica',ab:'Gr',nom:'Els graus de l\'escala',
  noms:[['tònica','tonica'],['supertònica','supertonica'],['mediant'],['subdominant'],['dominant'],['superdominant','submediant'],['sensible']],
  gen(lv){const ty=pick(lv?['nom','num','nota','tonal']:['nom','num','tonal']),g=rnd(1,7),nm=this.noms[g-1];
   if(ty==='nom')return{text:`Com s'anomena el <b>grau ${MU_ROM[g-1]}</b> de l'escala?`,fields:[lmF(nm,'Nom del grau')],
-   hints:['I tònica, V dominant... Els altres van al voltant d\'aquests.','«Super-» vol dir per damunt; «sub-», per davall.'],steps:['I tònica · II supertònica · III mediant · IV subdominant · V dominant · VI superdominant · VII sensible.',`El grau ${MU_ROM[g-1]} és la <b>${nm[0]}</b>.`],
+   hints:[(j=>`El grau ${MU_ROM[j-1]} és la ${this.noms[j-1][0]}.`)(g===5?1:g>1?g-1:2),'«Super-» vol dir per damunt; «sub-», per davall.'],steps:['I tònica · II supertònica · III mediant · IV subdominant · V dominant · VI superdominant · VII sensible.',`El grau ${MU_ROM[g-1]} és la <b>${nm[0]}</b>.`],
    err:v=>this.noms.some((x,i)=>i!==g-1&&lmIn(v[0],x))?'lm_grau':null};
   if(ty==='num')return{text:`Quin grau de l'escala és la <b>${nm[0]}</b>? (Escriu-lo en nombre romà o en xifra.)`,fields:[lmF(lmRomTxt(g),'Grau',false)],
-   hints:['Tònica = I.','Dominant = V. La subdominant és just per davall de la dominant.'],steps:['I tònica · II supertònica · III mediant · IV subdominant · V dominant · VI superdominant · VII sensible.',`La ${nm[0]} és el grau <b>${MU_ROM[g-1]}</b>.`],
+   hints:[(j=>`La ${this.noms[j-1][0]} és el grau ${MU_ROM[j-1]}.`)(g<7?g+1:6),'«Super-» vol dir per damunt; «sub-», per davall.'],steps:['I tònica · II supertònica · III mediant · IV subdominant · V dominant · VI superdominant · VII sensible.',`La ${nm[0]} és el grau <b>${MU_ROM[g-1]}</b>.`],
    err:v=>[g-1,g+1].some(x=>x>=1&&x<=7&&lmIn(v[0],lmRomTxt(x)))?'lm_grau':null};
   if(ty==='nota'){const n=lmNRange(1),t=lmMajor(n),z=lmScale(t,'maj')[g-1];
    return{text:`Quina nota és la <b>${nm[0]}</b> de <b>${lmKey(t,'major')}</b>?`,fields:[lmNF(z)],
@@ -516,7 +529,7 @@ lm_graus:{mat:'musica',ab:'Gr',nom:'Els graus de l\'escala',
     steps:[`${muCap(nm[0])} = grau ${MU_ROM[g-1]}.`,`Escala: ${lmScale(t,'maj').map(lmNom).join(', ')} → <b>${lmNom(z)}</b>.`],err:v=>lmLetterOnly(v[0],z)?'mu_alteracio_oblida':null}}
   const gg=pick([1,4,5,3,6]),tn=[1,4,5].includes(gg)?'tonal':'modal';
   return{text:`El <b>grau ${MU_ROM[gg-1]}</b>, és un grau <b>tonal</b> o <b>modal</b>?`,fields:[lmF([tn,`grau ${tn}`])],
-   hints:['Els tonals defineixen la tonalitat; els modals, el mode (major o menor).','Tonals: I, IV, V. Modals: III, VI.'],steps:[`Tonals: I, IV, V · modals: III, VI. El ${MU_ROM[gg-1]} és <b>${tn}</b>.`],err:v=>lmIn(v[0],[tn==='tonal'?'modal':'tonal'])?'lm_grau':null}}},
+   hints:['Uns graus són els pilars de la peça; els altres decideixen si sona major o menor.','Els pilars són els graus dels tres acords principals: tònica, subdominant i dominant. Quin número té cadascun?'],steps:[`Tonals: I, IV, V · modals: III, VI. El ${MU_ROM[gg-1]} és <b>${tn}</b>.`],err:v=>lmIn(v[0],[tn==='tonal'?'modal':'tonal'])?'lm_grau':null}}},
 
 lm_acords:{mat:'musica',ab:'Ac',nom:'Acords tríada',
  teoria:['Un <b>acord tríada</b> són tres notes superposades per <b>terceres</b>: la <b>fonamental</b>, la <b>3a</b> i la <b>5a</b>. Exemple: do – mi – sol.','<b>Major</b>: 3a M + 5a J (do – mi – sol). <b>Menor</b>: 3a m + 5a J (la – do – mi). <b>Disminuït</b>: 3a m + 5a d (si – re – fa). <b>Augmentat</b>: 3a M + 5a A (do – mi – sol♯).','A l\'escala major, els acords dels graus <b>I, IV i V</b> són majors; els del <b>II, III i VI</b>, menors; el del <b>VII</b>, disminuït.','Per saber de quin tipus és, mira la 3a des de la fonamental (major o menor) i després la 5a (justa, disminuïda o augmentada).'],
@@ -528,7 +541,7 @@ lm_acords:{mat:'musica',ab:'Ac',nom:'Acords tríada',
   const nm=this.Q[q][2],i3=lmIntName(3,this.Q[q][0]),i5=lmIntName(5,this.Q[q][1]);
   if(ty==='tipus')return{text:'De quin tipus és aquest acord tríada? (major, menor, disminuït o augmentat)',fig:lmStaff([{ch:ns.map(z=>({n:z.l,acc:z.a})),w:60}],{minW:150})+muSndBtn(lmEv(ns,{harm:true})),
    fields:[lmF([nm,`acord ${nm}`,`tríada ${nm}`,`perfecte ${nm}`,nm.replace('ït','ida'),'acord '+nm.replace('ït','it')])],
-   hints:['Mira la 3a entre la nota de baix i la del mig: major (4 semitons) o menor (3)?','Mira la 5a entre la de baix i la de dalt: justa (7), disminuïda (6) o augmentada (8)?'],
+   hints:['Compta els semitons de la nota de baix a la del mig: en són 4 o 3?','Compta ara els semitons de la nota de baix a la de dalt: 7, 6 o 8? Amb les dues dades, mira la teoria.'],
    steps:[`Notes: ${ns.map(lmNom).join(' – ')}.`,`De ${lmNom(ns[0])} a ${lmNom(ns[1])}: ${i3}. De ${lmNom(ns[0])} a ${lmNom(ns[2])}: ${i5}.`,`És un acord <b>${nm}</b>.`],
    err:v=>lmIn(v[0],[q==='M'?'menor':q==='m'?'major':'___'])?'lm_acord':null};
   if(ty==='notes')return{text:`Escriu les notes de l'acord de <b>${lmNom(r)} ${nm}</b> (fonamental, 3a i 5a).`,fields:[lmNF(ns[0],'Fonamental'),lmNF(ns[1],'3a'),lmNF(ns[2],'5a')],
@@ -564,7 +577,7 @@ lm_transport:{mat:'musica',ab:'Tp',nom:'El transport',
   const out=mel.map(z=>down?lmDown(z,k,q):lmUp(z,k,q));
   return{text:`Transporta aquesta melodia de <b>${lmKey(t0,'major')}</b> una <b>${lmIntName(k,q)} ${down?'avall':'amunt'}</b> (a ${lmKey(t1,'major')}). Escriu les notes noves.`,
    fig:lmStaff(mel.map((z,j)=>({n:z.l,acc:fromN?null:z.a,d:'n',lab:j+1})),{ks:fromN})+muSndBtn(lmEv(mel)),fields:out.map((z,j)=>lmNF(z,`Nota ${j+1}`)),
-   hints:[`Tonalitat nova: ${lmKey(t1,'major')}, amb ${t1n?lmAltTxt(t1n)+' ('+lmKsAcc(t1n).map(lmNom).join(', ')+')':'cap alteració'}.`,`Puja (o baixa) cada nota ${k-1} nota${k===2?'':'s'} i aplica l'armadura nova.`],
+   hints:[`Tonalitat nova: ${lmKey(t1,'major')}, amb ${t1n?lmAltTxt(t1n)+'. Quins són?':'cap alteració.'}`,`${down?'Baixa':'Puja'} cada nota ${k-1} ${k===2?'nota':'notes'} i aplica l'armadura nova.`],
    steps:[`Melodia: ${mel.map(lmNom).join(', ')}.`,`Armadura de ${lmKey(t1,'major')}: ${t1n?lmKsAcc(t1n).map(lmNom).join(', '):'cap'}.`,`Transportada: <b>${out.map(lmNom).join(', ')}</b>.`],
    err:v=>v.some((x,j)=>lmLetterOnly(x,out[j]))?'mu_alteracio_oblida':null}}},
 
@@ -573,7 +586,7 @@ lm_formes:{mat:'musica',ab:'Hi',nom:'Formes musicals i història de la música',
  teoria:['<b>Estructura</b>: el <b>motiu</b> és una idea breu; unes quantes formen una <b>semifrase</b>, i dues semifrases, una <b>frase</b> (pregunta – resposta). La <b>cadència</b> és el final d\'una frase: <b>perfecta</b> (V → I, sensació de final) o <b>semicadència</b> (acaba al V, sensació de pregunta).','<b>Formes</b>: binària (A B), ternària (A B A), rondó (A B A C A), tema amb variacions, cànon, <b>fuga</b> (un tema que entra successivament a totes les veus), <b>suite</b> (sèrie de danses), <b>minuet</b> (dansa en 3/4 amb trio), <b>forma sonata</b> (exposició, desenvolupament, reexposició), <b>simfonia</b>, <b>concert</b>, <b>lied</b>.','<b>Història</b>: Edat Mitjana (cant gregorià, trobadors) · Renaixement (polifonia vocal) · <b>Barroc</b> (1600-1750: Bach, Vivaldi, Händel) · <b>Classicisme</b> (1750-1820: Haydn, Mozart, Beethoven) · <b>Romanticisme</b> (segle XIX: Schubert, Chopin, Schumann) · segles XX-XXI (Debussy, Stravinsky...).','Compositors i intèrprets del nostre entorn: Isaac Albéniz, Enric Granados, Pau Casals, Antoni Torrandell...'],
  bank:muMk([
   ['Com es diu el període de Bach i Vivaldi (aproximadament de 1600 a 1750)?','barroc|el barroc|període barroc','És el període anterior al Classicisme.','És el <b>Barroc</b>.','classicisme|romanticisme|renaixement'],
-  ['Com es diu el període de Haydn i Mozart (aproximadament de 1750 a 1820)?','classicisme|clàssic|període clàssic','Ve de la paraula «clàssic».','És el <b>Classicisme</b>.','barroc|romanticisme'],
+  ['Com es diu el període de Haydn i Mozart (aproximadament de 1750 a 1820)?','classicisme|clàssic|període clàssic','És el període que va just després del Barroc.','És el <b>Classicisme</b>.','barroc|romanticisme'],
   ['Com es diu el període musical del segle XIX, el de Chopin i Schumann?','romanticisme|romàntic|període romàntic','Les emocions i la llibertat hi són molt importants.','És el <b>Romanticisme</b>.','classicisme|barroc'],
   ['Quin compositor italià va escriure «Les quatre estacions»?','vivaldi|antonio vivaldi','Era un capellà de Venècia amb els cabells rojos.','És <b>Antonio Vivaldi</b> (Barroc).','bach|mozart'],
   ['Quin compositor austríac, nin prodigi, va escriure l\'òpera «La flauta màgica»?','mozart|wolfgang amadeus mozart','Va néixer a Salzburg el 1756.','És <b>Wolfgang Amadeus Mozart</b> (Classicisme).','beethoven|haydn'],
@@ -584,7 +597,7 @@ lm_formes:{mat:'musica',ab:'Hi',nom:'Formes musicals i història de la música',
   ['Quin compositor alemany del Barroc va escriure «L\'art de la fuga» i els Concerts de Brandenburg?','bach|johann sebastian bach|j s bach','Es diu Johann Sebastian.','És <b>Johann Sebastian Bach</b>.','vivaldi|händel|handel',1],
   ['Com es diu la forma en què un tema entra successivament a totes les veus, molt típica de Bach?','fuga|una fuga','Les veus semblen «fugir» les unes de les altres.','És la <b>fuga</b>.','cànon|canon|rondó',1],
   ['Com es diu una sèrie de danses (allemanda, courante, sarabanda, giga...) típica del Barroc?','suite|una suite','És una paraula francesa.','És una <b>suite</b>.','sonata|simfonia',1],
-  ['Com es diu la dansa elegant en 3/4 del Classicisme que sovint porta un trio enmig?','minuet|minuetto','Forma ternària: minuet – trio – minuet.','És el <b>minuet</b>.','vals',1],
+  ['Com es diu la dansa elegant en 3/4 del Classicisme que sovint porta un trio enmig?','minuet|minuetto','Té forma ternària, amb un trio al mig.','És el <b>minuet</b>.','vals',1],
   ['Quin compositor polonès del Romanticisme és famós per les seves peces per a piano (nocturns, valsos, polonesas)?','chopin|frédéric chopin|frederic chopin','Va passar un hivern a Valldemossa, a Mallorca.','És <b>Frédéric Chopin</b>, que va estar a la Cartoixa de Valldemossa (1838-1839).','liszt|schumann',1],
   ['Quin violoncel·lista català va fer famosa arreu del món la cançó «El cant dels ocells»?','pau casals|casals','Va néixer al Vendrell.','És <b>Pau Casals</b>.','',1],
   ['Com es diu el cant religiós a una sola veu i sense acompanyament de l\'Edat Mitjana?','cant gregorià|gregorià|cant gregoria','Porta el nom d\'un papa.','És el <b>cant gregorià</b>.','',1],
@@ -599,18 +612,18 @@ lm_formes:{mat:'musica',ab:'Hi',nom:'Formes musicals i història de la música',
 /* ---------- 14. Audició ---------- */
 lm_audicio:{mat:'musica',ab:'Au',nom:'Audició: intervals, acords i compassos',
  teoria:['Aquest tema és per entrenar l\'<b>orella</b>: cal escoltar. Pitja <b>▶ Escolta</b> tantes vegades com vulguis.','<b>3a major</b>: sona alegre i lluminosa (do-mi). <b>3a menor</b>: més trista o fosca (la-do). El mateix passa amb els <b>acords</b> majors i menors.','<b>Compàs binari</b>: el pols fort torna cada 2 (fort-feble). <b>Ternari</b>: cada 3 (fort-feble-feble), com un vals.','Per reconèixer intervals, ajuda recordar el començament de cançons conegudes.'],
- gen(lv){const ty=pick(lv>1?['int3','acord','compas','escala','num']:lv?['int3','acord','compas','escala']:['int3','compas','int3']);const r={l:rnd(0,4),a:0};
+ gen(lv){const ty=pick(lv>1?['int3','acord','compas','escala','num','num']:lv?['int3','acord','compas','escala','num']:['int3','compas','num']);const r={l:rnd(0,4),a:0};
   if(ty==='int3'||ty==='acord'){const q=pick(['M','m']),ns=ty==='int3'?[r,lmUp(r,3,q)]:[r,lmUp(r,3,q),lmUp(r,5,'J')],ans=q==='M'?'major':'menor';
    return{text:`Escolta ${ty==='int3'?'l\'<b>interval</b>':'l\'<b>acord</b>'}. És <b>major</b> o <b>menor</b>?<br>${muSndBtn(lmEv(ns,{harm:true}))}`,fields:[lmF([ans,ty==='int3'?`3a ${ans}`:`acord ${ans}`])],
-    hints:['Major sona més alegre i brillant; menor, més trist o fosc.','Canta la nota de baix i després la de dalt: la 3a major és més «oberta».'],steps:[`Era ${ty==='int3'?'una 3a':'un acord'} <b>${ans}</b> (${ns.map(lmNom).join(' – ')}). Torna-ho a escoltar fixant-t'hi.`],err:null}}
+    hints:['Un dels dos sona alegre i lluminós; l\'altre, més trist o fosc. Quina sensació et fa?',ty==='int3'?'Canta la nota de baix i després la de dalt. Com més separades estan, més lluminós sona.':'Escolta-ho uns quants cops i fixa\'t en la nota del mig.'],steps:[`Era ${ty==='int3'?'una 3a':'un acord'} <b>${ans}</b> (${ns.map(lmNom).join(' – ')}). Torna-ho a escoltar fixant-t'hi.`],err:null}}
   if(ty==='escala'){const tp=pick(['maj','nat']),sc=[...lmScale(r,tp),{l:r.l+7,a:0}],ans=tp==='maj'?'major':'menor';
-   return{text:`Escolta l'<b>escala</b>. És <b>major</b> o <b>menor</b>?<br>${muSndBtn(lmEv(sc,{gap:.42,dur:.4}))}`,fields:[lmF([ans,`escala ${ans}`])],hints:['Fixa\'t en la 3a nota: és alta (major) o baixa (menor)?','La major sona més alegre.'],steps:[`Era una escala <b>${ans}</b>: ${sc.map(lmNom).join(', ')}.`],err:null}}
-  if(ty==='compas'){const b=pick([2,3]),ev=[],beat=.5;for(let i=0;i<b*4;i++)ev.push({at:i*beat,click:true,strong:i%b===0},{at:i*beat,f:i%b===0?392:262,dur:.22,vol:i%b===0?.32:.12});
-   const ans=b===2?'binari':'ternari';return{text:`Escolta el pols. El compàs és <b>binari</b> o <b>ternari</b>?<br>${muSndBtn(ev)}`,fields:[lmF([ans,`compàs ${ans}`])],
-    hints:['Compta a partir de cada so fort: 1, 2... o 1, 2, 3...?','Binari: fort-feble. Ternari: fort-feble-feble.'],steps:[`Els sons forts tornaven cada ${b}: compàs <b>${ans}</b>.`],err:null}}
-  const k=rnd(2,8),q=lmPerf(k)?'J':'M',n2=lmUp({l:0,a:0},k,q);
-  return{text:`Escolta: la primera nota és <b>do</b>. Quin <b>interval</b> forma amb la segona (és major o just)? Escriu-ne el nombre.<br>${muSndBtn(lmEv([{l:0,a:0},n2]))}`,fields:[{label:'Nombre (2 a 8)',ans:R(k)}],
-   hints:['Canta l\'escala de do des de baix fins a la segona nota i compta.','Do-re 2a, do-mi 3a, do-fa 4a, do-sol 5a, do-la 6a, do-si 7a, do-do 8a.'],steps:[`La segona nota era <b>${lmNom(n2)}</b>: de do a ${lmNom(n2)} hi ha una <b>${k}a</b>.`],err:null}}}
+   return{text:`Escolta l'<b>escala</b>. És <b>major</b> o <b>menor</b>?<br>${muSndBtn(lmEv(sc,{gap:.42,dur:.4}))}`,fields:[lmF([ans,`escala ${ans}`])],hints:['Fixa\'t en la 3a nota: queda lluny o a prop de la primera?','Un tipus d\'escala sona alegre; l\'altre, més trist.'],steps:[`Era una escala <b>${ans}</b>: ${sc.map(lmNom).join(', ')}.`],err:null}}
+  if(ty==='compas'){const b=pick(lv?[2,3,4]:[2,3]),ev=[],beat=.5;for(let i=0;i<b*4;i++)ev.push({at:i*beat,click:true,strong:i%b===0},{at:i*beat,f:i%b===0?392:262,dur:.22,vol:i%b===0?.32:.12});
+   const ans=LM_CLS[b],opts=lv?'<b>binari</b>, <b>ternari</b> o <b>quaternari</b>':'<b>binari</b> o <b>ternari</b>';return{text:`Escolta el pols. El compàs és ${opts}?<br>${muSndBtn(ev)}`,fields:[lmF([ans,`compàs ${ans}`])],
+    hints:['Compta a partir de cada so fort: quants sons hi ha fins al fort següent?','Bi- vol dir dos; ter-, tres; quater-, quatre.'],steps:[`Els sons forts tornaven cada ${b}: compàs <b>${ans}</b>.`],err:null}}
+  const root=lv?pick([0,3,4]):0,R0={l:root,a:0},k=rnd(2,lv?8:5),q=lmPerf(k)?'J':'M',n2=lmUp(R0,k,q),rn=lmNom(R0);
+  return{text:`Escolta: la primera nota és <b>${rn}</b>. Quin <b>interval</b> forma amb la segona (és major o just)? Escriu-ne el nombre.<br>${muSndBtn(lmEv([R0,n2]))}`,fields:[{label:`Nombre (2 a ${lv?8:5})`,ans:R(k)}],
+   hints:[`Canta l'escala major que comença a ${rn}, des de baix, fins que arribis a la segona nota.`,'Compta les notes que has cantat, incloent-hi la primera i la darrera.'],steps:[`La segona nota era <b>${lmNom(n2)}</b>: de ${rn} a ${lmNom(n2)} hi ha una <b>${k}a</b>.`],err:null}}}
 });
 
 /* ---------- 4t EE: compassos d'amalgama i tonalitats veïnes ---------- */
@@ -625,8 +638,8 @@ lm_amalgama:{mat:'musica',ab:'Am',nom:'Compassos d\'amalgama (5/8, 7/8...)',
   if(ty==='parts')return{text:`Quantes <b>${un}</b> té un compàs de <b>${ts}</b>?`,fields:[{label:muCap(un),ans:R(a)}],hints:['Mira el número de dalt.',`El número de baix (${b}) diu quina figura es compta.`],steps:[`El ${ts} té <b>${a}</b> ${un}.`],err:null};
   if(ty==='llargs'){const k=G.filter(x=>x===3).length;return{text:`En un compàs de <b>${ts}</b> agrupat <b>${gs}</b>, quants temps són <b>llargs</b> (de 3 ${un})?`,fields:[{label:'Temps llargs',ans:R(k)}],
    hints:['Els temps de 3 són llargs; els de 2, curts.','Compta els 3 de l\'agrupació.'],steps:[`${gs}: hi ha <b>${k}</b> grup${k===1?'':'s'} de 3.`],err:null}}
-  if(ty==='classe'){const c=Math.random()<.5?'7/8':'6/8',am=c==='7/8';return{text:`El compàs de <b>${c}</b>, és d'amalgama o compost?`,fields:[lmF([am?'amalgama':'compost',am?'d\'amalgama':'compàs compost',am?'irregular':'compost'])],
-   hints:['Als compostos tots els temps tenen 3 parts.','Si el número de dalt no es pot repartir en grups iguals de 2 o de 3, és d\'amalgama.'],steps:[am?'7 = 2 + 2 + 3: temps desiguals → <b>d\'amalgama</b>.':'6 = 3 + 3: dos temps iguals de 3 → <b>compost</b>.'],err:v=>lmIn(v[0],[am?'compost':'amalgama'])?'lm_compost':null}}
+  if(ty==='classe'){const CL={'5/8':'2 + 3','7/8':'2 + 2 + 3','11/8':'3 + 3 + 3 + 2','5/4':'2 + 3','6/8':'3 + 3','9/8':'3 + 3 + 3','12/8':'3 + 3 + 3 + 3'},c=pick(Object.keys(CL)),am=['5/8','7/8','11/8','5/4'].includes(c);return{text:`El compàs de <b>${c}</b>, és d'amalgama o compost?`,fields:[lmF([am?'amalgama':'compost',am?'d\'amalgama':'compàs compost',am?'irregular':'compost'])],
+   hints:['Prova de repartir el número de dalt en grups de 3.','Si tots els grups surten iguals, de 3, cada temps té 3 parts; si cal barrejar grups de 2 i de 3, els temps són desiguals.'],steps:[am?`${c.split('/')[0]} = ${CL[c]}: temps desiguals → <b>d'amalgama</b>.`:`${c.split('/')[0]} = ${CL[c]}: temps iguals de 3 → <b>compost</b>.`],err:v=>lmIn(v[0],[am?'compost':'amalgama'])?'lm_compost':null}}
   const all=LM_AMG[ts].map(g=>g.join('+'));return{text:`Escriu una agrupació possible d'un compàs de <b>${ts}</b> amb grups de 2 i de 3 (p. ex. 2+3).`,fields:[{label:'Agrupació',txt:lmV(all.flatMap(s=>[s,s.replace(/\+/g,' + '),s.replace(/\+/g,' ')])),wide:false}],
    hints:[`Els grups han de sumar ${a}.`,'Només pots usar grups de 2 i de 3.'],steps:[`Possibles: <b>${all.join('</b>, <b>')}</b>.`],err:null}}},
 
