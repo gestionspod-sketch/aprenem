@@ -22,7 +22,10 @@ const DET_DEF={article:'acompanya el nom i diu si ja el coneixem (el, la, els, l
 const PP=[['*Na Maria i jo* anirem al cine.','nosaltres'],['*En Pau* juga a bàsquet.','ell'],['*Les meves cosines* viuen a Inca.','elles'],['*Tu i en Joan* sou germans.','vosaltres'],['*Els padrins* arriben demà.','ells'],['*La mestra* explica la lliçó.','ella'],['*Tu i jo* som amics.','nosaltres'],['*En Pere i na Laia* ballen molt bé.','ells'],['*Les nines i tu* heu guanyat.','vosaltres'],['*El meu ca* dorm a la terrassa.','ell']];
 
 /* ---------- sintagma nominal ---------- */
-const SN=[['el llibre de contes','llibre','de contes'],['una samarreta blava','samarreta','blava'],['els moixos negres','moixos','negres'],['la porta de fusta','porta','de fusta'],['aquell ca petit','ca','petit'],['el pastís de xocolata','pastís','de xocolata'],['les sabates noves','sabates','noves'],['un vaixell de vela','vaixell','de vela'],['la ciutat de Palma','ciutat','de palma'],['unes vacances fantàstiques','vacances','fantàstiques'],['el cotxe del meu pare','cotxe','del meu pare'],['la meva motxilla vermella','motxilla','vermella'],['tres gots d\'aigua','gots','d\'aigua'],['aquesta cançó tan bonica','cançó','tan bonica']];
+const SN=[['el llibre de contes','llibre','de contes'],['una samarreta blava','samarreta','blava'],['els moixos negres','moixos','negres'],['la porta de fusta','porta','de fusta'],['aquell ca petit','ca','petit'],['el pastís de xocolata','pastís','de xocolata'],['les sabates noves','sabates','noves'],['un vaixell de vela','vaixell','de vela'],['la ciutat de Palma','ciutat','de palma'],['unes vacances fantàstiques','vacances','fantàstiques'],['el cotxe del meu pare','cotxe','del meu pare'],['la meva motxilla vermella','motxilla','vermella'],['tres gots d\'aigua','gots','d\'aigua'],['aquesta cançó tan bonica','cançó','tan bonica'],
+ ['una nit freda','nit','freda'],['el jardí de la padrina','jardí','de la padrina'],['aquells núvols grisos','núvols','grisos'],['la clau del cotxe','clau','del cotxe'],['dos ocells blancs','ocells','blancs'],['el camí de l\'escola','camí','de l\'escola'],
+ ['una tassa de llet','tassa','de llet'],['les muntanyes nevades','muntanyes','nevades'],['el meu jersei verd','jersei','verd'],['un plat de sopa','plat','de sopa'],['aquella història tan llarga','història','tan llarga'],['la bicicleta de la meva germana','bicicleta','de la meva germana'],
+ ['els arbres fruiters','arbres','fruiters'],['una caixa de cartró','caixa','de cartró'],['el mar blau','mar','blau'],['la festa del poble','festa','del poble'],['uns pantalons curts','pantalons','curts'],['aquesta fotografia antiga','fotografia','antiga']];
 
 /* ---------- subjecte el·líptic ---------- */
 const SE_V=[['cantar','1','una cançó'],['parlar','1','amb la mestra'],['ballar','1','a la festa'],['nedar','1','a la piscina'],['pintar','1','un quadre'],['escoltar','1','música'],['mirar','1','la televisió'],['ajudar','1','els padrins'],['dormir','3','a casa'],['llegir','3i','un conte'],['perdre','2','les claus'],['servir','3i','el sopar']];
@@ -89,14 +92,27 @@ const MODE_DEF={indicatiu:'expressa fets reals o segurs',subjuntiu:'expressa des
 const GER=[['cantar','cantant'],['menjar','menjant'],['córrer','corrent'],['perdre','perdent'],['dormir','dormint'],['llegir','llegint'],['fer','fent'],['dir','dient'],['veure','veient'],['viure','vivint'],['escriure','escrivint'],['beure','bevent'],['riure','rient'],['venir','venint']];
 
 /* ---------- perífrasis ---------- */
-const PF=[['Hem de fer els deures abans de sopar.','hem de fer','ob'],['Deuen ser les cinc.','deuen ser','pr'],['Els nins estan jugant al pati.','estan jugant','cu'],['Comença a ploure.','comença a ploure','in'],['Acab de dinar.','acab de dinar','ac'],['Torna a sonar el telèfon.','torna a sonar','re'],['Has d\'estudiar més.','has d\'estudiar','ob'],['Deu fer fred a la muntanya.','deu fer','pr'],['Estic llegint un llibre.','estic llegint','cu'],['La Marta acaba d\'arribar.','acaba d\'arribar','ac'],['Tornarem a jugar demà.','tornarem a jugar','re'],['Comencen a riure.','comencen a riure','in']];
+const PF=[['Hem de fer els deures abans de sopar.','hem de fer','ob'],['Deuen ser les cinc.','deuen ser','pr'],['Els nins estan jugant al pati.','estan jugant','cu'],['Comença a ploure.','comença a ploure','in'],['Acab de dinar.','acab de dinar','ac'],['Torna a sonar el telèfon.','torna a sonar','re'],['Has d\'estudiar més.','has d\'estudiar','ob'],['Deu fer fred a la muntanya.','deu fer','pr'],['Estic llegint un llibre.','estic llegint','cu'],['La Marta acaba d\'arribar.','acaba d\'arribar','ac'],['Tornarem a jugar demà.','tornarem a jugar','re'],['Comencen a riure.','comencen a riure','in'],
+ ['Heu de portar el llibre demà.','heu de portar','ob'],['Haureu de recollir la taula.','haureu de recollir','ob'],['Hauran d\'esperar una estona.','hauran d\'esperar','ob'],
+ ['El tren deu arribar a les vuit.','deu arribar','pr'],['Aquesta motxilla deu pesar molt.','deu pesar','pr'],['Els avis deuen estar cansats.','deuen estar','pr'],
+ ['La mare està cuinant una paella.','està cuinant','cu'],['Estàvem mirant una pel·lícula.','estàvem mirant','cu'],['Els ocells estan fent el niu.','estan fent','cu'],
+ ['El nadó comença a caminar.','comença a caminar','in'],['Començarem a estudiar a les cinc.','començarem a estudiar','in'],['Ja comences a entendre les fraccions.','comences a entendre','in'],
+ ['Acabam d\'arribar de l\'escola.','acabam d\'arribar','ac'],['Els meus pares acaben de sortir.','acaben de sortir','ac'],['Acabes de guanyar el concurs!','acabes de guanyar','ac'],
+ ['Tornes a fer tard!','tornes a fer','re'],['La Joana torna a cantar la cançó.','torna a cantar','re'],['Demà tornarem a visitar el museu.','tornarem a visitar','re']];
 const PF_ANS={ob:['obligació','necessitat'],pr:['probabilitat','suposició','possibilitat'],cu:['acció en curs','durada','continuïtat','acció que dura','acció en desenvolupament'],in:['inici','començament','acció que comença'],ac:['acabament','acció acabada','final','acció acabada de fer'],re:['repetició','acció repetida']};
 const PF_FORM={ob:'haver de + infinitiu',pr:'deure + infinitiu',cu:'estar + gerundi',in:'començar a + infinitiu',ac:'acabar de + infinitiu',re:'tornar a + infinitiu'};
 
 /* ---------- complements ---------- */
 const CD=[['La Marta menja la poma.','la poma','la'],['En Joan llegeix el diari.','el diari','el'],['Els nins pinten les parets.','les parets','les'],['La padrina rega els tomàquets.','els tomàquets','els'],['Vull aquest llibre.','aquest llibre','el'],['No sé això.','això','ho'],['El pagès cull les ametles.','les ametles','les'],['Mon pare renta el cotxe.','el cotxe','el'],['La mestra explica la lliçó.','la lliçó','la'],['Ajudarem els padrins.','els padrins','els'],['Veig la meva cosina cada dia.','la meva cosina','la'],
- ['Compram pa al forn.','pa','en',1],['Beu aigua fresca.','aigua fresca','en',1],['Tinc tres germans.','tres germans','en',1],['Ella ha dit això.','això','ho',1]];
-const CI=[['He donat un regal a la meva germana.','a la meva germana','li'],['La mestra explica un conte als alumnes.','als alumnes','els'],['Escric una carta a la padrina.','a la padrina','li'],['Vaig regalar flors a la mare.','a la mare','li'],['Torna el llibre al teu germà.','al teu germà','li'],['Demanarem ajuda als bombers.','als bombers','els'],['El metge va donar un xarop al nin.','al nin','li'],['Hem enviat un missatge als cosins.','als cosins','els'],['Llegeix un conte a les nines.','a les nines','els'],['Diré la veritat a les mestres.','a les mestres','els']];
+ ['Compram pa al forn.','pa','en',1],['Beu aigua fresca.','aigua fresca','en',1],['Tinc tres germans.','tres germans','en',1],['Ella ha dit això.','això','ho',1],
+ ['Els alumnes escolten la música.','la música','la'],['Agafa el paraigua.','el paraigua','el'],['Hem plantat els arbres.','els arbres','els'],['La gata vigila les gallines.','les gallines','les'],['Pinta el quadre.','el quadre','el'],
+ ['Coneixes aquella nina?','aquella nina','la'],['He perdut les claus.','les claus','les'],['Recordes allò?','allò','ho',1],['Vols galetes?','galetes','en',1],['Necessitam dues cadires.','dues cadires','en',1]];
+const CI=[['He donat un regal a la meva germana.','a la meva germana','li'],['La mestra explica un conte als alumnes.','als alumnes','els'],['Escric una carta a la padrina.','a la padrina','li'],['Vaig regalar flors a la mare.','a la mare','li'],['Torna el llibre al teu germà.','al teu germà','li'],['Demanarem ajuda als bombers.','als bombers','els'],['El metge va donar un xarop al nin.','al nin','li'],['Hem enviat un missatge als cosins.','als cosins','els'],['Llegeix un conte a les nines.','a les nines','els'],['Diré la veritat a les mestres.','a les mestres','els'],
+ ['Envia una postal als avis.','als avis','els'],['La infermera ha posat una tireta al pacient.','al pacient','li'],['Donaré menjar al ca.','al ca','li'],['Explicaré el joc als meus amics.','als meus amics','els'],
+ ['El cambrer porta l\'aigua als clients.','als clients','els'],['Compraré un llibre a la meva cosina.','a la meva cosina','li'],['La mestra posa deures als alumnes de sisè.','als alumnes de sisè','els'],['Has de demanar permís a la directora.','a la directora','li'],
+ ['Regalarem una planta a les veïnes.','a les veïnes','els'],['El pare prepara el berenar a les nines.','a les nines','els'],['Diré un secret a la meva amiga.','a la meva amiga','li'],['En Pere va tornar la pilota al porter.','al porter','li'],
+ ['Han donat un premi a les guanyadores.','a les guanyadores','els'],['Deixa el teu llapis al company.','al company','li'],['El carter porta les cartes als veïns.','als veïns','els'],['Vaig contar un acudit al meu germà petit.','al meu germà petit','li'],
+ ['La padrina dona galetes als néts.','als néts','els'],['Ensenyarem les fotos a la mestra.','a la mestra','li'],['Lliuraré el treball al professor.','al professor','li'],['Mostra el camí als turistes.','als turistes','els']];
 const CC=[['Els nins juguen al pati.','al pati','lloc'],['Arribarem demà.','demà','temps'],['La nina canta molt bé.','molt bé','manera'],['Ballo amb la meva cosina.','amb la meva cosina','companyia'],['Escriu amb el llapis.','amb el llapis','instrument'],['El tren surt a les nou.','a les nou','temps'],['Camina a poc a poc.','a poc a poc','manera'],['Menja massa.','massa','quantitat'],['No va venir per la pluja.','per la pluja','causa'],['Estudia per aprovar.','per aprovar','finalitat'],['Talla el pa amb un ganivet.','amb un ganivet','instrument'],['Ens veurem dissabte.','dissabte','temps'],['Viuen a Ciutadella.','a ciutadella','lloc'],['Dorm a la seva habitació.','a la seva habitació','lloc'],['Va de vacances amb els seus amics.','amb els seus amics','companyia']];
 const CC_ANS={lloc:['lloc'],temps:['temps'],manera:['manera','mode'],companyia:['companyia'],instrument:['instrument','mitjà'],quantitat:['quantitat'],causa:['causa'],finalitat:['finalitat']};
 const CC_Q={lloc:'on?',temps:'quan?',manera:'com?',companyia:'amb qui?',instrument:'amb què?',quantitat:'quant?',causa:'per què?',finalitat:'per a què?'};
@@ -136,7 +152,7 @@ Object.assign(SK,{
      err:v=>Object.keys(DET_DEF).some(x=>caSame(x,v[0]))&&!A(t).some(x=>caSame(x,v[0]))?'ca_determinant':null})}
    const[f,p]=pick(PP);
    return caEx(`Substitueix les paraules destacades per un <b>pronom personal</b>:<br><i>${caMark(f)}</i>`,[p],{label:'Pronom',
-    hints:['Quantes persones són? Hi ha «jo» o «tu» entre elles?','Si hi ha «jo», és nosaltres; si hi ha «tu» (sense jo), vosaltres.'],
+    hints:['Quantes persones són? Hi ha «jo» o «tu» dins el grup?','Si hi ha «jo» dins el grup, és la primera persona del plural; si hi ha «tu» (sense jo), la segona del plural; si no, és tercera persona.'],
     steps:[/(^|\s)jo(\s|$)/.test(caLow(caStar(f)))?'Hi ha «jo» dins el grup: nosaltres.':/(^|\s)tu(\s|$)/.test(caLow(caStar(f)))?'Hi ha «tu» dins el grup: vosaltres.':`«${caStar(f)}» és tercera persona.`,`Pronom: <b>${p}</b>.`]})}},
 
  ca_sintagma_nominal:{mat:'catala',ab:'Sn',curs:[6],nom:'El sintagma nominal',
@@ -145,7 +161,7 @@ Object.assign(SK,{
    `<table class="mini"><tr><th>Determinant</th><th>Nucli</th><th>Complement del nom</th></tr><tr><td>el</td><td>llibre</td><td>de contes</td></tr><tr><td>unes</td><td>vacances</td><td>fantàstiques</td></tr></table>`],
   gen(){const[sn,n,c]=pick(SN);
    return{text:`Analitza el sintagma nominal «<b>${sn}</b>».`,fields:[{label:'Nucli (el nom)',txt:[caLow(n)],wide:true},{label:'Complement del nom',txt:[c],loose:true,wide:true}],vis:null,
-    hints:['El nucli és el nom: la paraula més important.','El complement del nom és l\'adjectiu o el grup amb preposició que ens diu com és o de què és.'],
+    hints:['El nucli és el nom: la paraula principal del grup.','El complement del nom és l\'adjectiu o el grup amb preposició que ens diu com és o de què és.'],
     steps:[`El nom més important és «<b>${n}</b>»: és el nucli.`,`«${c}» ens diu més coses del nucli: és el <b>complement del nom</b>.`],
     err:v=>v[1]&&caSame(v[0],c)?'ca_nucli':null}}},
 
@@ -160,7 +176,7 @@ Object.assign(SK,{
    const[inf,mod,rest]=pick(SE_V),T=lv>0?['pres','imp','fut','perif','cond']:['pres','fut','perif'],t=pick(T),pi=rnd(0,5),forms=caConj(inf,mod,t),f=forms[pi][0];
    const ok=[...new Set(forms.flatMap((x,i)=>x.includes(f)?PRON[i]:[]))];
    return caEx(`Aquesta oració té el <b>subjecte el·líptic</b>. Quin pronom personal s'hi amaga?<br><i>${caCap(f)} ${rest}.</i>`,ok,{label:'Subjecte (pronom)',
-    hints:['Mira la terminació del verb: de quina persona és?','Prova de posar-hi davant jo, tu, ell, nosaltres, vosaltres o ells. Quin encaixa?'],
+    hints:['Mira la terminació del verb: de quina persona és?','Prova de posar-hi davant els pronoms personals un per un, del singular al plural. Amb quin encaixa aquesta terminació?'],
     steps:[`El verb és «${f}» (${inf}, ${CA_TEMPS[t]}).`,`Correspon a: <b>${ok.filter(x=>!/vost/.test(x)).join(' / ')}</b>.`],
     err:v=>PRON.flat().includes(v[0])&&!ok.includes(v[0])?'ca_subj_persona':null})}},
 
@@ -199,7 +215,7 @@ Object.assign(SK,{
      err:v2=>ok.includes(v2[0])?null:irrReg(v,t,0).includes(v2[0])?'ca_irreg_regularitza':null})}
    const pi=rnd(0,5),forms=irr(v,t),ok=forms[pi];
    return caEx(`Conjuga el verb irregular <b>${v}</b> en <b>${IRR_T[t]}</b>:<br><b>${PERS[pi]}</b> ___`,ok,{label:'Forma verbal',
-    hints:[`Pensa en una frase: «${PERS[pi].split(' ')[0]} ... cada dia».`,`Mira com és en una altra persona: ${PERS[pi===0?1:0]} ${forms[pi===0?1:0][0]}.`],
+    hints:[`Pensa en una frase: «${PERS[pi].split(' ')[0]} ... cada dia».`,(r=>`Mira com és en una altra persona: ${PERS[r]} ${forms[r][0]}.`)([3,4,1,0,2,5].find(i=>i!==pi&&!forms[i].some(f=>ok.some(a=>f.includes(a))))??(pi===0?1:0))],
     steps:[`${caCap(IRR_T[t])} de «${v}»: ${forms.map((f,i)=>PERS[i]+' '+f[0]).join(', ')}.`,`Resposta: <b>${PERS[pi]} ${ok.join(' / ')}</b>.`],
     err:v2=>ok.includes(v2[0])?null:forms.some((f,i)=>i!==pi&&f.includes(v2[0]))?'ca_conj_persona':irrReg(v,t,pi).includes(v2[0])?'ca_irreg_regularitza':null})}},
 
@@ -246,7 +262,7 @@ Object.assign(SK,{
    'En català, el CD de persona va <b>sense «a»</b>: <i>Veig na Maria</i> (no «a na Maria»).'],
   gen(lv){const[o,c,p]=pick(CD.filter(x=>lv>0||!x[3]));
    return{text:`Troba el <b>complement directe</b> i el pronom feble que el substitueix:<br><i>${o}</i>`,fields:[{label:'Complement directe',txt:[c],loose:true,wide:true},{label:'Pronom feble',txt:[p]}],vis:null,
-    hints:['Pregunta al verb: què...? (o qui...?)','Masculí: el / els. Femení: la / les. Això: ho. Sense article o amb un numeral: en.'],
+    hints:['Pregunta al verb: què...? (o qui...?)','Fixa\'t en el CD: és masculí o femení? Singular o plural? Porta article, és un demostratiu neutre o va sense article o amb un numeral? Mira la taula de la teoria.'],
     steps:[`Què? → <b>${c}</b>.`,p==='en'?'No porta article determinat: el substitueix <b>en</b>.':p==='ho'?'«Això» se substitueix per <b>ho</b>.':`Se substitueix per <b>${p}</b>.`],
     err:v=>['li','els'].includes(v[1])&&v[1]!==p&&caSame(v[0],c)?'ca_cd_li':null}}},
 
@@ -256,7 +272,7 @@ Object.assign(SK,{
    'Compte! En plural sempre és <b>els</b>, també si són noies: <i>Llegeix un conte a les nines → <b>els</b> llegeix un conte</i> (no «les»).'],
   gen(){const[o,c,p]=pick(CI);
    return{text:`Troba el <b>complement indirecte</b> i el pronom feble que el substitueix:<br><i>${o}</i>`,fields:[{label:'Complement indirecte',txt:[c],loose:true,wide:true},{label:'Pronom feble',txt:[p]}],vis:null,
-    hints:['Pregunta al verb: a qui...?','Singular: li. Plural: els (també en femení).'],
+    hints:['Pregunta al verb: a qui...?','El CI és singular o plural? Recorda que el CI té un pronom per al singular i un altre per al plural, i que no canvia en femení.'],
     steps:[`A qui? → <b>${c}</b>.`,`Es substitueix per <b>${p}</b>.`],
     err:v=>v[1]==='les'?'ca_ci_les':['el','la','lo'].includes(v[1])?'ca_cd_li':null}}},
 

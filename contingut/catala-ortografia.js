@@ -157,7 +157,7 @@ Object.assign(SK,{
    '<b>Darrere vocal</b>, quasi sempre s\'escriu <b>c</b> i <b>t</b>, encara que la família tingui g o d: ami<b>c</b> (amiga), gro<b>c</b> (groga), bui<b>t</b> (buida), nebo<b>t</b> (neboda). Excepció: <b>càstig</b>.'],
   gen(lv){const[w,l,d]=pick(FIN_OK.filter(x=>lv>0||!x[3])),g=w.slice(0,-1)+'_',other={c:'g',g:'c',t:'d',d:'t'}[l],afterV=/[aeiouàèéíòóú]$/.test(w.slice(0,-1));
    return caEx(`Escriu la paraula completa:<br><b>${g}</b> <span class="muted">(${l==='c'||l==='g'?'c / g':'t / d'})</span><br><span class="muted">Pista de família: ${d}</span>`,[w],{label:'Paraula',
-    hints:['La lletra d\'abans del buit és una vocal o una consonant?',afterV?'Darrere vocal, quasi sempre c o t.':'Darrere consonant, fixa\'t en la paraula de la família.'],
+    hints:['La lletra just d\'abans del guió baix (_) és una vocal o una consonant?',afterV?'Darrere vocal, quasi sempre c o t.':'Darrere consonant, fixa\'t en la paraula de la família.'],
     steps:[w==='càstig'?'«Càstig» és una excepció: s\'escriu amb g.':afterV?`Darrere vocal s'escriu ${l} (encara que digui «${d}»).`:`Darrere consonant, la família ens ho diu: ${d} → ${l}.`,`S'escriu: <b>${w}</b>.`],
     err:v=>v[0]===w.slice(0,-1)+other?'ca_final':null})}},
 
