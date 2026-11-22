@@ -68,6 +68,16 @@ const CA_NORMA={'b-v':'Pensa en paraules de la mateixa família: cavall → cava
  's-z':'La z sona com la s de «casa», però a principi de paraula o darrere consonant s\'escriu z (zero, dotze).',
  'l·l':'La ela geminada (l·l) sona com dues eles: col·legi, il·lusió. Si sona «ll», com a cavall, és ll.',
  'r-rr':'Entre vocals, so fort: rr (carro, terra); so suau: r (cara). Darrere n o s s\'escriu r sola (honrat).'};
+// La mateixa norma amb altres exemples: la pista la fa servir quan la paraula de l'exercici surt a CA_NORMA (la pista no dona la resposta)
+const CA_NORMA_ALT={'b-v':'Pensa en paraules de la mateixa família: beure → beguda, nou → novena. En català, la b i la v sonen diferent en moltes zones (també a Mallorca).',
+ 'g-j':'Davant e i i escrivim g (gelat, gimnàs); davant a, o, u, j (joc, juny, menjar).',
+ 'tg-tj':'Davant e i i: tg (metge, formatge); davant a, o, u: tj (mitja, pitjor).',
+ 's-ss':'Entre vocals, s sona com a «z» (camisa, mesura) i ss sona com a «s» forta (tassa, pressa).',
+ 'c-ç':'Davant a, o, u el so «s» s\'escriu ç (força, cançó); davant e, i, c (cel, cinc).',
+ 's-z':'La z sona com la s de «casa», però a principi de paraula o darrere consonant s\'escriu z (zebra, onze).',
+ 'l·l':'La ela geminada (l·l) sona com dues eles: novel·la, cel·la. Si sona «ll», com a castell, és ll.',
+ 'r-rr':'Entre vocals, so fort: rr (gerro, barra); so suau: r (pera). Darrere n o s s\'escriu r sola (Enric).'};
+const caNormaSense=(nr,w)=>CA_NORMA[nr].includes(w)?CA_NORMA_ALT[nr]:CA_NORMA[nr];
 const CA_CAT=[['El *gat* dorm al sofà.','nom'],['La casa *vermella* és gran.','adjectiu'],['Els nens *juguen* al pati.','verb'],['Arribarem *demà* al matí.','adverbi'],['*Aquest* llibre és meu.','determinant|demostratiu'],
  ['*Ella* canta molt bé.','pronom|pronom personal'],['Vaig a l\'escola *amb* bicicleta.','preposició'],['Vull pa *i* formatge.','conjunció'],['Corre molt *ràpidament*.','adverbi'],['He llegit *tres* contes.','determinant|numeral'],
  ['*Nosaltres* anirem a la platja.','pronom|pronom personal'],['El mar és *blau*.','adjectiu'],['La *música* em fa feliç.','nom'],['El sopar és *a* les nou.','preposició'],['Vindré, *però* tard.','conjunció'],
@@ -99,12 +109,25 @@ function caConj(inf,mod,t){const st=inf.slice(0,-2),P=x=>x.map(f=>Array.isArray(
  if(t==='fut')return P(['é','às','à','em','eu','an'].map(e=>inf+e));
  return P(['ia','ies','ia','íem','íeu','ien'].map(e=>inf+e))}
 const CA_SUBJ=[['El meu germà juga a futbol cada dissabte.','el meu germà'],['Les flors del jardí són precioses.','les flors del jardí'],['Demà vindran els avis.','els avis'],['Els alumnes de sisè preparen una obra de teatre.','els alumnes de sisè'],
- ['El sol escalfa la terra.','el sol'],['Al bosc viuen molts animals.','molts animals'],['Tu i jo farem el treball.','tu i jo'],['La mestra ens explica un conte.','la mestra'],['Els ocells canten al matí.','els ocells'],['Aquest estiu ha arribat la meva cosina.','la meva cosina']];
+ ['El sol escalfa la terra.','el sol'],['Al bosc viuen molts animals.','molts animals'],['Tu i jo farem el treball.','tu i jo'],['La mestra ens explica un conte.','la mestra'],['Els ocells canten al matí.','els ocells'],['Aquest estiu ha arribat la meva cosina.','la meva cosina'],
+ ['La pluja ha mullat tota la roba.','la pluja'],['A la plaça juguen uns nins petits.','uns nins petits'],['El tren de Sóller passa per un túnel.','el tren de Sóller'],['Les cigonyes construeixen nius alts.','les cigonyes'],
+ ['La meva àvia fa unes coques boníssimes.','la meva àvia'],['Aquests llibres són de la biblioteca.','aquests llibres'],['Cada matí em desperta el cant del gall.','el cant del gall'],['Nosaltres anirem al museu dijous.','nosaltres'],
+ ['El director de l\'escola ha parlat amb les famílies.','el director de l\'escola'],['Al cel brillen milers d\'estrelles.','milers d\'estrelles'],['Els dofins salten entre les ones.','els dofins'],['La gata i els seus moixets dormen al sofà.','la gata i els seus moixets'],
+ ['Aquella muntanya tan alta és el Puig Major.','aquella muntanya tan alta'],['Em fa mal la panxa.','la panxa'],['Ens agraden molt les maduixes.','les maduixes'],['Per la finestra entrava un raig de sol.','un raig de sol'],
+ ['El meu cosí petit ja sap llegir.','el meu cosí petit'],['Les classes acaben a les dues.','les classes'],['Vosaltres heu guanyat el partit.','vosaltres'],['Al port han arribat tres vaixells grans.','tres vaixells grans']];
 const CA_ORA=[['Quina hora és?','interrogativa'],['Quin dia tan bonic!','exclamativa'],['Tanca la porta, per favor.','imperativa'],['Demà és dimarts.','enunciativa'],['On has posat les claus?','interrogativa'],['Que bé que ho hem passat!','exclamativa'],
- ['Renta\'t les mans abans de dinar.','imperativa'],['La biblioteca obre a les nou.','enunciativa'],['Vindràs a la festa?','interrogativa'],['Escolta bé les instruccions.','imperativa']];
+ ['Renta\'t les mans abans de dinar.','imperativa'],['La biblioteca obre a les nou.','enunciativa'],['Vindràs a la festa?','interrogativa'],['Escolta bé les instruccions.','imperativa'],
+ ['Com et dius?','interrogativa'],['Quina por que vaig passar!','exclamativa'],['Apaga el llum quan surtis.','imperativa'],['El museu tanca els dilluns.','enunciativa'],['Quants anys té la teva germana?','interrogativa'],
+ ['Que alt que és aquest arbre!','exclamativa'],['Porta\'m el llibre de mates, per favor.','imperativa'],['Les balenes són mamífers.','enunciativa'],['Per què plores?','interrogativa'],['Quina sorpresa tan agradable!','exclamativa'],
+ ['No corris pel passadís.','imperativa'],['Ahir va nevar a la serra.','enunciativa'],['Has acabat els deures?','interrogativa'],['Quin gol tan espectacular!','exclamativa'],['Seu bé a la cadira.','imperativa'],
+ ['La meva escola té un hort.','enunciativa'],['On viu el teu cosí?','interrogativa'],['Que contents que estam!','exclamativa'],['Escriu el teu nom a la part de dalt.','imperativa'],['El sol surt per l\'est.','enunciativa']];
 const CA_SIN=[['content','feliç|alegre'],['començar','iniciar|encetar'],['bonic','formós|bell|preciós|polit'],['parlar','xerrar|conversar|enraonar'],['ràpid','veloç|lleuger'],['casa','habitatge|llar'],['mirar','observar|contemplar|guaitar'],['gran','enorme|immens'],['acabar','finalitzar|enllestir'],['por','temor|basarda'],['caminar','passejar|anar a peu'],['enfadat','enutjat|empipat|irritat']];
 const CA_ANT=[['alt','baix'],['obrir','tancar'],['ric','pobre'],['entrar','sortir'],['ample','estret'],['calent','fred'],['ple','buit'],['guanyar','perdre'],['net','brut'],['valent','covard|poruc'],['aprovar','suspendre'],['dur','tou|bla']];
-const CA_PREF=[['feliç','infeliç','in-'],['possible','impossible','im-'],['ordenat','desordenat','des-'],['legal','il·legal','il-'],['responsable','irresponsable','ir-'],['fer','desfer','des-'],['cobrir','descobrir','des-'],['útil','inútil','in-'],['correcte','incorrecte','in-'],['agradable','desagradable','des-'],['paciència','impaciència','im-'],['regular','irregular','ir-']];
+const CA_PREF=[['feliç','infeliç','in-'],['possible','impossible','im-'],['ordenat','desordenat','des-'],['legal','il·legal','il-'],['responsable','irresponsable','ir-'],['fer','desfer','des-'],['cobrir','descobrir','des-'],['útil','inútil','in-'],['correcte','incorrecte','in-'],['agradable','desagradable','des-'],['paciència','impaciència','im-'],['regular','irregular','ir-'],
+ ['fidel','infidel','in-'],['visible','invisible','in-'],['just','injust','in-'],['capaç','incapaç','in-'],['comprensible','incomprensible','in-'],
+ ['perfecte','imperfecte','im-'],['puntual','impuntual','im-'],['prudent','imprudent','im-'],['parell','imparell','im-'],['batible','imbatible','im-'],
+ ['lògic','il·lògic','il-'],['limitat','il·limitat','il-'],['legible','il·legible','il-'],['real','irreal','ir-'],['rellevant','irrellevant','ir-'],['reconeixible','irreconeixible','ir-'],
+ ['lligar','deslligar','des-'],['connectar','desconnectar','des-'],['conegut','desconegut','des-'],['honest','deshonest','des-'],['aparèixer','desaparèixer','des-'],['obeir','desobeir','des-'],['tapar','destapar','des-']];
 const CA_REC=[['Els teus ulls són com dues estrelles.','comparació|símil'],['La lluna és un plat de plata.','metàfora'],['El vent xiuxiuejava cançons a les fulles.','personificació'],['T\'ho he dit un milió de vegades!','hipèrbole'],['El rellotge fa tic-tac.','onomatopeia'],
  ['Les flors somreien al sol.','personificació'],['Corria com un llamp.','comparació|símil'],['Els teus cabells són or.','metàfora'],['Tinc tanta gana que em menjaria un elefant.','hipèrbole'],['El gos feia bub-bub tota la nit.','onomatopeia'],
  ['Cada dia, cada hora, cada minut penso en tu.','anàfora',1],['Vull la mar, vull el cel, vull la llum del matí.','anàfora',1],['Mira els núvols, mira els ocells, mira el teu jardí.','anàfora',1],
@@ -177,7 +200,7 @@ Object.assign(SK,{
   teoria:['Algunes consonants poden fer dubtar: <b>b / v</b>, <b>g / j</b>, <b>tg / tj</b>, <b>s / ss</b>, <b>c / ç / z</b>, <b>r / rr</b> i <b>ll / l·l</b>.','Trucs: busca paraules de la mateixa <b>família</b> (cavall → cavaller), mira la <b>vocal que ve després</b> (gendre però jardí; rellotge però platja) i escolta si el so és <b>fort o suau</b> (massa / casa; carro / cara).','La <b>ela geminada</b> (l·l) s\'escriu amb punt volat: col·legi, il·lusió, pel·lícula.'],
   gen(lv){const[w,seg,opt,nr]=pick(CA_CONS.filter(x=>lv>0||!['tranquil·litat','intel·ligent','honrat'].includes(x[0]))),i=w.indexOf(seg),gap=w.slice(0,i)+'_'.repeat(seg.length===3?2:seg.length)+w.slice(i+seg.length);
    return{text:`Escriu la paraula completa:<br><b>${gap}</b> <span class="muted">(${opt})</span>`,fields:[{label:'Paraula',txt:[w],wide:true}],vis:null,
-    hints:[CA_NORMA[nr],`Comença per «${w.slice(0,2)}».`],steps:[CA_NORMA[nr],`S'escriu: <b>${w}</b>.`],
+    hints:[caNormaSense(nr,w),'Digues la paraula en veu alta i pensa en una altra paraula de la mateixa família.'],steps:[CA_NORMA[nr],`S'escriu: <b>${w}</b>.`],
     err:v=>v[0]!==w&&nr==='l·l'&&v[0].replace(/l\.?l|ll/,'l·l')===w?'ca_l_geminada':null}}},
  ca_categories:{mat:'catala',ab:'Cg',nom:'Les categories gramaticals',ic:'N',
   teoria:['Cada paraula pertany a una <b>categoria gramatical</b>:',`<table class="mini">${Object.entries(CA_CAT_DEF).map(([k,d])=>`<tr><td><b>${k}</b></td><td>${d}</td></tr>`).join('')}</table>`,'Truc: el <b>nom</b> pot anar darrere «el / la»; l\'<b>adjectiu</b> respon «com és?»; el <b>verb</b> es pot conjugar (jo…, tu…).'],
@@ -191,7 +214,7 @@ Object.assign(SK,{
    'A les Illes Balears també és correcte: <b>jo cant</b>, <b>jo perd</b>, <b>jo servesc</b> i <b>vàrem / vàreu / varen cantar</b>. Mira la <b>Taula de conjugació</b> per veure-ho tot.'],
   gen(lv){const[inf,mod]=pick(CA_VERBS.filter(x=>lv>0||x[1]!=='3i')),T=lv>0?Object.keys(CA_TEMPS):['pres','imp','fut','perif'],t=pick(T),pi=rnd(0,5),forms=caConj(inf,mod,t),ans=forms[pi];
    return{text:`Conjuga el verb <b>${inf}</b> en <b>${CA_TEMPS[t]}</b>:<br><b>${CA_PERS[pi]}</b> ___`,fields:[{label:'Forma verbal',txt:ans,wide:true}],vis:null,
-    hints:[`«${inf}» és de la ${CA_MODEL[mod]}.`,`Mira com és en la persona «${CA_PERS[pi===0?2:0]}»: ${caConj(inf,mod,t)[pi===0?2:0][0]}.`],
+    hints:[`«${inf}» és de la ${CA_MODEL[mod]}.`,(r=>`Mira com és en la persona «${CA_PERS[r]}»: ${forms[r][0]}.`)([3,4,0,1,2,5].find(i=>i!==pi&&!forms[i].some(f=>ans.some(a=>f.includes(a))))??[3,4,0,1,2,5].find(i=>i!==pi&&!forms[i].some(f=>ans.includes(f))))],
     steps:[`«${inf}» és de la ${CA_MODEL[mod]}.`,`${CA_TEMPS[t][0].toUpperCase()+CA_TEMPS[t].slice(1)}: ${forms.map((f,i)=>CA_PERS[i]+' '+f[0]).join(', ')}.`,`Resposta: <b>${CA_PERS[pi]} ${ans.join(' / ')}</b>.`],
     err:v=>ans.includes(v[0])?null:(forms.some((f,i)=>i!==pi&&f.includes(v[0]))?'ca_conj_persona':(Object.keys(CA_TEMPS).some(o=>o!==t&&caConj(inf,mod,o)[pi].includes(v[0]))?'ca_conj_temps':null))}}},
  ca_temps:{mat:'catala',ab:'Tv',nom:'Reconèixer el temps verbal',ic:'T',
@@ -204,7 +227,7 @@ Object.assign(SK,{
   teoria:['L\'<b>oració</b> té dues parts: el <b>subjecte</b> (qui fa l\'acció o de qui es diu alguna cosa) i el <b>predicat</b> (el que es diu del subjecte; té el verb).','Truc per trobar el subjecte: busca el <b>verb</b> i pregunta <b>qui?</b> Si canvies el subjecte de singular a plural, el verb també canvia (el gat dorm → els gats dormen).','El subjecte no sempre va al principi: «Demà vindran <b>els avis</b>».'],
   gen(){const[o,s]=pick(CA_SUBJ);
    return{text:`Escriu el <b>subjecte</b> d'aquesta oració:<br><i>${o}</i>`,fields:[{label:'Subjecte',txt:[s],loose:true,wide:true}],vis:null,
-    hints:['Busca el verb i pregunta-li: qui…?',`Comença per «${s.split(' ')[0]}».`],steps:['Busquem el verb de l\'oració i li preguntam «qui?».',`El subjecte és: <b>${s}</b>. La resta de l'oració és el predicat.`]}}},
+    hints:['Busca el verb i pregunta-li: qui…?',s.includes(' ')?`Comença per «${s.split(' ')[0]}».`:'És una sola paraula: mira de quina persona és el verb.'],steps:['Busquem el verb de l\'oració i li preguntam «qui?».',`El subjecte és: <b>${s}</b>. La resta de l'oració és el predicat.`]}}},
  ca_tipus_oracio:{mat:'catala',ab:'To',nom:'Tipus d\'oracions',ic:'?',
   teoria:['Segons la intenció de qui parla, les oracions poden ser:',`<table class="mini"><tr><td><b>Enunciatives</b></td><td>informen</td><td>Demà és dimarts.</td></tr><tr><td><b>Interrogatives</b></td><td>pregunten (?)</td><td>Quina hora és?</td></tr><tr><td><b>Exclamatives</b></td><td>expressen emoció (!)</td><td>Quin dia tan bonic!</td></tr><tr><td><b>Imperatives</b></td><td>donen una ordre o un consell</td><td>Tanca la porta.</td></tr></table>`],
   gen(){const[o,t]=pick(CA_ORA);
@@ -220,7 +243,7 @@ Object.assign(SK,{
   teoria:['Els <b>prefixos</b> s\'afegeixen davant una paraula per formar-ne una de nova.','Per dir el contrari fem servir <b>des-</b> (desfer), <b>in-</b> (inútil), <b>im-</b> davant p i b (impossible), <b>il-</b> davant l (il·legal) i <b>ir-</b> davant r (irregular).','Compte: il + legal = <b>il·legal</b> (amb ela geminada).'],
   gen(){const[b,a,p]=pick(CA_PREF);
    return{text:`Forma l'<b>antònim</b> de «<b>${b}</b>» amb un prefix.`,fields:[{label:'Paraula nova',txt:[a],wide:true}],vis:null,
-    hints:['Prova amb des-, in-, im-, il- o ir-.',`El prefix és «${p}».`],steps:[`${p} + ${b} = <b>${a}</b>.`,p==='im-'?'Davant p o b, in- es converteix en im-.':p==='il-'?'Davant l, in- es converteix en il- i s\'escriu l·l.':p==='ir-'?'Davant r, in- es converteix en ir-.':'']}}},
+    hints:['Prova amb des-, in-, im-, il- o ir-.',`Fixa't en com comença «${b}»: davant p i b, davant l i davant r, el prefix in- canvia de forma. Els verbs solen anar amb des-.`],steps:[`${p} + ${b} = <b>${a}</b>.`,p==='im-'?'Davant p o b, in- es converteix en im-.':p==='il-'?'Davant l, in- es converteix en il- i s\'escriu l·l.':p==='ir-'?'Davant r, in- es converteix en ir-.':'']}}},
  ca_recursos:{mat:'catala',ab:'Rl',nom:'Recursos literaris',ic:'✶',
   teoria:['Els escriptors fan servir <b>recursos literaris</b> per fer els textos més bells i expressius:',`<table class="mini">${Object.entries(CA_REC_DEF).map(([k,d])=>`<tr><td><b>${k}</b></td><td>${d}</td></tr>`).join('')}</table>`],
   gen(lv){const[o,r]=pick(CA_REC.filter(x=>lv>0||!x[2])),k=caFirst(r);
