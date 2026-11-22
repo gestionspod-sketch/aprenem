@@ -59,7 +59,7 @@ mt_frac_comparar:{mat:'mates',nom:'Comparar i ordenar fraccions',ab:'Fo',curs:[6
    const L=lcm(b,e),na=a*L/b,nc=c*L/e,big=na>nc?[a,b]:[c,e];
    return{text:`Compara ${F(a,b)} i ${F(c,e)}.<br>Redueix-les a comú denominador (el més petit possible) i escriu quina és <b>més gran</b>.`,
     fields:[{label:'Denominador comú',ans:R(L)},{label:`Numerador de ${a}/${b}`,ans:R(na)},{label:`Numerador de ${c}/${e}`,ans:R(nc)},{label:'La més gran',ans:R(big[0],big[1])}],
-    hints:[`El denominador comú ha de ser un múltiple de ${b} i de ${e}. Quin és el més petit?`,`Per passar ${F(a,b)} a denominador ${L}, per quin nombre multiplicam ${b}? Fes el mateix amb el numerador.`],
+    hints:[`El denominador comú ha de ser un múltiple de ${b} i de ${e}. Quin és el més petit?`,`Quan tenguis el denominador comú, divideix-lo entre ${b}: per aquest nombre has de multiplicar el numerador ${a}. Fes el mateix amb ${F(c,e)}.`],
     steps:[`m.c.m.(${b}, ${e}) = ${L}.`,`${F(a,b)} = ${F(na,L)} (× ${L/b}) i ${F(c,e)} = ${F(nc,L)} (× ${L/e}).`,`Comparam els numeradors: ${Math.max(na,nc)} > ${Math.min(na,nc)}. La més gran és <b>${F(big[0],big[1])}</b>.`],
     err:x=>{const d=val(x[0]);if(d!==L&&d%b===0&&d%e===0)return'mt_den_minim';if(L!==b&&val(x[1])===a||L!==e&&val(x[2])===c)return'mt_num_igual';return null}}}
   if(t===2){const n=rnd(1,lv===2?5:3);let ds;do{ds=MT.sample([2,3,4,5,6,7,8,9,10,12].filter(d=>d>n),3)}while(ds.length<3);

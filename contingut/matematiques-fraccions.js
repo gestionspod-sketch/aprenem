@@ -44,7 +44,7 @@ mt_comu_den:{mat:'mates',nom:'Reduir a comú denominador',ab:'Fc',curs:[6],
  gen(lv){const pool=lv?[2,3,4,5,6,8,9,10,12,15]:[2,3,4,6,8,10];let b,d;do{b=pick(pool);d=pick(pool)}while(b===d||lcm(b,d)>(lv?60:24));
   const a=rnd(1,b-1),c=rnd(1,d-1),M=lcm(b,d);
   return{text:`Redueix a <b>mínim comú denominador</b>:<br>${F(a,b)} i ${F(c,d)}`,fields:[{label:'Denominador comú',ans:R(M)},{label:'Numerador de la 1a',ans:R(a*M/b)},{label:'Numerador de la 2a',ans:R(c*M/d)}],
-   hints:[`El denominador comú és el m.c.m. de ${b} i ${d}.`,`Si el denominador ${b} es converteix en ${M}, s'ha multiplicat per ${M/b}. Fes el mateix amb el numerador.`],
+   hints:[`El denominador comú és el m.c.m. de ${b} i ${d}.`,`Divideix el denominador comú entre ${b}: el resultat és el nombre pel qual has de multiplicar el numerador ${a}. Fes el mateix amb la 2a fracció.`],
    steps:[`m.c.m.(${b}, ${d}) = ${M}: aquest és el denominador comú.`,`${F(a,b)}: ${M} : ${b} = ${M/b} → ${a} × ${M/b} = ${a*M/b}. Queda ${F(a*M/b,M)}.`,`${F(c,d)}: ${M} : ${d} = ${M/d} → ${c} × ${M/d} = ${c*M/d}. Queda ${F(c*M/d,M)}.`],
    err:x=>{const D=val(x[0]),p=val(x[1]),q=val(x[2]);if(D!==M&&D>0&&D%b===0&&D%d===0)return'mt_den_minim';if(D===M&&p===a&&q===c&&(a!==a*M/b||c!==c*M/d))return'mt_num_igual';return null}}}},
 mt_frac_resta:{mat:'mates',nom:'Restar fraccions (denominador diferent)',ab:'F−',curs:[6],
@@ -118,7 +118,7 @@ mt_frac_dec:{mat:'mates',nom:'Fraccions i nombres decimals',ab:'Fd',curs:[6],
     err:x=>x[0]===`${n}${d}`?'mt_frac_coma':null}}
   const p=lv===0?1:pick([2,2,3]),P=10**p;let n;do{n=rnd(1,P-1)}while(n%10===0);const r=R(n,P);
   return{text:`Escriu en forma de <b>fracció irreductible</b>:<br>${dc(n/P)}`,fields:[{label:'Numerador',ans:R(r.n)},fInt('Denominador',r.d)],
-   hints:[`${dc(n/P)} té ${p} xifra${p>1?'es':''} decimal${p>1?'s':''}: el denominador és ${num(P)}.`,'Després simplifica fins que no es pugui més.'],
+   hints:['Compta les xifres decimals: 1 xifra són dècimes, 2 xifres són centèsimes i 3 xifres són mil·lèsimes. Escriu el nombre sense coma damunt el denominador que toca.','Després simplifica: divideix numerador i denominador pel mateix nombre fins que no es pugui més.'],
    steps:[`${dc(n/P)} = ${F(n,P)}.`,r.d!==P?`Simplificam dividint per ${P/r.d}: ${F(n,P)} = ${F(r.n,r.d)}.`:`No es pot simplificar.`,`Resultat: <b>${F(r.n,r.d)}</b>.`],
    err:x=>{const a=val(x[0]),b=val(x[1]);return b&&eq(a/b,n/P)&&a!==r.n?'mt_simplifica_mes':null}}}},
 mt_dec_mult:{mat:'mates',nom:'Multiplicar decimals',ab:'D×',curs:[6],
