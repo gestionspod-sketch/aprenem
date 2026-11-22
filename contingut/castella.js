@@ -133,7 +133,7 @@ Object.assign(SK,{
    'Todas las lenguas y todos los acentos son igual de valiosos: reírse de cómo habla alguien es un <b>prejuicio lingüístico</b>. También procuramos usar un <b>lenguaje no discriminatorio</b>, que no excluya ni ofenda a nadie (por ejemplo, decir «el alumnado» o «los niños y las niñas»).',
    'Cuando dos lenguas conviven, a veces se mezclan sin querer: son las <b>interferencias</b>. En castellano, las que vienen del catalán se llaman <b>catalanismos</b> (por ejemplo, «plegar» en lugar de «salir del trabajo»).'],
   gen(lv){const[q,a,ex]=pick(CS_LENG.filter(x=>lv>0||!x[3]));
-   return CS.ex(`Respon la pregunta:<br><i lang="es">${q}</i>`,CS.A(a),{loose:true,label:'Resposta',hints:['Relee la teoría: lenguas oficiales, origen latino, dialectos y registros.',`Empieza por «${CS.first(a)[0].toUpperCase()}».`],steps:[ex,`Respuesta: <b>${CS.first(a)}</b>.`]})}}
+   return CS.ex(`Respon la pregunta:<br><i lang="es">${q}</i>`,CS.A(a),{loose:true,label:'Resposta',hints:['Relee la teoría de este tema y busca la idea que responde a la pregunta.',`Empieza por «${CS.first(a)[0].toUpperCase()}».`],steps:[ex,`Respuesta: <b>${CS.first(a)}</b>.`]})}}
 });
 
 /* ---------- material: tabla de conjugación ---------- */
