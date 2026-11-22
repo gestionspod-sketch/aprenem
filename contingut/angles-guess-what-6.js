@@ -277,7 +277,7 @@ Object.assign(SK,{
      err:v=>ans.includes(v[0])?null:A(`${g?'should':"shouldn't"} to ${b}`).includes(v[0])?'en_modal_to':A(`${g?'should':"shouldn't"} ${s3(b)}`).includes(v[0])?'en_modal_inf':null}}
    const good=g?'should':"shouldn't",ans=A(good),sent=`${su} ___ ${act}.`;
    return{text:`Completa amb <b>should</b> o <b>shouldn't</b> ${g?'👍':'👎'}:<br><b>${sent}</b>`,fields:[{label:'should / shouldn\'t',txt:ans}],vis:null,pron:sent.replace('___',good),
-    hints:['👍 vol dir que és bo per al planeta; 👎, que no ho és.',`${g?'👍':'👎'} → ${g?'should':'shouldn\'t'}.`],
+    hints:['👍 vol dir que és bo per al planeta; 👎, que no ho és.','Consell positiu → should · consell negatiu → shouldn\'t.'],
     steps:[`${g?'És bo per al planeta':'No és bo per al planeta'}.`,`→ <b>${good}</b>.`,`<b>${sent.replace('___',good)}</b>`],
     err:v=>ans.includes(v[0])?null:/^(should|shouldn't|should not|shouldnt) to$/.test(v[0])?'en_modal_to':null}}},
  en_relative:{mat:'angles',ab:'Rw',curs:[6],bloc:GR,nom:'Who, which, where (relatius)',
