@@ -220,7 +220,7 @@ mt_grafics_sl:{mat:'mates',nom:'Gràfics de sectors i de línies',ab:'Gs',curs:[
   if(t===1){const byCount=lv===2&&Math.random()<.5;
    if(byCount){const N=pick([12,18,20,24,30,36,40,60]),k=rnd(1,N-1),g=k*360/N;if(!Number.isInteger(g))return this.gen(lv);
     return{text:`En una enquesta a <b>${N} persones</b>, <b>${k}</b> prefereixen el cinema. Quants graus ha de fer el sector del cinema en un gràfic de sectors?`,fields:[fInt('Graus',g)],
-     hints:['Tot el cercle (360°) són les '+N+' persones.',`Cada persona ocupa 360° : ${N} = ${360/N}°.`],
+     hints:['Tot el cercle (360°) són les '+N+' persones.',`Calcula primer quants graus ocupa cada persona (divideix 360° entre ${N}) i després multiplica per les ${k} persones.`],
      steps:[`Cada persona: 360° : ${N} = ${dc(360/N)}°.`,`${k} persones: ${dc(360/N)}° × ${k} = ${g}°.`,`El sector fa <b>${g}°</b>.`]}}
    const p=pick([5,10,15,20,25,30,35,40,45,50,60,75]);
    return{text:`En un gràfic de sectors, una dada representa el <b>${p} %</b> del total. Quants graus fa el seu sector?`,fig:pie([{p,n:`${p} %`},{p:100-p,n:'la resta'}]),fields:[fInt('Graus',p*3.6)],
