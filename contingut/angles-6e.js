@@ -65,6 +65,7 @@ Object.assign(ERR,{
  en_pperf_have:{kid:'Al present perfect hi falta <b>have / has</b> davant del participi: I have seen.',par:'Oblida l\'auxiliar have / has al present perfect'},
  en_pperf_pp:{kid:'Després de have / has el verb va en <b>participi</b> (la tercera forma): have seen, has eaten.',par:'No posa el participi al present perfect'},
  en_prep_lloc:{kid:'Mira bé el dibuix: el gat és dins, damunt, davall, davant, darrere, al costat o entre dues coses?',par:'Confon les preposicions de lloc'},
+ en_prep_frase:{kid:'Torna a llegir la frase en català: diu dins, damunt, davall, al costat, darrere, davant, enfront o entre? Cada una té la seva preposició en anglès.',par:'Confon les preposicions de lloc'},
  en_prep_temps:{kid:'Recorda: <b>at</b> + hores · <b>on</b> + dies i dates · <b>in</b> + mesos, estacions, anys i parts del dia.',par:'Confon in / on / at en expressions de temps'}
 });
 
@@ -193,6 +194,24 @@ const PLACE={// preposició: [objecte, dibuix, explicació en català, nivell]
  'in front of':['box',()=>`${BOX(85,70,90,80)}${CAT(130,166,50)}`,'el gat és <b>davant</b> la capsa (tapa una part de la capsa)',1],
  'between':['boxes',()=>`${BOX(20,90,70)}${BOX(170,90,70)}${CAT(130,148)}`,'el gat és <b>entre</b> les dues capses',2]};
 const placeFig=p=>`<svg viewBox="0 0 260 170" width="260" height="170" role="img" aria-label="Dibuix d'un gat"><rect x="0" y="0" width="260" height="170" fill="#EEF6FF"/><path d="M0 150h260" stroke="#9BB3C9" stroke-width="2"/>${PLACE[p][1]()}</svg>`;
+/* frases de lloc sense dibuix: [anglès, català amb article, català amb «de», plural?] */
+const PL_SUBJ=[['the ball','la pilota'],['the book','el llibre'],['my phone','el meu mòbil'],['the dog','el ca'],['the cat','el moix'],['my shoes','les meves sabates',1],['the keys','les claus',1],['her glasses','les seves ulleres',1],['the teddy bear','l\'ós de peluix'],['your pencil case','el teu estoig']];
+const PL_OBJ={// preposició: [català, usa la forma amb «de», nivell, objectes possibles]
+ 'in':['dins',0,0,[['the box','la capsa'],['my schoolbag','la meva motxilla'],['the wardrobe','l\'armari'],['the drawer','el calaix'],['the fridge','la nevera']]],
+ 'on':['damunt',0,0,[['the table','la taula'],['the bed','el llit'],['the chair','la cadira'],['the sofa','el sofà'],['the shelf','la prestatgeria'],['my desk','el meu escriptori']]],
+ 'under':['davall',0,0,[['the table','la taula'],['the bed','el llit'],['the chair','la cadira'],['the sofa','el sofà'],['my desk','el meu escriptori']]],
+ 'next to':['al costat',1,0,[['the door','la porta','de la porta'],['the window','la finestra','de la finestra'],['the sofa','el sofà','del sofà'],['the TV','la tele','de la tele'],['the lamp','el llum','del llum']]],
+ 'behind':['darrere',0,1,[['the door','la porta'],['the sofa','el sofà'],['the curtain','la cortina'],['the tree','l\'arbre'],['the TV','la tele']]],
+ 'in front of':['davant',0,1,[['the door','la porta'],['the window','la finestra'],['the TV','la tele'],['the mirror','el mirall'],['the fridge','la nevera']]]};
+const PL_TOWN=[['the bank','el banc','del banc'],['the park','el parc','del parc'],['the school','l\'escola','de l\'escola'],['the library','la biblioteca','de la biblioteca'],['the church','l\'església','de l\'església'],['the supermarket','el supermercat','del supermercat'],['the cinema','el cinema','del cinema'],['the hospital','l\'hospital','de l\'hospital'],['the museum','el museu','del museu'],['the train station','l\'estació de tren','de l\'estació de tren']];
+const capF=s=>s[0].toUpperCase()+s.slice(1);
+function prepSentence(lv){
+ if(lv>=1&&Math.random()<.4){const[a,b,c]=AV_shufP(PL_TOWN),p=pick(lv>=2?['opposite','next to','between','in front of']:['opposite','next to','in front of']);
+  const ca=p==='opposite'?`enfront ${b[2]}`:p==='next to'?`al costat ${b[2]}`:p==='in front of'?`davant ${b[1]}`:`entre ${b[1]} i ${c[1]}`,obj=p==='between'?`${b[0]} and ${c[0]}`:b[0];
+  return{p,ca:`${capF(a[1])} és ${ca}.`,en:`${capF(a[0])} is ___ ${obj}.`}}
+ const p=pick(Object.keys(PL_OBJ).filter(k=>PL_OBJ[k][2]<=lv)),[w,de,,objs]=PL_OBJ[p],o=pick(objs),s=pick(PL_SUBJ);
+ return{p,ca:`${capF(s[1])} ${s[2]?'són':'és'} ${w} ${de?o[2]:o[1]}.`,en:`${capF(s[0])} ${s[2]?'are':'is'} ___ ${o[0]}.`}}
+const AV_shufP=a=>{const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
 
 /* ---------- textos de comprensió lectora ---------- */
 const READ=[// [títol, text, nivell, [[pregunta, respostes, frase del text], ...]]
@@ -220,6 +239,8 @@ const READ=[// [títol, text, nivell, [[pregunta, respostes, frase del text], ..
  ['Ben and Ona',`Ben and his cousin Ona are very different. Ben is thirteen and Ona is eleven, so Ben is older. But Ona is taller than Ben! Ben likes reading and he is quieter than Ona. Ona loves sport: she is the fastest runner in her school. Their favourite food is the same: pizza.`,2,
   [['Who is older?',['ben'],'Ben is thirteen and Ona is eleven, so Ben is older'],['Who is taller?',['ona'],'Ona is taller than Ben'],['How old is Ona?',['eleven','11','eleven years old','she is eleven',"she's eleven"],'Ona is eleven'],
    ['What does Ben like?',['reading'],'Ben likes reading'],['What is their favourite food?',['pizza'],'Their favourite food is the same: pizza'],['Who is quieter?',['ben'],'he is quieter than Ona']]]];
+const readWhere=(txt,ev)=>{const ss=txt.match(/[^.!?]+[.!?]*/g)||[txt],f=s=>fold(s).replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim(),i=ss.findIndex(s=>f(s).includes(f(ev)));
+ return i<0?'Rellegeix el text a poc a poc i subratlla les paraules de la pregunta.':`La resposta és a la ${['primera','segona','tercera','quarta','cinquena','sisena','setena','vuitena','novena','desena'][i]||(i+1)+'a'} frase del text.`};
 const qWord=q=>{const m=[['How old','quants anys'],['How long','quant de temps'],['How','com'],['What','què'],['Where','on'],['Who','qui'],['When','quan']].find(([w])=>q.startsWith(w));return m?`«${m[0]}» vol dir «${m[1]}»`:''};
 
 Object.assign(SK,{
@@ -295,12 +316,12 @@ Object.assign(SK,{
    if(kind===0){const OW=[['I','have','my'],['You','have','your'],['Tom','has','his'],['My dad','has','his'],['Anna','has','her'],['My sister','has','her'],['The cat','has','its'],['We','have','our'],['My parents','have','their'],['They','have','their']];
     const[su,h,ans]=pick(OW),[n,adj]=su==='The cat'?pick([['bed','soft'],['ball','red']]):pick([['bike','red'],['house','big'],['schoolbag','blue'],['computer','new'],['bedroom','tidy'],['dog','very friendly']]);
     return{text:`Completa amb el possessiu:<br><b>${su} ${h} got a ${n}. ___ ${n} is ${adj}.</b>`,fields:[{label:'Possessiu',txt:[ans]}],vis:null,pron:`${su} ${h} got a ${n}. ${cap(ans)} ${n} is ${adj}.`,
-     hints:[`De qui és el ${n}? De «${su}».`,'I → my · you → your · he → his · she → her · it → its · we → our · they → their'],
+     hints:[`De qui és el ${n}? De «${su}»: quin pronom és (I, you, he, she, it, we, they)?`,`Recorda la taula (hi falta el que busques): ${[['I','my'],['you','your'],['he','his'],['she','her'],['it','its'],['we','our'],['they','their']].filter(x=>x[1]!==ans).map(x=>x.join(' → ')).join(' · ')}.`],
      steps:[`El ${n} és de «${su}».`,`«${su}» → <b>${ans}</b>.`,`${cap(ans)} ${n} is ${adj}.`],
      err:v=>v[0]===ans?null:(['his','her'].includes(ans)&&['his','her'].includes(v[0]))?'en_his_her':(ans==='its'&&v[0]==="it's")?'en_its':['my','your','his','her','its','our','their',"it's"].includes(v[0])?'en_poss':null}}
    if(kind===1){const[a,p]=pick([['my','mine'],['your','yours'],['his','his'],['her','hers'],['our','ours'],['their','theirs']]),n=pick(['pencil','ball','book','jacket','umbrella']);
     return{text:`Completa amb el <b>pronom</b> possessiu:<br><i>This is ${a} ${n}.</i> → <b>This ${n} is ___.</b>`,fields:[{label:'Pronom',txt:[p]}],vis:null,pron:`This ${n} is ${p}.`,
-     hints:['Darrere de l\'espai no hi ha cap nom: fem servir el pronom.','my → mine · your → yours · his → his · her → hers · our → ours · their → theirs'],
+     hints:['Darrere de l\'espai no hi ha cap nom: fem servir el pronom.',`Recorda la taula (hi falta el que busques): ${[['my','mine'],['your','yours'],['his','his'],['her','hers'],['our','ours'],['their','theirs']].filter(x=>x[0]!==a).map(x=>x.join(' → ')).join(' · ')}.`],
      steps:[`«${a}» va davant d'un nom; sense nom, fem servir el pronom.`,`${a} → <b>${p}</b>.`,`This ${n} is <b>${p}</b>.`],
      err:v=>v[0]===p?null:(v[0]===a?'en_poss_pron':/'s$/.test(v[0])?'en_poss_apos':null)}}
    const G=[['Laura','bike','la bicicleta de la Laura',0],['Pere','dog','el ca d\'en Pere',0],['my mum','car','el cotxe de la meva mare',0],['Tom','room','l\'habitació d\'en Tom',0],['the teacher','book','el llibre del mestre',0],['my brother','skateboard','el monopatí del meu germà',0],['my parents','house','la casa dels meus pares',1],['the girls','bags','les motxilles de les nenes',1],['my cousins','dog','el ca dels meus cosins',1]];
@@ -390,7 +411,7 @@ Object.assign(SK,{
   gen(lv){const it=pick(WILL),[su,b,rest,qs]=it,r=Math.random(),kind=lv===0?0:lv===1?(r<.6?0:1):(r<.35?0:r<.65?1:2);
    const badW=v=>new RegExp(`^(will|won't|will not|wont) (to ${b}|${s3(b)}|${pastOf(b).join('|')}|\\w+ing)$`).test(v)&&!A(`will ${b}`,`won't ${b}`).includes(v);
    if(kind===2&&qs)return{text:`Completa la <b>pregunta</b>:<br><b>___ ${qs} ___ ${rest}?</b> ${mut(b)}`,fields:[{label:'1a paraula',txt:['will']},{label:'2a paraula',txt:[b]}],vis:null,pron:`Will ${qs} ${b} ${rest}?`,
-    hints:['Les preguntes de futur comencen amb will.','Després del subjecte, el verb en infinitiu.'],
+    hints:['Les preguntes de futur comencen amb el mateix auxiliar que fem servir a les prediccions.','Després del subjecte, el verb en infinitiu.'],
     steps:['Pregunta → <b>Will</b> + subjecte + verb.',`El verb queda en infinitiu: <b>${b}</b>.`,`<b>Will</b> ${qs} <b>${b}</b> ${rest}?`],
     err:v=>v[0]==='will'&&v[1]===b?null:(v[0]==='will'&&[s3(b),...pastOf(b)].includes(v[1]))||v[1]===`to ${b}`?'en_will_inf':null};
    const neg=kind>=1,good=neg?`won't ${b}`:`will ${b}`,ans=A(good);
@@ -421,7 +442,13 @@ Object.assign(SK,{
   teoria:['Les <b>preposicions de lloc</b> diuen on és una cosa.',
    tbl(['Anglès','Català'],[['<b>in</b>','dins'],['<b>on</b>','damunt / sobre'],['<b>under</b>','davall / sota'],['<b>next to</b>','al costat de'],['<b>behind</b>','darrere'],['<b>in front of</b>','davant'],['<b>between</b>','entre'],['<b>opposite</b>','enfront de (a l\'altra banda)']]),
    'Exemple: <i>The cat is <b>under</b> the table. The bank is <b>opposite</b> the park. The school is <b>between</b> the library and the church.</i>'],
-  gen(lv){const p=pick(Object.keys(PLACE).filter(k=>PLACE[k][3]<=lv)),[obj,,ca]=PLACE[p],ans=p==='next to'?['next to','beside']:[p],the=obj==='boxes'?'the two boxes':`the ${obj}`;
+  gen(lv){const ERRS=[...Object.keys(PLACE),'opposite','beside','near','above','below','inside','over'];
+   if(Math.random()<.55){const q=prepSentence(lv),ans=q.p==='next to'?['next to','beside']:[q.p];
+    return{text:`Completa en anglès amb una preposició de lloc:<br><span class="muted">${q.ca}</span><br><b>${q.en}</b>`,fields:[{label:'Preposició',txt:ans,wide:true}],vis:null,pron:q.en.replace('___',q.p),
+     hints:['Llegeix la frase en català: on és exactament?','Busca la preposició catalana a la taula de la teoria i mira com es diu en anglès.'],
+     steps:[`En català: «${q.ca}»`,`La preposició en anglès és <b>${q.p}</b>.`,`<b>${q.en.replace('___',q.p)}</b>`],
+     err:v=>ans.includes(v[0])?null:ERRS.includes(v[0])?'en_prep_frase':null}}
+   const p=pick(Object.keys(PLACE).filter(k=>PLACE[k][3]<=lv)),[obj,,ca]=PLACE[p],ans=p==='next to'?['next to','beside']:[p],the=obj==='boxes'?'the two boxes':`the ${obj}`;
    return{text:`Mira el dibuix. <b>Where is the cat?</b><br><b>The cat is ___ ${the}.</b>`,fig:placeFig(p),fields:[{label:'Preposició',txt:ans,wide:true}],vis:null,pron:`The cat is ${p} ${the}.`,
     hints:[`Mira on és el gat respecte de ${obj==='table'?'la taula':obj==='boxes'?'les capses':'la capsa'}.`,`En català diríem que ${ca}.`],
     steps:[`Al dibuix, ${ca}.`,`En anglès: <b>${p}</b>.`,`The cat is <b>${p}</b> ${the}.`],
@@ -440,7 +467,7 @@ Object.assign(SK,{
    '2. <b>Busca al text</b> les paraules de la pregunta. 3. <b>Respon curt</b>, amb una o dues paraules: <i>Where does Lucy live? — In Sóller.</i>'],
   gen(lv){const[tit,txt,,qs]=pick(READ.filter(x=>x[2]<=lv)),[q,a,ev]=pick(qs);
    return{text:`<div style="text-align:left;font-size:17px;line-height:1.5;background:#F4F8FF;border-left:4px solid var(--s-angles);padding:10px 14px;margin-bottom:10px"><b>${tit}</b><br>${esc(txt)}</div>Llegeix el text i respon en anglès, curt:<br><b>${esc(q)}</b>`,fields:[{label:'Resposta (una o dues paraules)',txt:[...new Set(a.map(norm))],loose:true,wide:true}],vis:null,pron:q,
-    hints:[`${qWord(q)}. Busca al text les paraules de la pregunta.`,`La resposta és en aquesta part del text: «${esc(ev)}».`],
+    hints:[`${qWord(q)}. Busca al text les paraules de la pregunta.`,readWhere(txt,ev)],
     steps:[`La pregunta: «${esc(q)}». ${qWord(q)}.`,`Al text diu: «${esc(ev)}».`,`Resposta: <b>${esc(a[0][0].toUpperCase()+a[0].slice(1))}</b>.`]}}}
 });
 
