@@ -85,7 +85,7 @@ SK.md_sectors=mdMix(mdSkill('Les activitats econòmiques','Ae','md_sectors',
   ['Com es diu el formatge típic de Menorca amb denominació d\'origen?','formatge de Maó|Maó|Mahón','Té el nom de la capital de l\'illa.','El <b>formatge de Maó</b> és famós arreu.','sobrassada',1],
   ['Com es diuen les tres erres del consum responsable? Escriu la primera, la més important.','reduir','Vol dir gastar menys.','Les tres erres són <b>reduir</b>, reutilitzar i reciclar.','reciclar|reutilitzar',1]]),
  ()=>{const[f,s]=pick(FEINES);return{text:`A quin sector econòmic pertany <b>${f}</b>?`,fields:[{label:'Sector',txt:[s,'sector '+s],loose:true,wide:true}],vis:null,
-  hints:['Obté recursos de la natura (primari), transforma productes (secundari) o ofereix un servei (terciari)?',`Comença per «${s[0].toUpperCase()}».`],steps:[s==='primari'?'Obté recursos directament de la natura.':s==='secundari'?'Transforma matèries primeres en productes.':'Ofereix un servei a les persones.',`Per tant, és del sector <b>${s}</b>.`],
+  hints:['El primer sector obté recursos de la natura, el segon transforma productes i el tercer ofereix serveis.',`Pensa què fa ${f.replace(/<[^>]+>/g,'')} a la feina: treu alguna cosa de la natura, fabrica o construeix alguna cosa, o atén i ajuda altres persones?`],steps:[s==='primari'?'Obté recursos directament de la natura.':s==='secundari'?'Transforma matèries primeres en productes.':'Ofereix un servei a les persones.',`Per tant, és del sector <b>${s}</b>.`],
   err:v=>['primari','secundari','terciari'].some(x=>x!==s&&(fold(v[0])===x||fold(v[0])==='sector '+x))?'md_sectors':null}},.55);
 
 /* ---------- Les institucions: Constitució, Estatut i organització territorial ---------- */
@@ -162,7 +162,7 @@ const REIS={md_histbal:[['va conquerir Mallorca el 31 de desembre de 1229','Jaum
  md_moderna:[['va guanyar la Guerra de Successió i va ser el primer rei Borbó','Felip',5,'Va regnar a partir del 1700.'],['va ser el primer rei de la dinastia dels Àustries i també emperador d\'Alemanya','Carles',1,'Era nét dels Reis Catòlics.'],['va fer construir el monestir de l\'Escorial i regnava sobre un imperi «on no es ponia el sol»','Felip',2,'Era fill de Carles I.',1],['va ser el darrer rei Àustria i va morir sense fills el 1700','Carles',2,'Té el mateix nom que el primer Àustria.',1]]};
 const reiGen=k=>lv=>{const[q,nom,n,h]=pick(REIS[k].filter(r=>lv>0||!r[4])),rm=ROM(n);
  return{text:`Quin rei ${q}? Escriu el nom i el número (en nombres romans).`,fields:[{label:'Nom',txt:[nom],loose:true},{label:'Número',txt:[rm,rm.toLowerCase(),String(n)]}],vis:null,
-  hints:[h,`El seu nom comença per «${nom[0]}» i el número és el ${n}.`],steps:[`Va ser <b>${nom} ${rm}</b>.`,`El número dels reis s'escriu en nombres romans: ${n} = ${rm}.`],
+  hints:[h,`El seu nom comença per «${nom[0]}». En nombres romans, el número s'escriu amb ${rm.length===1?'un sol símbol':rm.length+' símbols'}.`],steps:[`Va ser <b>${nom} ${rm}</b>.`,`El número dels reis s'escriu en nombres romans: ${n} = ${rm}.`],
   err:v=>fold(v[0])===fold(nom)&&v[1]!==rm.toLowerCase()&&v[1]!==String(n)?'md_rei':REIS[k].some(r=>r[1]!==nom&&fold(r[1])===fold(v[0]))?k:null}};
 mdMix(SK.md_histbal,reiGen('md_histbal'),.2);mdMix(SK.md_moderna,reiGen('md_moderna'),.25);
 

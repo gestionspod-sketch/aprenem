@@ -6,9 +6,10 @@ const fold=s=>art(norm(s)).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/·/g
 const cap=s=>s[0].toUpperCase()+s.slice(1);
 // banc: [pregunta, respostes 'a|b', pista, explicació, confusions típiques 'x|y', nivell]
 const mkBank=a=>a.map(([q,ans,h,ex,c,lv])=>({q,a:ans.split('|'),h,ex,c:(c||'').split('|').filter(Boolean),lv:lv||0}));
+// Pistes: la del banc (sense la resposta) i una segona que no la delata (només la inicial, mai inicial + nombre de lletres)
 function qProb(it,errT){const a=it.a[0],w=a.split(' ').length;
  return{text:esc(it.q),fields:[{label:'Resposta',txt:it.a,loose:true,wide:true}],vis:null,
-  hints:[it.h||'Rellegeix la teoria del tema.',/^\d/.test(a)?`És un nombre ${a.length===1?'d\'una xifra':`de ${a.length} xifres`}.`:`Comença per «${a[0].toUpperCase()}»${w>1?` i té ${w} paraules`:` i té ${[...a.replace(/·/g,'')].length} lletres`}.`],
+  hints:[it.h||'Rellegeix la teoria del tema.',/^\d/.test(a)?`És un nombre ${a.length===1?'d\'una xifra':`de ${a.length} xifres`}.`:`Comença per «${a[0].toUpperCase()}»${w>1?` i té ${w} paraules`:''}.`],
   steps:[it.ex||it.h||'Repassa la teoria.',`Resposta: <b>${esc(a)}</b>.`],
   err:v=>errT&&it.c.map(fold).includes(fold(v[0]))?errT:null}}
 const bankSkill=(nom,ic,errT,teoria,bank)=>({mat:'ciencies',nom,ic,teoria,bank,gen(lv){return qProb(pick(bank.filter(q=>lv>0||!q.lv)),errT)}});
@@ -120,5 +121,77 @@ Object.assign(SK,{
    if(!pq.length){const sk=pick(['ci_cos','ci_plantes','ci_energia','ci_univers']);return qProb(pick(SK[sk].bank.filter(q=>lv>0||!q.lv)),null)}
    const it=pick(pq);return qProb({q:it.q,a:String(it.a).split('|').map(s=>s.trim()).filter(Boolean),h:it.h||'',ex:it.ex||'',c:[]},null)}}
 });
+
+/* ---------- Més varietat (perquè no es repeteixin sempre les mateixes preguntes) ---------- */
+SK.ci_cos.bank.push(...mkBank([
+ ['Quin òrgan fabrica la bilis, que ajuda a digerir els greixos?','fetge','És l\'òrgan més gros de dins el cos, a la dreta de la panxa.','El <b>fetge</b> fabrica la bilis i guarda energia.','ronyons|estómac'],
+ ['Com es diu el tub que porta el menjar de la boca a l\'estómac?','esòfag','Passa pel coll, darrere la tràquea.','L\'<b>esòfag</b> empeny el menjar fins a l\'estómac.','tràquea|faringe'],
+ ['Quins vasos sanguinis porten la sang de tornada al cor?','venes|vena','Fan el camí contrari de les artèries.','Les <b>venes</b> tornen la sang al cor.','artèries|artèria'],
+ ['Quin os protegeix el cervell?','crani','És la part dura del cap.','El <b>crani</b> és una capsa d\'ossos que protegeix l\'encèfal.','columna vertebral|columna'],
+ ['Quins ossos formen una gàbia que protegeix el cor i els pulmons?','costelles|costella','Les pots notar al pit si respires fondo.','Les <b>costelles</b> formen la caixa toràcica.','vèrtebres|crani'],
+ ['Com es diu el conjunt de tots els ossos del cos?','esquelet','Ens sosté i protegeix els òrgans.','L\'<b>esquelet</b> és l\'armadura del cos.','músculs|múscul'],
+ ['Quin sentit feim servir amb el nas?','olfacte','Ens permet notar les olors.','Amb el nas notam les olors: és el sentit de l\'<b>olfacte</b>.','gust'],
+ ['Quin sentit feim servir amb la pell?','tacte','Ens diu si una cosa és calenta, freda, aspra o suau.','La pell és l\'òrgan del <b>tacte</b>.','vista'],
+ ['Quin sentit feim servir amb les orelles?','oïda','Ens permet sentir els sons.','Les orelles són l\'òrgan de l\'<b>oïda</b>.','vista|tacte'],
+ ['Quin sentit feim servir amb els ulls?','vista|visió','Ens permet veure els colors i les formes.','Els ulls són l\'òrgan de la <b>vista</b>.','oïda'],
+ ['Quin líquid vermell porta l\'oxigen i els nutrients per tot el cos?','sang','Circula per les artèries i les venes.','La <b>sang</b> reparteix l\'oxigen i els nutrients.','orina|limfa'],
+ ['Quin gas de rebuig expulsam quan respiram?','diòxid de carboni|CO2','Les plantes l\'aprofiten per fer la fotosíntesi.','Expulsam <b>diòxid de carboni</b> (CO₂).','oxigen'],
+ ['Quin aparell elimina les substàncies de rebuig de la sang amb l\'orina?','aparell excretor|excretor|aparell urinari|urinari','Hi participen els ronyons i la bufeta.','L\'<b>aparell excretor</b> neteja la sang.','aparell digestiu|digestiu'],
+ ['Quin sistema rep la informació dels sentits i dona ordres als músculs?','sistema nerviós|nerviós','El cervell n\'és la part principal.','El <b>sistema nerviós</b> controla tot el cos.','aparell locomotor|locomotor'],
+ ['Quin òrgan guarda l\'orina fins que anam al bany?','bufeta|bufeta urinària','És com una bossa elàstica.','La <b>bufeta urinària</b> guarda l\'orina.','ronyons|ronyó'],
+ ['Com es diuen les cordes resistents que uneixen els músculs amb els ossos?','tendons|tendó','N\'hi ha un de molt gros al taló.','Els <b>tendons</b> transmeten la força dels músculs als ossos.','lligaments',1],
+ ['Com es diu el múscul en forma de cúpula que hi ha davall els pulmons i ens ajuda a respirar?','diafragma','Baixa quan agafam aire.','El <b>diafragma</b> fa entrar i sortir l\'aire dels pulmons.','',1],
+ ['Com es diuen els ossets que formen la columna vertebral?','vèrtebres|vèrtebra','N\'hi ha 33, l\'un damunt l\'altre.','La columna està formada per <b>vèrtebres</b>.','costelles',1]]));
+SK.ci_plantes.bank.push(...mkBank([
+ ['En què es converteix la flor després de la pol·linització?','fruit|fruits','A dins hi ha les llavors.','La flor es transforma en <b>fruit</b>, que protegeix les llavors.','llavor|llavors'],
+ ['Què hi ha dins el fruit que, si el sembram, pot fer néixer una planta nova?','llavor|llavors|pinyol|pinyols','Si la poses a terra humida, germina.','La <b>llavor</b> té a dins una planta petitíssima.','fruit'],
+ ['Quin insecte que fa mel ajuda molt a pol·linitzar les flors?','abella|abelles','Viu en ruscs.','L\'<b>abella</b> porta el pol·len d\'una flor a una altra.','vespa|mosca'],
+ ['De quin color són les fulles gràcies a la clorofil·la?','verd|verdes|verda','És el color de l\'herba.','La clorofil·la fa que les fulles siguin <b>verdes</b>.','groc|marró'],
+ ['Quina part dura protegeix el tronc dels arbres?','escorça','En l\'alzina surera és molt gruixuda i se\'n fa suro.','L\'<b>escorça</b> protegeix el tronc del fred, la calor i els animals.','arrel|tija'],
+ ['Com es diuen els arbres que perden les fulles a la tardor?','de fulla caduca|caducifolis|caducs|caduca|caducifoli','Les tornen a treure a la primavera.','Els arbres de <b>fulla caduca</b>, com l\'ametller o la figuera, perden les fulles.','perenne|de fulla perenne'],
+ ['Com es diuen els arbres que tenen fulles tot l\'any, com el pi o l\'alzina?','de fulla perenne|perennifolis|perennes|perenne|perennifoli','No es queden mai pelats.','Els arbres de <b>fulla perenne</b> canvien les fulles a poc a poc.','caduca|de fulla caduca'],
+ ['Què absorbeixen les arrels de la terra, a més de l\'aigua?','sals minerals|minerals|sals','Són com les «vitamines» de la terra.','Les arrels absorbeixen aigua i <b>sals minerals</b>.','oxigen'],
+ ['Quin arbre típic de les Illes fa olives?','olivera|oliver','Amb el seu fruit es fa oli.','L\'<b>olivera</b> és un arbre mediterrani que pot viure centenars d\'anys.','ametller|garrover'],
+ ['Quin arbre de les Illes fa garroves?','garrover|garrofer|garroferer','Les seves beines són marrons i dolces.','El <b>garrover</b> és molt típic de Mallorca.','olivera|ametller'],
+ ['Quin arbre de les Illes floreix a l\'hivern i fa ametles?','ametller|ametler','Les flors són blanques o rosades.','L\'<b>ametller</b> floreix al gener i al febrer.','garrover|olivera'],
+ ['Què fan servir les plantes, a més de l\'aigua i el diòxid de carboni, per fer la fotosíntesi?','llum|llum del sol|energia solar|sol','Sense ella, no la poden fer.','Les plantes necessiten la <b>llum del sol</b> per fer la fotosíntesi.','oxigen'],
+ ['Com es diuen les peces de colors vius de la flor que atreuen els insectes?','pètals|pètal','Sovint fan bona olor.','Els <b>pètals</b> atreuen els insectes pol·linitzadors.','sèpals|sèpal',1],
+ ['Com es diu el líquid amb l\'aliment fabricat a les fulles, que es reparteix per tota la planta?','saba elaborada|saba','Baixa de les fulles cap a la resta de la planta.','La <b>saba elaborada</b> porta l\'aliment fabricat a la fotosíntesi.','saba bruta',1],
+ ['Com es diu el líquid d\'aigua i sals minerals que puja de l\'arrel cap a les fulles?','saba bruta|saba','Puja per la tija.','La <b>saba bruta</b> porta l\'aigua i les sals minerals a les fulles.','saba elaborada',1],
+ ['Com es diuen els foradets petitíssims de les fulles per on entren i surten els gasos?','estomes|estoma','Són a la cara de davall de la fulla.','Pels <b>estomes</b> entra el CO₂ i surt l\'oxigen.','',1]]));
+SK.ci_energia.bank.push(...mkBank([
+ ['Com es diu l\'energia que arriba a les cases pels cables i fa funcionar els endolls?','elèctrica|electricitat','La fan servir la rentadora i la televisió.','L\'energia <b>elèctrica</b> és molt fàcil de transportar.','lluminosa'],
+ ['Com es diu l\'energia de la calor?','tèrmica|calorífica','La notam vora el foc.','L\'energia <b>tèrmica</b> és la de la calor.','lluminosa'],
+ ['Com es diu l\'energia del so?','sonora|acústica','La produeixen els instruments i els altaveus.','L\'energia <b>sonora</b> viatja en forma d\'ones.','lluminosa'],
+ ['Quin combustible fòssil, negre i sòlid, s\'extreu de les mines?','carbó','Movia les màquines de vapor.','El <b>carbó</b> és no renovable i contamina molt.','petroli'],
+ ['Quin combustible fòssil arriba a moltes cases per tubs i serveix per cuinar i escalfar?','gas natural|gas','No és líquid ni sòlid.','El <b>gas natural</b> és no renovable.','petroli|carbó'],
+ ['Com es diuen les fonts d\'energia que no s\'esgoten, com el sol o el vent?','renovables|renovable','Es «renoven» de manera natural.','Les energies <b>renovables</b> contaminen molt menys.','no renovables'],
+ ['Com es diuen les fonts d\'energia que s\'esgoten, com el petroli?','no renovables|no renovable','Un dia s\'acabaran.','El petroli, el carbó, el gas natural i l\'urani són <b>no renovables</b>.','renovables'],
+ ['Quina energia s\'obté de l\'urani a les centrals?','nuclear','Les seves restes són radioactives.','L\'energia <b>nuclear</b> no fa fum, però deixa residus perillosos.','solar'],
+ ['Quin aparell transforma l\'energia elèctrica en llum?','bombeta|làmpada|llum','La trobam al sostre.','La <b>bombeta</b> transforma l\'electricitat en llum (i una mica de calor).','motor'],
+ ['Quin aparell transforma l\'energia elèctrica en moviment?','motor|motor elèctric','El tenen els ventiladors i els cotxes elèctrics.','El <b>motor elèctric</b> transforma l\'electricitat en moviment.','bombeta'],
+ ['Quin aparell transforma l\'energia elèctrica en so?','altaveu|altaveus','El tenen els mòbils i les ràdios.','L\'<b>altaveu</b> transforma l\'electricitat en so.','micròfon'],
+ ['Quin gas expulsen els cotxes de benzina que fa augmentar el canvi climàtic?','diòxid de carboni|CO2','També l\'expulsam en respirar.','Cremar combustibles fòssils fa <b>diòxid de carboni</b>.','oxigen'],
+ ['Com es diu fer servir menys energia, per exemple apagant els llums que no necessitam?','estalvi energètic|estalvi|estalviar|estalvi d\'energia','És bo per al planeta i per a la butxaca.','L\'<b>estalvi energètic</b> redueix la contaminació.',''],
+ ['Quin tipus d\'energia té l\'aigua d\'un embassament perquè és a dalt?','potencial','Es transforma en moviment quan l\'aigua cau.','L\'aigua a dalt té energia <b>potencial</b>.','cinètica',1],
+ ['Com es diu l\'energia que s\'obté de les marees i les ones de la mar?','mareomotriu|undimotriu|marina','Ve del moviment de l\'aigua de la mar.','L\'energia <b>mareomotriu</b> aprofita les marees.','hidràulica',1],
+ ['Quin aparell d\'una central elèctrica gira i produeix l\'electricitat?','turbina|generador|alternador','Es mou amb aigua, vapor o vent.','La <b>turbina</b> fa girar el generador.','',1]]));
+SK.ci_univers.bank.push(...mkBank([
+ ['Quin és el segon planeta des del Sol, el més calent de tots?','Venus','És molt calent perquè té una atmosfera molt espessa.','<b>Venus</b> és el planeta més calent.','Mercuri'],
+ ['Quin planeta té uns anells grossos i molt visibles?','Saturn','És el sisè planeta.','<b>Saturn</b> té anells de gel i roca.','Júpiter'],
+ ['Quin és el planeta més llunyà del Sol?','Neptú','És blau i fa molt de fred.','<b>Neptú</b> és el vuitè planeta.','Urà'],
+ ['Quina estació comença al juny a les Illes Balears?','estiu','Els dies són els més llargs de l\'any.','L\'<b>estiu</b> comença cap al 21 de juny.','hivern'],
+ ['Quina estació comença al desembre a les Illes Balears?','hivern','Els dies són els més curts de l\'any.','L\'<b>hivern</b> comença cap al 21 de desembre.','estiu'],
+ ['En quina estació cauen les fulles de molts arbres?','tardor','Comença al setembre.','A la <b>tardor</b> cauen les fulles dels arbres de fulla caduca.','primavera'],
+ ['En quina estació floreixen moltes plantes?','primavera','Comença al març.','A la <b>primavera</b> floreixen moltes plantes.','tardor'],
+ ['Com es diu la línia imaginària que divideix la Terra en l\'hemisferi nord i l\'hemisferi sud?','equador|l\'equador','És a la meitat de la Terra.','L\'<b>equador</b> divideix la Terra en dos hemisferis.','meridià'],
+ ['En quin hemisferi són les Illes Balears, el nord o el sud?','nord|hemisferi nord','Són a Europa.','Les Illes són a l\'hemisferi <b>nord</b>.','sud'],
+ ['Com es diu la fase de la Lluna en què la veiem sencera i rodona?','lluna plena|plena','És el contrari de la lluna nova.','A la <b>lluna plena</b> la veiem tota il·luminada.','lluna nova|nova'],
+ ['Com es diu la fase de la Lluna en què no la veiem gens?','lluna nova|nova','És el contrari de la lluna plena.','A la <b>lluna nova</b> la cara il·luminada no mira cap a nosaltres.','lluna plena|plena'],
+ ['Per quin punt cardinal surt el Sol cada matí?','est|llevant|orient','És el punt cardinal contrari de ponent.','El Sol surt per l\'<b>est</b> (llevant).','oest|ponent'],
+ ['Per quin punt cardinal es pon el Sol?','oest|ponent|occident','És el contrari de l\'est.','El Sol es pon per l\'<b>oest</b> (ponent).','est|llevant'],
+ ['Quin és l\'únic planeta on sabem que hi ha vida?','Terra|la Terra','Hi vivim nosaltres.','La <b>Terra</b> té aigua líquida i una atmosfera amb oxigen.','Mart'],
+ ['Com es diu un astre que gira al voltant d\'un planeta, com la Lluna?','satèl·lit','La Lluna és el de la Terra.','La Lluna és un <b>satèl·lit</b> natural.','estrella',1],
+ ['Com es diu un grup enorme d\'estrelles, gas i pols, com la Via Làctia?','galàxia','N\'hi ha milers de milions a l\'Univers.','La Via Làctia és una <b>galàxia</b> espiral.','constel·lació',1]]));
 
 /* Les unitats de MEDI (5è i 6è) són a contingut/medi-unitats.js, que es carrega el darrer del bloc. */

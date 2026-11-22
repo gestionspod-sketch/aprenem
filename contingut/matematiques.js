@@ -81,7 +81,7 @@ Object.assign(SK,{
    const text=pick([`Una classe té ${N} alumnes. ${F(n,d)} dels alumnes van d'excursió. Quants alumnes hi van?`,`En Pau té ${N} cromos i en regala ${F(n,d)}. Quants cromos regala?`,`Un dipòsit té ${N} litres d'aigua. Se n'han gastat ${F(n,d)}. Quants litres s'han gastat?`,`Quant és ${F(n,d)} de ${N}?`]);
    return{text,fields:[{label:'Resposta',ans:R(n*k)}],
     vis:N<=80?groupsHTML(d,k,0):null,
-    hints:[`En quantes parts iguals has de repartir ${N}? Mira el denominador.`,`${N} : ${d} = ${k}. Cada part val ${k}. Quantes parts has d'agafar?`],
+    hints:[`En quantes parts iguals has de repartir ${N}? Mira el denominador.`,`Divideix ${N} entre ${d} per saber quant val cada part. Després, quantes parts has d'agafar?`],
     steps:[`Dividim pel denominador: ${N} : ${d} = ${k}. Cada part val ${k}.`,`Multipliquem pel numerador: ${k} × ${n} = ${n*k}.`,`Resposta: ${n*k}.`],
     err:v=>v[0].d!==1?null:(n!==1&&v[0].n===k?'nomes_divideix':(v[0].n===N*n?'nomes_multiplica':null)),
     paint:N<=60?{kind:'groups',parts:d,k,target:n,label:`Hi ha ${N} punts repartits en ${d} grups iguals. Toca els grups que formen ${F(n,d)} del total.`,

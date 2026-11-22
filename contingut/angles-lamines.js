@@ -30,7 +30,7 @@ function elamGen(id,lv){const L=ELAM[id],ids=Object.keys(L.parts).filter(k=>lv>0
  const hl=[`Comença per «${en[0]}»${en.includes(' ')?` i són ${en.split(' ').length} paraules`:` i té ${en.length} lletres`}.`,en.split(' ').map(x=>x[0]+' _'.repeat(Math.max(0,x.length-1))).join('   ')];
  const ro=Math.random();
  if(ro<.6)return{text:`Observa la làmina. <b>What's number ${r.n}?</b> Escriu-ho en anglès.`,fig:elamSVG(id,{mode:'numbers',hi:k}),fields:[{label:'En anglès',txt:ans,wide:en.includes(' ')}],vis:null,pron:en,
-  hints:[`En català és «${ca[0]}».`,hl[0]],steps:[`El número ${r.n} és <b>${esc(r.en.split('|').join(' / '))}</b> (${ca.join(' / ')}).`,r.ex?`Exemple: <i>${r.ex}</i>`:'Digues-ho en veu alta tres vegades.'],err};
+  hints:[lev(fold(ca[0]),fold(en))<=2?'Mira bé el dibuix: quin lloc o quina cosa és? Pensa com es diu en català.':`En català és «${ca[0]}».`,hl[0]],steps:[`El número ${r.n} és <b>${esc(r.en.split('|').join(' / '))}</b> (${ca.join(' / ')}).`,r.ex?`Exemple: <i>${r.ex}</i>`:'Digues-ho en veu alta tres vegades.'],err};
  if(lv===0||ro<.85)return{text:`${r.em?`<div style="font-size:56px;line-height:1.2">${r.em}</div>`:''}Com es diu «<b>${esc(ca.join(' / '))}</b>» en anglès?`,fields:[{label:'En anglès',txt:ans,wide:en.includes(' ')}],vis:null,pron:en,
   hints:hl,steps:[`«${ca[0]}» en anglès és <b>${esc(r.en.split('|').join(' / '))}</b>.`,r.ex?`Exemple: <i>${r.ex}</i>`:'Escriu-la una vegada al quadern.'],err};
  return{text:`Què vol dir «<b>${esc(en)}</b>»?`,fields:[{label:'En català',txt:ca.map(norm),loose:true,wide:true}],vis:null,pron:en,

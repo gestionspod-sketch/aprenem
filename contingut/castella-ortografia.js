@@ -125,6 +125,17 @@ const PUN=[['Compré peras▢ manzanas y plátanos.','coma|una coma','Usamos <b>
  ['Los niños llegaron tarde▢ El autobús se había averiado.','punto|punto y seguido|punt','El <b>punto y seguido</b> separa oraciones de un mismo párrafo.'],
  ['El tren sale a las 9▢30 h.','dos puntos|dos punts','Las horas se escriben con <b>dos puntos</b> (9:30) o con punto (9.30).',1]];
 CS.REGLAS={bv:BV_N,gj:GJ_N,h:H_N,lly:LY_N,xs:XS_N};
+// pista amb la norma sense la paraula de l'exercici: la treu dels exemples i, si és una excepció, no la diu
+const low=s=>s.replace(/<[^>]+>/g,'').toLowerCase();
+function sinEx(t,w){const lw=w.toLowerCase();if(!low(t).includes(lw))return t;
+ const m=t.match(/^(.*?)(,?\s*(?:<b>)?(?:excepto|salvo)\b.*)$/);
+ if(m&&low(m[2]).includes(lw))return m[1].replace(/[\s.,]+$/,'')+'. Pero hay alguna excepción: ¿será esta palabra una de ellas?';
+ const p=t.split(/(\s*[(),:;]\s*|\s+y\s+)/),D=d=>d!==undefined&&/^\s*,\s*$|^\s+y\s+$/.test(d);
+ for(let i=0;i<p.length;i+=2)if(low(p[i]).includes(lw)){if(D(p[i-1]))p[i-1]='';else if(D(p[i+1]))p[i+1]='';p[i]=''}
+ let r=p.join('').replace(/\(\s*\)/g,'').replace(/\(\s*(?:,|y)\s*/g,'(').replace(/\s*(?:,|y\s)\s*\)/g,')').replace(/:\s*([.;]|$)/g,'$1').replace(/\s+([.,;])/g,'$1').replace(/\s{2,}/g,' ');
+ if(/\.\s*$/.test(t)&&!/[.!?]\s*$/.test(r))r=r.replace(/[\s,:;]*$/,'.');
+ if(low(r).includes(lw))r=r.replace(new RegExp(w,'gi'),'…');
+ return r}
 const PUN_NAMES=['coma','dos puntos','punto y coma','puntos suspensivos','interrogación','exclamación','raya','comillas','punto','paréntesis','guion'];
 
 Object.assign(SK,{
@@ -134,7 +145,7 @@ Object.assign(SK,{
    'En castellano solo hay un tipo de tilde: (´). ¡No confundas con el catalán, que tiene abierta y cerrada (è, é)!'],
   gen(lv){const[w,t]=pick(ACC.filter(x=>lv>0||!x[2])),s=CS.strip(w);
    return{text:`Observa la paraula «<b lang="es">${s}</b>».<br>És aguda, llana, esdrúixola o sobreesdrúixola? Escriu-la amb la tilde, si en porta.`,fields:[{label:'Aguda, llana, esdrújula...',txt:TIPUS_ALT[t],loose:true},{label:'Ben escrita',txt:[w],wide:true}],vis:null,
-    hints:['Di la palabra en voz alta y da una palmada en cada sílaba. ¿Cuál suena más fuerte?',RULE[t]],
+    hints:['Di la palabra en voz alta y da una palmada en cada sílaba. ¿Cuál suena más fuerte?','Cuenta desde el final: ¿la sílaba fuerte es la última, la penúltima, la antepenúltima o una anterior? Después mira en qué letra acaba la palabra y repasa la regla de la tilde.'],
     steps:[`La sílaba tónica de «${s}» hace que sea <b>${TIPUS[t]}</b>.`,RULE[t],w===s?'Por su terminación, esta palabra <b>no</b> lleva tilde.':'Por eso <b>sí</b> lleva tilde.',`Se escribe: <b>${w}</b>.`],
     err:v=>CS.tilde(w,v[1])}}},
  cs_hiatos:{mat:'castella',ab:'Dh',nom:'Diptongos e hiatos',ic:'Dh',curs:[6],
@@ -144,7 +155,7 @@ Object.assign(SK,{
    '<b>¡Ojo!</b> Cuando la vocal <b>cerrada (i, u)</b> es la tónica y está junto a una abierta, <b>siempre lleva tilde</b>, aunque no lo pidan las reglas generales: <b>maíz, país, río, búho, día, policía</b>.'],
   gen(lv){const[s,w,t]=pick(DH.filter(x=>lv>0||!x[3])),ty=t==='h'?'hiato':'diptongo',cerr=t==='h'&&/[íú]/.test(w);
    return{text:`Observa la paraula «<b lang="es">${s}</b>».<br>Té diftong o hiat? Escriu-la ben escrita (amb tilde, si en porta).`,fields:[{label:'Diptongo o hiato',txt:[ty],loose:true},{label:'Ben escrita',txt:[w],wide:true}],vis:null,
-    hints:['Sepárala en sílabas despacio. ¿Las dos vocales van en la misma sílaba o en sílabas distintas?','Si la i o la u suenan fuertes al lado de a, e, o, hay hiato y llevan tilde (río, maíz).'],
+    hints:['Sepárala en sílabas despacio. ¿Las dos vocales van en la misma sílaba o en sílabas distintas?','Si la i o la u suena fuerte al lado de a, e, o, las dos vocales se separan y la i o la u lleva tilde (Raúl, ataúd, sonríe).'],
     steps:[t==='h'?`Las vocales se pronuncian en sílabas distintas: es un <b>hiato</b>.`:`Las vocales van en la misma sílaba: es un <b>diptongo</b>.`,cerr?'La vocal cerrada es la tónica: lleva tilde aunque no lo pidan las reglas generales.':w===s?'Según las reglas generales, no lleva tilde.':'Lleva tilde por las reglas generales de acentuación.',`Se escribe: <b>${w}</b>.`],
     err:v=>CS.tilde(w,v[1])||(v[0]&&fold(v[0])===(t==='h'?'diptongo':'hiato')?'cs_hiato':null)}}},
  cs_diacritica:{mat:'castella',ab:'Td',nom:'La tilde diacrítica',ic:'Td',curs:[6],
@@ -157,39 +168,39 @@ Object.assign(SK,{
    'Cuando no preguntan ni exclaman, van sin tilde: «Quiero <b>que</b> vengas», «Es tan alto <b>como</b> tú».',
    `<table class="mini"><tr><td><b>por qué</b></td><td>pregunta</td><td>¿Por qué lloras?</td></tr><tr><td><b>porque</b></td><td>da la causa</td><td>Lloro porque me duele.</td></tr><tr><td><b>porqué</b></td><td>sustantivo (= el motivo)</td><td>No sé el porqué.</td></tr><tr><td><b>por que</b></td><td>preposición + que</td><td>Esa es la razón por (la) que vine.</td></tr></table>`],
   gen(lv){const[f,a,op,ex]=pick(PQ.filter(x=>lv>0||!x[4]));
-   return CS.ex(`Completa la frase:<br><i lang="es">${f.replace('___',CS.gap)}</i> <span class="muted">(${op})</span>`,A(a),{label:'Paraula o paraules',hints:['¿La frase pregunta o exclama (directa o indirectamente)? Entonces lleva tilde.','Porque responde; por qué pregunta; el porqué es un nombre.'],steps:[ex,`Respuesta: <b>${A(a)[0]}</b>.`],
+   return CS.ex(`Completa la frase:<br><i lang="es">${f.replace('___',CS.gap)}</i> <span class="muted">(${op})</span>`,A(a),{label:'Paraula o paraules',hints:['¿La frase pregunta o exclama (directa o indirectamente)? Entonces lleva tilde.',/porqu/.test(op)?'Porque responde; por qué pregunta; el porqué es un nombre.':'Si no pregunta ni exclama (solo une dos ideas, compara o indica un lugar o un tiempo), va sin tilde.'],steps:[ex,`Respuesta: <b>${A(a)[0]}</b>.`],
     err:v=>CS.strip(v)===CS.strip(A(a)[0])||op.split(' / ').includes(v)?'cs_interrogativo':null})}},
  cs_bv:{mat:'castella',ab:'Bv',nom:'B y V',ic:'Bv',curs:[6],
   teoria:['En castellano la b y la v suenan igual, así que hay que conocer las <b>reglas</b> y fijarse en las palabras de la misma familia.',...Object.values(BV_N).slice(0,7),'<b>Homófonas:</b> tuvo (tener) / tubo (pieza hueca), votar (elecciones) / botar (pelota), bello (bonito) / vello (pelo), vaca (animal) / baca (del coche).'],
   gen(lv){if(lv>0&&Math.random()<.35){const[f,a,o,ex]=pick(BVH);
     return CS.ex(`Completa la frase:<br><i lang="es">${f.replace('___',CS.gap)}</i> <span class="muted">(${[a,o].sort().join(' / ')})</span>`,[a],{label:'Paraula',hints:['Las dos palabras suenan igual. Piensa qué significa cada una.'],steps:[ex,`Respuesta: <b>${a}</b>.`],err:v=>v===o?'cs_bv':null})}
    const[w,l,r]=pick(BV.filter(x=>lv>0||!x[3])),sw=w.replace(new RegExp(l,'g'),l==='b'?'v':'b');
-   return CS.ex(`Escriu la paraula completa (<b>b</b> o <b>v</b>):<br><b lang="es">${CS.gapw(w,l)}</b>`,[w],{label:'Paraula',hints:[BV_N[r],`¿Conoces otra palabra de la misma familia?`],steps:[BV_N[r],`Se escribe: <b>${w}</b>.`],err:v=>v===sw||CS.strip(v)===CS.strip(sw)?'cs_bv':null})}},
+   return CS.ex(`Escriu la paraula completa (<b>b</b> o <b>v</b>):<br><b lang="es">${CS.gapw(w,l)}</b>`,[w],{label:'Paraula',hints:[sinEx(BV_N[r],w),`¿Conoces otra palabra de la misma familia?`],steps:[BV_N[r],`Se escribe: <b>${w}</b>.`],err:v=>v===sw||CS.strip(v)===CS.strip(sw)?'cs_bv':null})}},
  cs_gj:{mat:'castella',ab:'Gj',nom:'G y J',ic:'Gj',curs:[6],
   teoria:['Delante de <b>e, i</b>, la g y la j pueden sonar igual (gente, jefe; gigante, jirafa). Estas reglas te ayudan:',...Object.values(GJ_N)],
   gen(lv){const[w,l,r]=pick(GJ.filter(x=>lv>0||!x[3])),sw=w.replace(new RegExp(l,'g'),l==='g'?'j':'g');
-   return CS.ex(`Escriu la paraula completa (<b>g</b> o <b>j</b>):<br><b lang="es">${CS.gapw(w,l)}</b>`,[w],{label:'Paraula',hints:[GJ_N[r],'Fíjate en cómo acaba la palabra o en su infinitivo.'],steps:[GJ_N[r],`Se escribe: <b>${w}</b>.`],err:v=>v===sw||CS.strip(v)===CS.strip(sw)?'cs_gj':null})}},
+   return CS.ex(`Escriu la paraula completa (<b>g</b> o <b>j</b>):<br><b lang="es">${CS.gapw(w,l)}</b>`,[w],{label:'Paraula',hints:[sinEx(GJ_N[r],w),'Fíjate en cómo acaba la palabra o en su infinitivo.'],steps:[GJ_N[r],`Se escribe: <b>${w}</b>.`],err:v=>v===sw||CS.strip(v)===CS.strip(sw)?'cs_gj':null})}},
  cs_h:{mat:'castella',ab:'Hh',nom:'La H',ic:'Hh',curs:[6],
   teoria:['La <b>h</b> no suena, por eso hay que aprender cuándo se escribe:',...Object.values(H_N).slice(0,5),
    `<b>¡No las confundas!</b><table class="mini"><tr><td><b>haber</b> (verbo) / <b>a ver</b> (vamos a mirar)</td><td>Puede haber tormenta. · A ver qué pasa.</td></tr><tr><td><b>hecho</b> (hacer) / <b>echo</b> (echar)</td><td>He hecho los deberes. · Echo sal.</td></tr><tr><td><b>hay</b> (haber) / <b>ahí</b> (lugar) / <b>¡ay!</b></td><td>Hay pan. · Está ahí. · ¡Ay, qué daño!</td></tr><tr><td><b>ha</b> (haber) / <b>a</b> (preposición)</td><td>Ha venido. · Voy a casa.</td></tr><tr><td><b>hola</b> / <b>ola</b> · <b>hasta</b> / <b>asta</b> · <b>hierba</b> / <b>hierva</b></td><td></td></tr></table>`,
    'Recuerda: <b>echar</b> no lleva h. «Hechar» es una falta muy frecuente.'],
   gen(lv){if(Math.random()<.5){const[f,a,op,ex]=pick(HH);
-    return CS.ex(`Completa la frase:<br><i lang="es">${f.replace('___',CS.gap)}</i> <span class="muted">(${op})</span>`,[a],{label:'Paraula o paraules',hints:['Prueba a cambiar la palabra: si es un verbo, cámbiala de tiempo (ha ido → había ido; echo → eché).','Fíjate en el significado de cada opción.'],steps:[ex,`Respuesta: <b>${a}</b>.`],
+    return CS.ex(`Completa la frase:<br><i lang="es">${f.replace('___',CS.gap)}</i> <span class="muted">(${op})</span>`,[a],{label:'Paraula o paraules',hints:['Prueba a cambiar la palabra de tiempo o a buscar su infinitivo: si cambia, es un verbo.','Si no es un verbo, piensa qué significa cada opción: ¿un lugar, un saludo, una queja, una preposición...?'],steps:[ex,`Respuesta: <b>${a}</b>.`],
      err:v=>{const o=op.split(' / ').map(x=>x.replace(/[¡!]/g,''));if(/haber|a ver/.test(op)&&o.includes(v))return'cs_haber_aver';if(/hecho/.test(op)&&(o.includes(v)||v==='hechar'||v==='hecho'))return'cs_hecho_echo';return o.includes(v)?'cs_h_homofono':null}})}
    const[w,r]=pick(HW.filter(x=>lv>0||!x[2])),s=w.replace(/(^|[^c])h/g,'$1');
-   return CS.ex(`Escriu correctament aquesta paraula (afegeix la <b>h</b> on calgui, si en porta):<br><b lang="es">${s}</b>`,[w],{label:'Paraula',hints:[r==='no'?'Piensa en la regla de hie-, hue-, hum-... ¿Esta palabra empieza así?':H_N[r],'¿Hay alguna palabra de la misma familia que te ayude?'],steps:[H_N[r],`Se escribe: <b>${w}</b>.`],
+   return CS.ex(`Escriu correctament aquesta paraula (afegeix la <b>h</b> on calgui, si en porta):<br><b lang="es">${s}</b>`,[w],{label:'Paraula',hints:[r==='no'?'Piensa en la regla de hie-, hue-, hum-... ¿Esta palabra empieza así?':sinEx(H_N[r],w),'¿Hay alguna palabra de la misma familia que te ayude?'],steps:[H_N[r],`Se escribe: <b>${w}</b>.`],
     err:v=>{if(w==='echar'&&v==='hechar')return'cs_hechar';if(CS.strip(v.replace(/(^|[^c])h/g,'$1'))!==CS.strip(s))return null;return /(^|[^c])h/.test(w)?'cs_h_falta':'cs_h_sobra'}})}},
  cs_lly:{mat:'castella',ab:'Ly',nom:'LL e Y',ic:'Ly',curs:[6],
   teoria:['En muchas zonas la <b>ll</b> y la <b>y</b> suenan igual (yeísmo). Por eso hay que saber las reglas:',...Object.values(LY_N).slice(0,4),'<b>Homófonas:</b> cayó (caer) / calló (callar), valla (cerca) / vaya (ir), haya (haber) / halla (hallar).'],
   gen(lv){if(lv>0&&Math.random()<.35){const[f,a,o,ex]=pick(LYH);
-    return CS.ex(`Completa la frase:<br><i lang="es">${f.replace('___',CS.gap)}</i> <span class="muted">(${[a,o].sort().join(' / ')})</span>`,[a],{label:'Paraula',hints:['Las dos suenan igual: piensa en su infinitivo (caer o callar, ir o vallar...).'],steps:[ex,`Respuesta: <b>${a}</b>.`],err:v=>v===o?'cs_lly':null})}
+    return CS.ex(`Completa la frase:<br><i lang="es">${f.replace('___',CS.gap)}</i> <span class="muted">(${[a,o].sort().join(' / ')})</span>`,[a],{label:'Paraula',hints:['Las dos suenan igual: ¿es una forma de un verbo o el nombre de una cosa? Si es un verbo, piensa en su infinitivo.'],steps:[ex,`Respuesta: <b>${a}</b>.`],err:v=>v===o?'cs_lly':null})}
    const[w,l,r]=pick(LY.filter(x=>lv>0||!x[3])),sw=w.split(l).join(l==='ll'?'y':'ll');
-   return CS.ex(`Escriu la paraula completa (<b>ll</b> o <b>y</b>):<br><b lang="es">${CS.gapw(w,l)}</b>`,[w],{label:'Paraula',hints:[LY_N[r],'Piensa en palabras de su familia o en su infinitivo.'],steps:[LY_N[r],`Se escribe: <b>${w}</b>.`],err:v=>v===sw||CS.strip(v)===CS.strip(sw)?'cs_lly':null})}},
+   return CS.ex(`Escriu la paraula completa (<b>ll</b> o <b>y</b>):<br><b lang="es">${CS.gapw(w,l)}</b>`,[w],{label:'Paraula',hints:[sinEx(LY_N[r],w),'Piensa en palabras de su familia o en su infinitivo.'],steps:[LY_N[r],`Se escribe: <b>${w}</b>.`],err:v=>v===sw||CS.strip(v)===CS.strip(sw)?'cs_lly':null})}},
  cs_x:{mat:'castella',ab:'Xs',nom:'X, S y CC',ic:'Xs',curs:[6],
   teoria:['<b>X o S</b>',XS_N.expl,XS_N.extra,XS_N.es,'Otras palabras con x hay que memorizarlas: examen, éxito, taxi, exacto, texto, próximo.','<b>CC o C</b>',XS_N.cc,XS_N.c],
   gen(lv){const[w,l,r]=pick(XS.filter(x=>lv>0||!x[3])),i=l[0]==='c'?w.lastIndexOf(l+'ión'):w.indexOf(l),shown=w.slice(0,i)+'▢'+w.slice(i+l.length),opt=l==='x'||l==='s'?'x o s':'cc o c',
     sw=w.slice(0,i)+({x:'s',s:'x',cc:'c',c:'cc'})[l]+w.slice(i+l.length);
-   return CS.ex(`Escriu la paraula completa (<b>${opt}</b>):<br><b lang="es">${shown.replace('▢',CS.box)}</b>`,[w],{label:'Paraula',hints:[XS_N[r],l.length===2||l==='c'?'Busca una palabra de la familia: ¿tiene -ct-?':'Fíjate en la letra que viene después.'],steps:[XS_N[r],`Se escribe: <b>${w}</b>.`],err:v=>v===sw||CS.strip(v)===CS.strip(sw)?(l==='x'||l==='s'?'cs_xs':'cs_cc'):null})}},
+   return CS.ex(`Escriu la paraula completa (<b>${opt}</b>):<br><b lang="es">${shown.replace('▢',CS.box)}</b>`,[w],{label:'Paraula',hints:[sinEx(XS_N[r],w),l.length===2||l==='c'?'Busca una palabra de la familia: ¿tiene -ct-?':'Fíjate en la letra que viene después.'],steps:[XS_N[r],`Se escribe: <b>${w}</b>.`],err:v=>v===sw||CS.strip(v)===CS.strip(sw)?(l==='x'||l==='s'?'cs_xs':'cs_cc'):null})}},
  cs_puntuacion:{mat:'castella',ab:'Pu',nom:'Los signos de puntuación',ic:'Pu',curs:[6],
   teoria:['Los signos de puntuación ayudan a leer y a entender los textos:',
    `<table class="mini"><tr><td><b>,</b> coma</td><td>enumeraciones, vocativos (Luis, ven), aclaraciones</td></tr><tr><td><b>.</b> punto</td><td>final de oración (y seguido, y aparte, final)</td></tr><tr><td><b>;</b> punto y coma</td><td>separa oraciones relacionadas que ya llevan comas</td></tr><tr><td><b>:</b> dos puntos</td><td>antes de una enumeración, de las palabras de alguien y después del saludo de una carta</td></tr><tr><td><b>...</b> puntos suspensivos</td><td>enumeración incompleta, duda, suspense</td></tr><tr><td><b>¿?</b> <b>¡!</b></td><td>preguntas y exclamaciones: en castellano se abren y se cierran</td></tr><tr><td><b>—</b> raya</td><td>en los diálogos, antes de lo que dice cada personaje</td></tr><tr><td><b>« »</b> comillas</td><td>palabras exactas de alguien, refranes, títulos</td></tr></table>`,

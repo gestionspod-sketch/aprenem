@@ -193,7 +193,7 @@ Object.assign(SK,{
      err:v=>ans.includes(v[0])?null:/^(you|please you) /.test(v[0])||/^to /.test(v[0])?'en_imperatiu':null}}
    const[b,rest,ca,pos]=pick(IMP),good=pos?b:`don't ${b}`,ans=A(good,pos?[]:[`do not ${b}`]);
    return{text:`Completa la instrucció ${pos?'✅':'❌'}:<br><span class="muted">${ca}</span><br><b>___ ${rest}.</b> ${mut(b)}`,fields:[{label:pos?'Verb':'Don\'t + verb',txt:ans,wide:!pos}],vis:null,pron:`${cap(good)} ${rest}.`,
-    hints:[pos?'És una instrucció: comença amb el verb, sense subjecte.':'És una prohibició: Don\'t + verb.',`El verb és «${b}».`],
+    hints:[pos?'És una instrucció: comença amb el verb, sense subjecte.':'És una prohibició: Don\'t + verb.',pos?'No hi posis «you» ni «to»: només el verb, sense -s ni -ing.':'Després de Don\'t, el verb va en infinitiu: sense -s ni -ing.'],
     steps:[pos?'Instrucció → verb sense subjecte.':'Prohibició → <b>Don\'t</b> + verb.',`<b>${cap(good)}</b> ${rest}.`],
     err:v=>ans.includes(v[0])?null:[`you ${b}`,`to ${b}`,`no ${b}`,`not ${b}`,`doesn't ${b}`,`doesnt ${b}`,`you don't ${b}`,`dont ${b}s`,`don't ${b}ing`,`${s3x(b)}`].map(norm).includes(v[0])&&v[0]!==b?'en_imperatiu':null}}},
  en_functions:{mat:'angles',ab:'Fr',curs:[6],bloc:'Vocabulari i comprensió',nom:'Frases útils: saludar, presentar-se, demanar ajuda',

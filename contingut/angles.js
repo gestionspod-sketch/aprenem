@@ -63,7 +63,7 @@ Object.assign(SK,{
   gen(lv){const pool=lv?PLUR:PLUR.filter(x=>!x[3]||['child','man','woman'].includes(x[0])),[s,pl,em,irr]=pick(pool);
    const rule=irr?'és un plural irregular':pl.endsWith('ies')?'consonant + y → -ies':pl.endsWith('es')?'afegim -es':'afegim -s';
    return{text:`Escriu el plural:<br>${em} one <b>${s}</b> → ${em}${em} two ___`,fields:[{label:'Plural',txt:[pl]}],vis:null,
-    hints:[`Com acaba «${s}»? Recorda les regles de la teoria.`,irr?'És un plural irregular: no segueix la regla de la -s.':`Regla: ${rule}.`],
+    hints:[irr?'Recorda les regles de la teoria: aquesta paraula segueix la regla o és especial?':`Com acaba «${s}»? Recorda les regles de la teoria.`,irr?'És un plural irregular: no segueix la regla de la -s.':`Regla: ${rule}.`],
     steps:[`«${s}»: ${rule}.`,`one ${s} → two <b>${pl}</b>.`,'Escriu-ne tres frases al quadern: «I have got two ...».'],
     err:v=>v[0]===s+'s'&&pl!==s+'s'?'en_plural_regla':null};
   }},
@@ -109,7 +109,7 @@ Object.assign(SK,{
   gen(lv){const[subj,pers]=pick([['I',0],['He',0],['She',0],['It',0],['My dog',0],['You',1],['We',1],['They',1],['My parents',1]]),rest=pick(WAS_R),neg=lv>0&&Math.random()<.4,
    ans=neg?(pers?["weren't",'were not']:["wasn't",'was not']):[pers?'were':'was'];
    return{text:`Completa amb <b>${neg?'wasn\'t o weren\'t':'was o were'}</b>:<br><b>${subj} ___ ${rest}.</b>`,fields:[{label:'Forma',txt:ans,wide:neg}],vis:null,
-    hints:[`«${subj}» és com ${pers?'you, we o they':'I, he, she o it'}.`,pers?'you / we / they → were':'I / he / she / it → was'],
+    hints:[`«${subj}» és com ${pers?'you, we o they':'I, he, she o it'}.`,'I / he / she / it → was · you / we / they → were'],
     steps:[`«${subj}» → ${pers?'you/we/they':'I/he/she/it'}.`,`Per tant: <b>${ans[0]}</b>.`,`${subj} <b>${ans[0]}</b> ${rest}.`],
     err:v=>['was','were',"wasn't","weren't",'was not','were not'].includes(v[0])&&!ans.includes(v[0])?'en_was':null}}},
  en_reg_past:{mat:'angles',bloc:EV,nom:'Passat dels verbs regulars (-ed)',ic:'',
@@ -155,7 +155,7 @@ Object.assign(SK,{
   gen(lv){const[b,pa,rest]=pick(lv?PAST:PAST.slice(0,12)),time=pick(['yesterday','last weekend','last summer','two days ago']);
    if(lv>0&&Math.random()<.5){const qs=pick(['you','she','they','your brother']);
     return{text:`Completa la <b>pregunta</b> en passat:<br><b>___ ${qs} ___ ${rest} ${time}?</b> <span class="muted">(${b})</span>`,fields:[{label:'1a paraula',txt:['did']},{label:'2a paraula',txt:[b]}],vis:null,
-     hints:['Les preguntes en passat comencen amb un verb auxiliar de tres lletres.','Després de «Did» el verb va en infinitiu.'],
+     hints:['Les preguntes en passat comencen amb un verb auxiliar de tres lletres.','Després de l\'auxiliar, el verb va en infinitiu.'],
      steps:['Pregunta en passat: <b>Did</b> + subjecte + verb en <b>infinitiu</b>.',`El verb queda en infinitiu: <b>${b}</b> (no «${pa}»).`,`<b>Did</b> ${qs} <b>${b}</b> ${rest} ${time}?`],
      err:v=>v[1]===pa&&pa!==b?'en_did_inf':(['do','does'].includes(v[0])?'en_did_temps':null)}}
    const subj=pick(['I','You','We','They','She','He','My brother']);

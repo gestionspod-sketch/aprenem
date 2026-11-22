@@ -122,17 +122,19 @@ function imSVG(id,{mode='labels',hi=null}={}){const I=IM[id],show=mode==='labels
  return`<svg class="lamsvg" viewBox="${I.vb}" role="img" aria-label="${I.nom}: parts">${s}</svg>`}
 
 /* ===================== temes (un per instrument) ===================== */
+// amaga a la pista (o a l'enunciat) el nom de la part i els seus sinònims
+const imHide=(t,p)=>[p[1],...p[2].split('|')].filter(w=>w.length>=3).sort((a,b)=>b.length-a.length).reduce((h,w)=>h.replace(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),'…'),String(t).replace(/<\/?b>/g,''));
 function imGen(id,lv){const I=IM,X=I[id],ty=pick(lv?['num','num','func','fam','prop','prop']:['num','num','func','prop']);
  const parts=X.parts,pAns=p=>p[2].split('|');
  const errP=p=>v=>parts.some(q=>q!==p&&muIs(v[0],pAns(q))&&!muIs(v[0],pAns(p)))?'im_part':null;
  if(ty==='num'){const i=rnd(0,parts.length-1),p=parts[i];
   return{text:`Observa ${X.art}. Com es diu la part número <b>${i+1}</b>?`,fig:imSVG(id,{mode:'numbers',hi:p[0]}),fields:[muA(pAns(p),'Part')],
-   hints:[`Pista: ${p[7].replace(/<\/?b>/g,'')}`,`Comença per «${p[1][0]}».`],steps:[`El número ${i+1} és: <b>${p[1]}</b>.`,p[7]],err:errP(p)}}
+   hints:[`Pista: ${imHide(p[7],p)}`,`Comença per «${p[1][0]}».`],steps:[`El número ${i+1} és: <b>${p[1]}</b>.`,p[7]],err:errP(p)}}
  if(ty==='func'){const p=pick(parts);
-  return{text:`Quina part ${X.de} és aquesta? <i>${p[7]}</i>`,fields:[muA(pAns(p),'Part')],
+  return{text:`Quina part ${X.de} és aquesta? <i>${imHide(p[7],p)}</i>`,fields:[muA(pAns(p),'Part')],
    hints:['Mira la làmina de l\'instrument amb els noms.',`Comença per «${p[1][0]}» (${p[1].split(' ').length} paraula${p[1].split(' ').length>1?'es':''}).`],steps:[`És: <b>${p[1]}</b>.`],err:errP(p)}}
  if(ty==='fam')return{text:`A quina família i subfamília pertany ${X.art}? (Per exemple: «corda fregada», «vent metall».)`,fields:[muA(muSubTxt(X.sub),'Família i subfamília')],
-  hints:['Pensa com es produeix el so: vibra una corda, hi bufam, o el picam?',id==='flauta'?'Compte: és de metall, però el so es fa amb un bisell, com les flautes de fusta.':'Després pensa com es fa vibrar.'],
+  hints:['Pensa com es produeix el so: vibra una corda, hi bufam, o el picam?',id==='flauta'?'Compte: és de metall, però el so es fa bufant per un bisell, com a la flauta dolça.':'Després pensa com es fa vibrar.'],
   steps:[`${muCap(X.art)}: <b>${muSubTxt(X.sub)[0]}</b>.`],err:v=>id==='flauta'&&muIs(v[0],muSubTxt('metall').concat(['metall']))?'mu_flauta':muIs(v[0],Object.keys(MU_SUB).filter(k=>k!==X.sub).flatMap(muSubTxt))?'mu_familia':null};
  return X.prop(lv)}
 
@@ -141,25 +143,25 @@ IM.flauta.prop=function(lv){const ds=lv?IM_DIG:IM_DIG.filter(d=>!d[2]&&d[1]===4|
   return{text:`Quants dits (sense comptar el polze ni els menovells) es tapen per fer el <b>${z[0]}</b> greu (${z[0]}4) a la flauta travessera?`,fields:[{label:'Dits',ans:R(k)}],
    hints:['Mira la taula de digitacions de la làmina.','Com més greu és la nota, més dits es tapen.'],steps:[`${muCap(z[0])}4: ${imDigSVG(z[3])}`,`Es tapen <b>${k}</b> dits.`],err:null}}
  return{text:'Quina nota fa aquesta digitació de flauta travessera? (Negre = clau pitjada.)',fig:imDigSVG(d[3]),fields:[lmNF(n)],
-  hints:['Com més claus pitjades, més llarg és el tub i més greu la nota.','Sol: polze i tres dits de la mà esquerra · la: polze i dos dits · si: polze i un dit.'],
+  hints:['Com més claus pitjades, més llarg és el tub i més greu la nota.','Compta quants dits pitgen claus a cada mà (a més del polze) i recorda la taula de la làmina.'],
   steps:['Compta els dits de cada mà i recorda la taula: re (tots), mi, fa, sol (mà esquerra), la, si, do (només un dit), do♯ (tot obert).',`És el <b>${lmNom(n)}</b>${d[1]===5&&['mi','fa','sol','la'].includes(d[0])?' (igual que la nota greu, però bufant més ràpid)':''}.`],
   err:v=>lmLetterOnly(v[0],n)?'mu_alteracio_oblida':null}};
 IM.violi.prop=function(lv){const S=['sol','re','la','mi'];
  if(lv&&Math.random()<.4)return{text:'Escriu les 4 cordes del violí, de la més <b>greu</b> a la més <b>aguda</b>.',fields:S.map((s,i)=>lmF([s],`${i+1}a`,false)),
-  hints:['Van per quintes justes.','La més greu és la mateixa nota que marca la clau de sol.'],steps:[`De greu a agut: <b>${S.join(', ')}</b> (per quintes).`],err:v=>v.join()===[...S].reverse().join()?'im_cordes':null};
+  hints:['Van per quintes justes: de cada corda a la següent hi ha una 5a.','Si en recordes una, troba les altres pujant o baixant una 5a.'],steps:[`De greu a agut: <b>${S.join(', ')}</b> (per quintes).`],err:v=>v.join()===[...S].reverse().join()?'im_cordes':null};
  const i=rnd(0,3),q=pick(['nom','int']);
  if(q==='int'&&i<3)return{text:`Quin interval hi ha entre la corda de <b>${S[i]}</b> i la de <b>${S[i+1]}</b> del violí?`,fields:[lmF(lmIntTxt(5,'J'),'Interval')],
   hints:['Compta les notes de la primera a la segona.','Les cordes del violí estan afinades totes igual.'],steps:[`${S[i]} → ${S[i+1]}: 5 notes, 7 semitons → <b>5a justa</b>.`],err:null};
  const ord=['més greu','segona més greu','segona més aguda','més aguda'][i];
  return{text:`Quina nota fa la corda <b>${ord}</b> del violí, tocada a l'aire (sense prémer)?`,fields:[lmF([S[i]],'Nota',false)],
-  hints:['De greu a agut, les cordes van per quintes.','La més greu és el sol.'],steps:[`Cordes: sol, re, la, mi. La ${ord} és el <b>${S[i]}</b>.`],err:v=>lmIn(v[0],[S[3-i]])&&S[3-i]!==S[i]?'im_cordes':null}};
+  hints:['De greu a agut, les cordes van per quintes.',i===3?'La més greu és el sol: puja tres quintes.':'La més aguda és el mi: baixa de 5a en 5a.'],steps:[`Cordes: sol, re, la, mi. La ${ord} és el <b>${S[i]}</b>.`],err:v=>lmIn(v[0],[S[3-i]])&&S[3-i]!==S[i]?'im_cordes':null}};
 IM.guitarra.prop=function(lv){const S=['mi','si','sol','re','la','mi'];// 1a ... 6a
  const k=rnd(1,6);if(lv&&Math.random()<.35){const t=rnd(1,lv>1?5:3),c=pick([6,5,4]),base={6:{l:-12,a:0},5:{l:-9,a:0},4:{l:-6,a:0}}[c],n=lmUp(base,1,'J'),s=lmS(base)+t,opts=[];
    for(let l=base.l;l<base.l+4;l++)for(const a of[-1,0,1])if(lmS({l,a})===s)opts.push({l,a});
    return{text:`A la guitarra, quina nota fa la <b>${c}a corda</b> (${LM_L[lmMod(base.l,7)]}) prement-la al <b>trast ${t}</b>? (Cada trast puja un semitò.)`,fields:[lmF(opts.flatMap(lmNoteTxt),'Nota')],
     hints:['Cada trast puja un semitò.','Recorda que entre mi-fa i si-do només hi ha un semitò.'],steps:[`${muCap(LM_L[lmMod(base.l,7)])} + ${t} semitons = <b>${opts.map(lmNom).join(' o ')}</b>.`],err:null}}
  return{text:`Quina nota fa la <b>${k}a corda</b> de la guitarra, tocada a l'aire?`,fields:[lmF([S[k-1]],'Nota',false)],
-  hints:['La 6a és la més greu i la 1a la més aguda.','De la 6a a la 1a: mi, la, re, sol, si, mi.'],steps:['Cordes de la 6a a la 1a: mi, la, re, sol, si, mi.',`La ${k}a corda és el <b>${S[k-1]}</b>.`],err:v=>lmIn(v[0],[S[6-k]])&&S[6-k]!==S[k-1]?'im_cordes':null}};
+  hints:['La 6a és la més greu i la 1a la més aguda.','La 6a i la 1a fan la mateixa nota, a dues octaves. Entre les altres hi ha quartes, menys entre la 3a i la 2a, que hi ha una tercera.'],steps:['Cordes de la 6a a la 1a: mi, la, re, sol, si, mi.',`La ${k}a corda és el <b>${S[k-1]}</b>.`],err:v=>lmIn(v[0],[S[6-k]])&&S[6-k]!==S[k-1]?'im_cordes':null}};
 IM.clarinet.prop=function(lv){const w={l:rnd(0,9),a:lv>1?pick([0,0,1,-1]):0},s=lmDown(w,2,'M');
  if(Math.abs(s.a)>1)return this.prop(lv);
  return{text:`Un clarinet en si♭ llegeix la nota <b>${lmNom(w)}</b>. Quina nota <b>sona</b> realment?`,fig:lmStaff([{n:w.l,acc:w.a,d:'n'}],{minW:150}),fields:[lmNF(s)],

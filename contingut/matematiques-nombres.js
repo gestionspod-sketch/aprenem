@@ -116,7 +116,7 @@ mt_combinades:{mat:'mates',nom:'Operacions combinades',ab:'Oc',curs:[6],
    ()=>{const d=rnd(2,6),q=rnd(2,9),s=d*q,b=rnd(1,s-1),c=s-b,a=q+rnd(1,30);return{e:`${a} − (${b} + ${c}) : ${d}`,v:a-q,w:(a-s)/d,st:[`Primer el parèntesi: ${b} + ${c} = ${s}.`,`Després la divisió: ${s} : ${d} = ${q}.`,`Al final la resta: ${a} − ${q} = ${a-q}.`]}}];
   const i=lv===0?rnd(0,3):lv===1?rnd(2,7):rnd(4,10),o=T[i]();
   return{text:`Calcula, respectant l'ordre de les operacions:<br><b>${o.e}</b>`,fields:[fInt('Resultat',o.v)],
-   hints:[o.e.includes('(')?'Hi ha parèntesis: què has de fer primer?':'Hi ha multiplicacions o divisions? Recorda que van abans que les sumes i les restes.',o.st[0]],
+   hints:[o.e.includes('(')?'Hi ha parèntesis: què has de fer primer?':'Hi ha multiplicacions o divisions? Recorda que van abans que les sumes i les restes.',o.st[0].replace(/ = [−-]?\d+/g,'').replace(/\.$/,'. Calcula-ho i continua.')],
    steps:[...o.st,`Resultat: <b>${o.v}</b>.`],
    err:x=>o.w!==o.v&&val(x[0])===o.w?'mt_jerarquia':null}}},
 mt_problemes:{mat:'mates',nom:'Problemes de diverses operacions',ab:'Rp',curs:[6],

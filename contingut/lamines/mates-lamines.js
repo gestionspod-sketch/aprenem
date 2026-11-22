@@ -34,6 +34,7 @@ window.mlamScreen=mlamScreen;
 const ans=r=>[r.nom,...(r.a?r.a.split('|'):[])];
 function mlamSkill(id,o){return{mat:'mates',curs:[6],ab:o.ab,nom:o.nom,teoria:o.teoria,fig:()=>mlamSVG(id,'labels'),
  gen(lv){const L=MLAM[id],ks=Object.keys(L.parts),k=pick(ks),r=L.parts[k],errF=v=>Object.entries(L.parts).some(([o2,p])=>o2!==k&&ans(p).map(fold).includes(fold(v[0])))?o.errT:null;
+  const ex=o.extra&&o.extra(lv,k,r,errF);if(ex)return ex;
   if(lv>0&&r.q&&Math.random()<.5)return{text:`${L.pregunta} ${r.q}?`,fields:[{label:'Nom',txt:ans(r),loose:true,wide:true}],
    hints:[L.recorda,`Comença per «${r.nom[0].toUpperCase()}».`],steps:[`És el <b>${r.nom}</b>.`,r.f],err:errF};
   return{text:`Observa la làmina. Com es diu la figura número <b>${r.n}</b>?`,fig:mlamSVG(id,'numbers',k),fields:[{label:'Nom',txt:ans(r),loose:true,wide:true}],
@@ -77,9 +78,27 @@ MLAM.cossos={nom:'Cossos geomètrics',intro:'Toca cada cos per veure\'n els elem
   con:{n:6,nom:'con',d:(x,y)=>`<path d="M${x-34} ${y+26} L${x} ${y-40} L${x+34} ${y+26} A34 10 0 0 1 ${x-34} ${y+26}Z" fill="${C.bl}" stroke="${C.b}" stroke-width="2.5"/><ellipse cx="${x}" cy="${y+26}" rx="34" ry="10" fill="none" stroke="${C.b}" stroke-width="1.5" stroke-dasharray="4 3"/>`,p:'Té una base circular i acaba en punta, com un cucurutx de gelat.',f:'Cos rodó amb una base circular i una superfície lateral corba que acaba en un vèrtex.',fm:'V = π × r × r × altura : 3',q:'té una base circular i acaba en punta, com un cucurutx',
    dev:()=>svg(180,150,`<path d="M90 10 L30 95 A75 75 0 0 0 150 95Z" fill="${C.bl}" stroke="${C.b}" stroke-width="2"/><circle cx="90" cy="122" r="22" fill="${C.bl}" stroke="${C.b}" stroke-width="2"/>`,180)},
   esfera:{n:7,nom:'esfera',d:(x,y)=>`<circle cx="${x}" cy="${y}" r="38" fill="${C.bl}" stroke="${C.b}" stroke-width="2.5"/><ellipse cx="${x}" cy="${y}" rx="38" ry="11" fill="none" stroke="${C.b}" stroke-width="1.5" stroke-dasharray="4 3"/>`,p:'És rodona per tot arreu, com una pilota.',f:'Cos rodó en què tots els punts de la superfície són a la mateixa distància del centre (el radi). No té cap desenvolupament pla.',fm:'V = 4 × π × r × r × r : 3',q:'és rodona per tot arreu, com una pilota'}}};
-SK.mt_lam_cossos=mlamSkill('cossos',{nom:'Làmina: cossos geomètrics',ab:'Lc',errT:'mt_lam_cos',
+// Elements de cada cos (per a les preguntes de comptar): cares, arestes, vèrtexs; als cossos rodons, bases circulars.
+const COS_EL={cub:{c:6,a:12,v:8},ortoedre:{c:6,a:12,v:8},prisma:{c:5,a:9,v:6},piramide:{c:5,a:8,v:5},cilindre:{b:2},con:{b:1},esfera:{b:0}};
+const ELN={c:['cares','Cares'],a:['arestes','Arestes'],v:['vèrtexs','Vèrtexs'],b:['bases circulars','Bases circulars']};
+const ELH={c:['Les cares són les superfícies planes del cos. Compta primer les bases i després les cares laterals.','Pensa també en les cares que queden amagades darrere del dibuix.'],
+ a:['Una aresta és la línia on es troben dues cares. Compta les arestes de cada base i després les que les uneixen.','No t\'oblidis de les arestes amagades darrere del dibuix.'],
+ v:['Un vèrtex és una cantonada: un punt on es troben diverses arestes.','Compta els vèrtexs de les bases i mira si n\'hi ha cap fora de les bases.'],
+ b:['Les bases dels cossos rodons són les cares planes i rodones (cercles).','Imagina\'t el cos damunt la taula: té alguna cara plana i rodona a baix? I a dalt?']};
+function cosExtra(lv,k,r,errF){
+ if(r.dev&&Math.random()<.25)return{text:'Si retalles aquest <b>desenvolupament pla</b> i el plegues, quin cos geomètric obtens?',fig:r.dev(),fields:[{label:'Nom',txt:ans(r),loose:true,wide:true}],
+  hints:['Compta quantes peces té el desenvolupament i fixa\'t en la forma de cada una.','Les bases són les peces que queden a dalt i a baix en plegar-lo. Quina forma tenen?'],
+  steps:['Miram les peces del desenvolupament i quina forma tenen.',`En plegar-lo obtenim el <b>${r.nom}</b>.`,r.f],err:errF};
+ const E=COS_EL[k];if(!E||Math.random()<(lv?.45:.55))return null;
+ const ks=Object.keys(E),e=pick(ks),val0=E[e];
+ return{text:`Observa la làmina. Quantes <b>${ELN[e][0]}</b> té el cos número <b>${r.n}</b>?`,fig:mlamSVG('cossos','numbers',k),fields:[{label:ELN[e][1],ans:R(val0)}],
+  hints:ELH[e],
+  steps:[e==='b'?'Les bases dels cossos rodons són les cares planes i circulars.':`Comptam les ${ELN[e][0]}, també les que no es veuen al dibuix.`,`El número ${r.n} és el <b>${r.nom}</b>: ${r.f}`,val0===0?'No en té <b>cap</b> (0): no té cap cara plana.':`Té <b>${val0}</b> ${val0===1?'base circular':ELN[e][0]}.`],
+  err:x=>{const y=x[0]&&x[0].d===1?x[0].n:null;return y!==null&&y!==val0&&ks.some(o2=>o2!==e&&E[o2]===y)?'mt_lam_elem':null}}}
+SK.mt_lam_cossos=mlamSkill('cossos',{nom:'Làmina: cossos geomètrics',ab:'Lc',errT:'mt_lam_cos',extra:cosExtra,
  teoria:['Els <b>cossos geomètrics</b> tenen tres dimensions: llargària, amplària i altura. Els <b>poliedres</b> tenen totes les cares planes (cub, prismes, piràmides); els <b>cossos rodons</b> tenen alguna superfície corba (cilindre, con, esfera).','Si retallam un cos i el desplegam damunt la taula, obtenim el seu <b>desenvolupament pla</b>. Toca cada cos per veure\'l.']});
 Object.assign(ERR,{mt_lam_figura:{kid:'Aquesta és una altra figura de la làmina. Fixa\'t en els costats: quants en té, si són iguals i si són paral·lels.',par:'Confon les figures planes'},
+ mt_lam_elem:{kid:'Aquest nombre correspon a un altre element del cos. Recorda: les cares són superfícies, les arestes són línies i els vèrtexs són punts.',par:'Confon cares, arestes i vèrtexs'},
  mt_lam_cos:{kid:'Aquest és un altre cos de la làmina. Fixa\'t en les bases i en si les cares són planes o corbes.',par:'Confon els cossos geomètrics'}});
 
 /* =====================================================================
