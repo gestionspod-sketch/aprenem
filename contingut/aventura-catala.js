@@ -108,7 +108,7 @@ button.cav-slot:disabled{opacity:1;cursor:default}
   return{w,S,V,alt,altV,subj:S.map(i=>w[i]).join(' '),verb:w[V],inv:S[0]>V}};
 
  const moll={id:'moll',nom:'El moll de les frases',desc:'Carrega al carro les paraules del subjecte i fes concordar el verb.',
-  skills:['ca_subjecte','ca_sintagma_nominal'],
+  skills:['ca_subjecte','ca_sintagma_nominal','c4_subjecte'],
   render(el,api){const o=pick(OR.map(parseOR).filter(x=>api.lv>0||!x.inv)),sel=new Set(),sub=lc1(o.subj);let phase=0;el._cav=o;
    el.innerHTML=`<p>Al moll, les frases arriben en caixes de paraules. <b>Toca les paraules que formen el subjecte</b> per carregar-les al carro. Si en toques una de carregada, torna a la frase.</p>
     <div class="cav-sent" role="group" aria-label="Paraules de la frase"></div>
@@ -162,7 +162,7 @@ button.cav-slot:disabled{opacity:1;cursor:default}
   return n.length?' '+[...new Set(n)].join(' '):''}
 
  const torre={id:'torre',nom:'La torre de les síl·labes',desc:'Talla la paraula en síl·labes, troba la que sona més forta i posa-hi l\'accent.',
-  skills:['ca_accent','ca_diftongs'],
+  skills:['ca_accent','ca_diftongs','c4_silaba','c4_accent'],
   render(el,api){const it=parseTS(pick(TS.filter(x=>api.lv>0||x[0]!=='!'))),s=CA_STRIP(it.word),L=[...s],cut=new Set();let phase=0;el._cav=it;
    el.innerHTML=`<p>Al rellotge de la torre, les paraules hi són escrites <b>sense accents</b>. Primer, <b>toca entre les lletres</b> per tallar la paraula en síl·labes. Si et descuides, torna a tocar el tall per treure'l.</p>
     <div class="cav-syl" role="group" aria-label="Lletres de la paraula ${s}"></div>
@@ -246,7 +246,7 @@ button.cav-slot:disabled{opacity:1;cursor:default}
   ['tornar-se groc','groc','-ejar',['groguejar'],'La c es torna gu davant de e: groc → <b>groguejar</b>.',1]];
 
  const taller={id:'taller',nom:'El taller de paraules',desc:'Enganxa un prefix o un sufix a una paraula i escriu la paraula nova.',
-  skills:['ca_derivacio','ca_prefixos'],
+  skills:['ca_derivacio','ca_prefixos','c4_derivades'],
   render(el,api){const ks=api.ks,both=ks.includes('ca_prefixos')&&ks.includes('ca_derivacio');
    const pre=both||!ks.length?Math.random()<.5:ks.includes('ca_prefixos');
    const [def,base,af,A,note]=pick(AFX.filter(x=>isPre(x[2])===pre&&(api.lv>0||!x[5])));
@@ -389,7 +389,7 @@ button.cav-slot:disabled{opacity:1;cursor:default}
  const parseORT=([s,r,why])=>{const h=s.match(/\{(.+?)\}/)[1],tok=s.split(' ').find(x=>x.includes('{')),w=tok.replace(/[{}]/g,'').replace(/[.,!?]/g,'').replace(/^[a-z]'/i,'');return{s,r,why,h,w}};
 
  const biblio={id:'biblio',nom:'La biblioteca del far',desc:'Restaura les lletres que la humitat ha esborrat del diari del faroner.',
-  skills:['ca_consonants','ca_x_ix','ca_m_n'],
+  skills:['ca_consonants','ca_x_ix','ca_m_n','c4_essa','c4_x_ix','c4_ava_bv'],
   render(el,api){const all=Object.keys(NOR),want=[...new Set(api.ks.flatMap(k=>TOP[k]||[]))],w=want.length?want:all;
    let rules=AV.shuf(w).concat(AV.shuf(all.filter(r=>!w.includes(r))));
    rules=w.length===1?[w[0],w[0],rules[1]]:rules.slice(0,3);   // un sol tema: dues frases d'aquella regla

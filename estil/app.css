@@ -399,6 +399,7 @@ code.k{background:var(--soft);padding:2px 8px;border-radius:8px;font-weight:500}
 .sh5-t{flex:1;min-width:0;position:relative}
 .sh5-t small{color:var(--d);opacity:.85;font-size:13px}
 .sh5-t h1{color:var(--ink);font-size:30px;margin:0}
+.sh5-t h1 .curs5{display:inline-block;vertical-align:middle;margin-left:8px;padding:3px 12px;border-radius:999px;background:var(--d);color:#fff;font-size:15px;font-weight:600;line-height:1.4}
 .sh5-p{width:260px;flex:none;position:relative;color:var(--ink)}
 .sh5-p div:first-child{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--d)}
 .sh5-p div:first-child b{font-size:26px;font-weight:300;color:var(--ink)}
