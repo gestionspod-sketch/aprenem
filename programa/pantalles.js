@@ -360,7 +360,7 @@ function pProg(el){const log=S.log,tot=log.reduce((a,b)=>a+b.min,0),wk=log.filte
 
 function pCfg(el){const c=S.cfg,p=S.perfil;
  el.innerHTML=`<div class="card"><h3 style="margin-top:0">Infant</h3><label>Nom</label><input id="nm" value="${esc(p.nom)}">
- <label>Curs</label><select id="cu">${[1,2,3,4,5,6].map(n=>`<option value="${n}" ${n==p.curs?'selected':''} ${n<5?'disabled':''}>${ORD[n]} de Primària${n<5?' (properament)':''}</option>`).join('')}</select>
+ <label>Curs</label><select id="cu">${[1,2,3,4,5,6].map(n=>`<option value="${n}" ${n==p.curs?'selected':''} ${n<4?'disabled':''}>${ORD[n]} de Primària${n<4?' (properament)':''}</option>`).join('')}</select>
  <label class="chk" style="margin-top:14px"><input type="checkbox" id="rl" ${p.rellotge!==false?'checked':''}> Mostrar el rellotge de compte enrere a l'infant</label><small>Si l'amagau, l'app igualment avisa quan toca canviar de part o acabar.</small>
  <div class="row" style="margin-top:14px;align-items:center"><button id="sv0">Desar</button><span id="st0" class="muted"></span></div></div>
  <div class="card"><h3 style="margin-top:0"><svg class="ic" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> PIN de la zona de famílies</h3><p class="muted" style="margin-top:0">Serveix perquè els infants no puguin entrar aquí.</p><button class="sec" id="cpin">Canviar el PIN</button></div>
