@@ -41,7 +41,7 @@ function pinAns(a){if(!window.ResizeObserver)return;if(ANS_RO)ANS_RO.disconnect(
  const fit=()=>{const on=a&&a.isConnected&&getComputedStyle(a).position==='fixed';document.body.style.paddingBottom=on?a.offsetHeight+'px':''};
  ANS_RO=new ResizeObserver(fit);if(a)ANS_RO.observe(a);fit()}
 const app=(h,focus=false)=>{const t=$('#timer');if(t)document.body.appendChild(t);if(ANS_RO){ANS_RO.disconnect();ANS_RO=null}document.body.style.paddingBottom='';$('#app').innerHTML=h;document.body.classList.toggle('focus',!!focus);
- const slot=$('#tbTm');if(slot&&t)slot.appendChild(t);window.scrollTo(0,0)};
+ const slot=$('#tbTm');if(slot&&t)slot.appendChild(t);window.scrollTo(0,0);if(typeof navHist==='function')navHist()};
 
 /* ===================== veu ===================== */
 function plain(h){return String(h).replace(/<span class="fr"><span>([^<]*)<\/span><span>([^<]*)<\/span><\/span>/g,' $1 sobre $2 ').replace(/<br>/g,'. ').replace(/<[^>]+>/g,'').replace(/×/g,' per ').replace(/−/g,' menys ').replace(/ : /g,' entre ').replace(/\s+/g,' ').trim()}

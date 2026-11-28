@@ -731,3 +731,7 @@ button.av-chip.on{border-color:var(--pri);background:var(--pri-l)}
  .av-ans button{width:100%}
 }
 @media (max-width:520px){.av-lab{display:none}.av .av-hd h2{font-size:19px}.av-gems{padding:6px 10px}}
+
+/* Enrere / endavant dins la lliçó */
+.prof-nav{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+@media (max-width:767px){.prof-nav>span{display:none}.prof-nav>button{flex:1 1 140px}}
