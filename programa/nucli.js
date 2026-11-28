@@ -60,15 +60,26 @@ async function gemini(contents,{json=false,system=''}={}){
  if(json)body.generationConfig.responseMimeType='application/json';
  if(system)body.systemInstruction={parts:[{text:system}]};
  const BASE='https://generativelanguage.googleapis.com/v1beta/models/',H={'Content-Type':'application/json','x-goog-api-key':S.cfg.key};
- const call=async m=>{let r,d;try{r=await fetch(`${BASE}${encodeURIComponent(m)}:generateContent`,{method:'POST',headers:H,body:JSON.stringify(body)});d=await r.json().catch(()=>({}))}
-  catch(e){return{busy:true,net:true}}   // sense connexió o tallada: es reintenta
+ // Rapidesa: els models nous «pensen» abans de respondre i això pot tardar més d'un minut.
+ // Per a aquestes tasques n'hi ha prou amb pensar poc (Gemini 3: thinkingLevel 'low'; Gemini 2.5 flash: sense pensar).
+ const think=m=>{const v=parseFloat((m.match(/gemini-(\d+(?:\.\d+)?)/)||[])[1]||0);
+  return v>=3?{thinkingLevel:'low'}:(v>=2.5&&/flash/.test(m)?{thinkingBudget:0}:null)};
+ const TEMPS=45000;   // temps màxim per intent: si Google no respon, es prova amb un altre model
+ const call=async(m,ambThink=true)=>{let r,d;const ab=new AbortController(),tm=setTimeout(()=>ab.abort(),TEMPS);
+  const tc=ambThink&&think(m),b=tc?{...body,generationConfig:{...body.generationConfig,thinkingConfig:tc}}:body;
+  try{r=await fetch(`${BASE}${encodeURIComponent(m)}:generateContent`,{method:'POST',headers:H,body:JSON.stringify(b),signal:ab.signal});d=await r.json().catch(()=>({}))}
+  catch(e){return ab.signal.aborted?{busy:true,slow:true}:{busy:true,net:true}}   // massa lent o sense connexió
+  finally{clearTimeout(tm)}
   if(r.ok)return{text:(d.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('')};
-  return{status:r.status,msg:d.error?.message||('Error '+r.status),busy:[429,500,502,503,504].includes(r.status)}};
+  const msg=d.error?.message||('Error '+r.status);
+  if(tc&&r.status===400&&/think/i.test(msg))return call(m,false);   // el model no accepta l'opció de pensar: sense
+  return{status:r.status,msg,busy:[429,500,502,503,504].includes(r.status)}};
  const wait=ms=>new Promise(res=>setTimeout(res,ms));
- // 1) el model triat, fins a 3 intents si Google està saturat
- let last;for(const ms of [0,2500,6000]){if(ms)await wait(ms);last=await call(S.cfg.model);if(last.text!=null)return last.text;if(!last.busy)break}
+ // 1) el model triat, fins a 3 intents si Google està saturat (si tarda massa, es passa directament a un altre model)
+ let last;for(const ms of [0,2500,6000]){if(ms)await wait(ms);last=await call(S.cfg.model);if(last.text!=null)return last.text;if(!last.busy||last.slow)break}
  // 2) si continua saturat, es prova amb altres models «flash» del mateix compte
- if(last.busy){for(const m of (await geminiAlts()).slice(0,3)){const x=await call(m);if(x.text!=null)return x.text;if(!x.busy){last=x;break}last=x;await wait(1500)}}
+ if(last.busy){for(const m of (await geminiAlts()).slice(0,last.slow?1:3)){const x=await call(m);if(x.text!=null)return x.text;if(!x.busy){last=x;break}last=x;if(x.slow)break;await wait(1500)}}
+ if(last.slow)throw new Error('La IA de Google tarda massa a respondre ara mateix. Torneu-ho a provar d\'aquí a una estona, o escriviu un text més curt.');
  if(last.net)throw new Error('No hi ha connexió amb la IA. Comproveu Internet i torneu-ho a provar.');
  if(last.status===429)throw new Error('S\'ha arribat al límit d\'ús gratuït de la IA per ara. Torneu-ho a provar d\'aquí a una estona (el límit es renova cada dia).');
  if(last.busy)throw new Error('Els servidors de la IA de Google estan saturats ara mateix. Ho hem provat diverses vegades i amb altres models. Torneu-ho a provar d\'aquí a uns minuts.');
@@ -83,6 +94,9 @@ async function geminiAlts(){if(GEM_ALTS)return GEM_ALTS;
    .filter(n=>/^gemini-/.test(n)&&/flash/.test(n)&&!/image|tts|audio|live|embed|thinking|exp/.test(n)&&n!==S.cfg.model)
    .sort((a,b)=>v(b)-v(a)||(/preview/.test(a)-/preview/.test(b))||a.length-b.length)}
  catch(e){GEM_ALTS=[]}return GEM_ALTS}
+// Missatge d'espera amb un comptador de segons (s'atura sol quan el missatge desapareix)
+function iaEspera(st,txt){st.innerHTML=`<div class="fb info">${txt} <b class="ia-seg">0 s</b><br><span class="muted">Sol tardar entre 10 i 40 segons. No tanqueu la pàgina.</span></div>`;
+ const t0=Date.now(),b=st.querySelector('.ia-seg'),iv=setInterval(()=>{if(!b.isConnected)return clearInterval(iv);b.textContent=Math.round((Date.now()-t0)/1000)+' s'},1000)}
 const parseJSON=t=>JSON.parse(t.slice(t.indexOf('{'),t.lastIndexOf('}')+1));
 function fileToPart(f){return new Promise((res,rej)=>{const rd=new FileReader();rd.onerror=rej;rd.onload=()=>{const url=rd.result;
  if(!f.type.startsWith('image/'))return res({inline_data:{mime_type:f.type||'application/pdf',data:url.split(',')[1]}});
