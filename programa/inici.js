@@ -77,6 +77,7 @@ function home(){endSession();PARENT_OK=false;nav('inici');
    <label class="srch5" for="cerca">${IC.search}<input id="cerca" type="search" placeholder="Cerca un tema o una unitat" autocomplete="off" enterkeyhint="search"><button class="srx" type="button" aria-label="Esborrar la cerca" hidden>✕</button></label></div>
   <div id="cres" aria-live="polite"></div>
   <div class="top5">${contCard(lt)}${goalCard(done,goal,st)}</div>
+  ${triaCard()}
   <section><h2 class="h5">Com vols practicar?</h2><div class="modes5">${modeTiles(false)}</div></section>
   <section><div class="h5row"><h2>Assignatures</h2><a onclick="subjects()">Veure-les totes</a></div><div class="subjs5">${Object.keys(SUBJ).map(m=>subCard(m)).join('')}</div></section>
  </div>
@@ -86,6 +87,10 @@ function home(){endSession();PARENT_OK=false;nav('inici');
  $('#mGo').onclick=()=>start(s.mode);
  bindSearch($('#cerca'),q=>{$('#cres').innerHTML=q?searchHTML(q):'';bindTopicButtons($('#cres'))})}
 
+// «Tria què vols estudiar»: l'infant tria ell mateix assignatura i tema, sense que els pares preparin res
+function triaCard(){
+ return`<section class="tria5"><div class="tria5-t"><h2>Tria què vols estudiar</h2><p>Toca una assignatura, obre una unitat i pitja <b>Aprendre</b> o <b>Practicar</b>. També pots buscar un tema al cercador de dalt.</p></div>
+  <div class="tria5-s">${Object.keys(SUBJ).map(m=>`<button style="${sujC(m)}" onclick="subject('${m}')"><span class="ti" aria-hidden="true">${SUBJ[m].ic}</span>${SUBJ[m].nom}</button>`).join('')}</div></section>`}
 function contCard(lt){
  if(!lt){const k=S.sessio.skills.find(x=>SK[x]),m=k?matOf(k):'mates';
   return`<div class="cont5"><div class="cont5-t"><span class="k">Comença per aquí</span><h2>${S.sessio.mode==='escriptura'?'Escriptura al quadern':'La missió d\'avui'}</h2><p>${k?S.sessio.skills.filter(x=>SK[x]).slice(0,3).map(x=>SK[x].nom).join(' · '):'Tria una assignatura i comença a aprendre.'}</p><button class="go" id="cGo">Comença</button></div>${PLAY5}</div>`}
