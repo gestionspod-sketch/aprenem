@@ -269,7 +269,7 @@ function pDeures(el){const H=S.deures=S.deures||[];
  el.querySelectorAll('[data-dh]').forEach(b=>b.onclick=()=>show(H[+b.dataset.dh]));
  el.querySelector('#dgo').onclick=async()=>{const st=el.querySelector('#dst'),files=[...el.querySelector('#dfi').files],ins=el.querySelector('#dins').value.trim();
   if(!files.length){st.innerHTML='<div class="fb warn">Primer feu o trieu una foto dels exercicis.</div>';return}
-  st.innerHTML='<div class="fb info">Llegint els exercicis i corregint... Pot tardar fins a un minut: no tanqueu la pàgina.</div>';el.querySelector('#dgo').disabled=true;
+  iaEspera(st,'Llegint els exercicis i corregint...');el.querySelector('#dgo').disabled=true;
   try{const parts=await Promise.all(files.map(fileToPart));
    parts.push({text:`Ets un mestre de Primària de les Illes Balears. Els pares envien ${files.length} foto(s) d'exercicis que el seu fill o filla de ${ORD[S.perfil.curs]} de Primària ja ha fet (deures del llibre, d'una fitxa o del quadern). Indicació dels pares: "${ins||'(cap)'}".
 Volen saber quins exercicis estan bé i quins no, la solució correcta i com es fa, per poder-los repassar junts abans de corregir-los a classe.
@@ -324,7 +324,7 @@ function pSessio(el){const s=S.sessio,r=recom();let mode=s.mode;
   if(!files.length&&!ins){st.innerHTML='<div class="fb warn">Afegiu alguna foto o escriviu què ha d\'estudiar.</div>';return}
   // es desa el que hi ha marcat al formulari (encara que no s'hagi premut «Desar») i la IA ho respecta
   collect();const marked=S.sessio.skills.filter(k=>SK[k]);
-  st.innerHTML='<div class="fb info">Llegint el material i preparant la sessió... Pot tardar fins a un minut: no tanqueu la pàgina.</div>';$('#ai').disabled=true;
+  iaEspera(st,'Llegint el material i preparant la sessió...');$('#ai').disabled=true;
   try{const parts=await Promise.all(files.map(fileToPart));
    const nomK=k=>SUBJ[matOf(k)].nom+' – '+SK[k].nom;
    parts.push({text:`Ets l'assistent pedagògic d'una aplicació d'estudi en català per a infants de Primària (currículum de les Illes Balears). Assignatures de l'app: ${Object.values(SUBJ).map(s=>s.nom).join(', ')}. L'infant fa ${ORD[S.perfil.curs]} de Primària.
