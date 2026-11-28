@@ -32,7 +32,19 @@ const LEGEND=`<div class="legend5"><span><i></i>Sense començar</span><span><i c
 
 /* ---------- closca: menú lateral (ordinador i tauleta) i barra inferior (mòbil) ---------- */
 let NAV={k:'inici',m:null};
-function nav(k,m=null){NAV={k,m};drawShell()}
+function nav(k,m=null){NAV={k,m};NAV_NOU=true;drawShell()}
+// Botó «enrere» del navegador i del mòbil: cada pantalla queda a l'historial i «enrere» hi torna
+// (abans sortia de la web). Exercicis, lliçons i làmines comparteixen una sola entrada: «enrere» torna a la pantalla d'on s'havien obert.
+let NAV_NOU=false,NAV_REST=false;
+function navHist(){try{const cur=history.state||{};
+ if(NAV_NOU){NAV_NOU=false;const st={ap:1,k:NAV.k,m:NAV.m};
+  if(NAV_REST||!cur.ap||(cur.k===st.k&&cur.m===st.m))history.replaceState(st,'');else history.pushState(st,'');NAV_REST=false}
+ else if(cur.ap&&cur.k!=='x')history.pushState({ap:1,k:'x'},'')}catch(e){}}
+window.addEventListener('popstate',e=>{const s=e.state;if(!s||!s.ap)return;
+ if(typeof closeModal==='function')try{closeModal()}catch(_){}
+ if(s.k==='x'){history.back();return}   // endavant cap a un exercici ja tancat: es torna a la pantalla d'abans
+ NAV_REST=true;setTimeout(()=>{NAV_REST=false},0);
+ ({inici:home,assig:()=>s.m&&SUBJ[s.m]?subject(s.m):subjects(),practicar,progres,families:()=>parent()}[s.k]||home)()});
 function drawShell(){const s=$('#side'),t=$('#tabbar');if(!s||!t)return;const on=x=>NAV.k===x?' class="on" aria-current="page"':'';
  s.innerHTML=`<button class="logo5" onclick="home()" aria-label="Aprenem: anar a l'inici" title="Aprenem">${OWLM(50)}<b>Aprenem</b></button>
  <nav class="nav5"><button${on('inici')} onclick="home()" title="Inici" aria-label="Inici">${IC.home}<span>Inici</span></button>

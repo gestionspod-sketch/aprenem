@@ -139,13 +139,18 @@ function mProf(el,done){const ks=CUR.skills;let i=0;
   const extra=llibre?`<div class="fb info" style="white-space:pre-line"><b>Del teu llibre:</b> ${esc(S.sessio.explicacio)}</div>`:'';
   const pb=()=>setBar(ks[i],ks.map((_,j)=>j<i?"ok":j===i?"cur":""),`Tema ${i+1} de ${ks.length}`);pb();
   pa.innerHTML=`<div class="card">${exLbl(ks[i])}<h2 style="margin:6px 0 0">${s.nom}</h2><div class="owl" style="margin-top:16px"><div class="ic">${OWL(44)}</div><div class="bub">${s.teoria.map(t=>`<p>${t}</p>`).join('')}${extra}</div></div>${s.fig?`<div class="fig" style="margin-top:16px">${s.fig()}</div>`:''}
-  <div class="row" style="margin-top:18px;justify-content:flex-end"><button class="sec" id="spk">${IC.speaker} Llegeix-m'ho</button><button id="go">Ho he llegit → Veure un exemple</button></div></div>`;
-  $('#spk').onclick=()=>say(s.teoria.join(' ')+' '+(llibre?S.sessio.explicacio:''));$('#go').onclick=example}
- function example(){const p=genP(ks[i]);let j=0;
+  <div class="row prof-nav" style="margin-top:18px">${i>0?'<button class="sec" id="bk">← Tema anterior</button>':''}<span style="flex:1"></span><button class="sec" id="spk">${IC.speaker} Llegeix-m'ho</button><button id="go">Ho he llegit → Veure un exemple</button></div></div>`;
+  $('#spk').onclick=()=>say(s.teoria.join(' ')+' '+(llibre?S.sessio.explicacio:''));$('#go').onclick=example;
+  if(i>0)$('#bk').onclick=()=>{i--;theory()}}
+ // Enrere / endavant dins la lliçó: teoria ⇄ exemple (pas a pas) ⇄ pràctica
+ function example(j0){const p=genP(ks[i]);let j=j0==='fi'?p.steps.length:0;
   const draw=()=>{pa.innerHTML=`<div class="card">${exLbl(ks[i])}<h3 style="margin:6px 0 0">Exemple resolt</h3><div class="prob">${p.text}</div><ol class="steps">${p.steps.slice(0,j).map(s=>`<li>${s}</li>`).join('')}</ol>
-   ${j<p.steps.length?`<p class="muted">Abans de mirar-ho: què creus que toca fer ara?</p><button id="nx">Mostra el pas ${j+1}</button>`:'<button id="nx">Ara tu! </button>'}</div>`;
-   $('#nx').onclick=()=>{if(j<p.steps.length){j++;draw()}else practice(2)}};draw()}
- function practice(n){let c=0;pa.innerHTML=`<div class="card">${exLbl(ks[i])}<h3 style="margin:6px 0 0">Practica amb ajuda</h3><div id="ex"></div></div>`;
+   ${j<p.steps.length?'<p class="muted">Abans de mirar-ho: què creus que toca fer ara?</p>':''}
+   <div class="row prof-nav"><button class="sec" id="bk">${j>0?'← Pas anterior':'← Torna a la teoria'}</button><span style="flex:1"></span><button id="nx">${j<p.steps.length?`Mostra el pas ${j+1}`:'Ara tu! →'}</button></div></div>`;
+   $('#nx').onclick=()=>{if(j<p.steps.length){j++;draw()}else practice(2)};
+   $('#bk').onclick=()=>{if(j>0){j--;draw()}else theory()}};draw()}
+ function practice(n){let c=0;pa.innerHTML=`<div class="card">${exLbl(ks[i])}<div class="row prof-nav" style="align-items:center"><h3 style="margin:6px 0 0;flex:1">Practica amb ajuda</h3><button class="sec" id="bk">← Torna a l'exemple</button></div><div id="ex"></div></div>`;
+  $('#bk').onclick=()=>example('fi');
   const next=()=>{if(c>=n){i++;return theory()}c++;exercise($('#ex'),ks[i],{mode:'prac',onDone:next})};next()}
  function end(){setBar(null,ks.map(()=>'ok'),'');pa.innerHTML='<div class="card"><h3 style="margin-top:0">Molt bé! Has repassat tots els temes.</h3><button id="fin">Continuar →</button></div>';$('#fin').onclick=done}
  theory();
