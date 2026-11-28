@@ -320,6 +320,16 @@ code.k{background:var(--soft);padding:2px 8px;border-radius:8px;font-weight:500}
 .h5-head .srch5{width:320px}
 .h5-logo{display:none}
 .top5{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px}
+/* «Tria què vols estudiar» (l'infant tria el tema sol) */
+.tria5{background:var(--mint,#D4F1E4);border-radius:28px;padding:22px 26px;display:flex;flex-direction:column;gap:14px}
+.tria5-t h2{margin:0 0 4px;font-size:19px}
+.tria5-t p{margin:0;color:#3D5A4C;font-size:14px;line-height:1.5}
+.tria5-s{display:flex;flex-wrap:wrap;gap:10px}
+.tria5-s button{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--d,#1E1B3A);border:0;border-radius:999px;padding:9px 16px 9px 9px;font:inherit;font-weight:600;font-size:15px;cursor:pointer;box-shadow:0 1px 2px rgba(30,27,58,.06)}
+.tria5-s button:hover{box-shadow:0 3px 10px rgba(30,27,58,.10)}
+.tria5-s .ti{width:32px;height:32px;border-radius:50%;background:var(--t,#EEE);display:grid;place-items:center;font-size:16px}
+.tria5-s .ti svg{width:18px;height:18px}
+@media (max-width:767px){.tria5{padding:18px;border-radius:22px}.tria5-s button{font-size:14px}}
 .cont5{display:flex;align-items:center;gap:20px;background:var(--peach);border-radius:28px;padding:26px 28px;min-width:0}
 .cont5-t{flex:1;min-width:0}
 .cont5 .k{font-size:14px;color:#A0661A}
