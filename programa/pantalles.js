@@ -71,7 +71,7 @@ function temari(forParent,el){const T=TEMARI.angles,c=+S.perfil.curs>=6?6:5;
 const PH=[['professor',.15],['aventura',.4],['exercicis',.25],['comprovacio',.2]];
 function start(mode,ovSkills,ovMin){const skills=ovSkills||S.sessio.skills,min=ovMin||S.sessio.minuts;
  if(!skills.length&&mode!=='escriptura'){app(`<div class="card" style="text-align:center;max-width:560px;margin:40px auto 0">${OWL(64)}<h3>Encara no hi ha cap tema triat</h3><p class="muted">Els pares han de triar almenys un tema a la Zona famílies, o pots entrar a una assignatura des de l'inici.</p><button onclick="home()">Tornar a l'inici</button></div>`);return}
- CUR={t0:Date.now(),fin:Date.now()+min*60000,tot:0,ok:0,mode,skills:skills.slice()};phaseEnd=0;
+ CUR={t0:Date.now(),fin:Date.now()+min*60000,tot:0,ok:0,mode,skills:skills.slice(),lliure:!!ovSkills};phaseEnd=0;   // lliure: l'infant ha triat el tema (no és la sessió preparada pels pares)
  TIME_TOLD=false;
  if(mode==='combinada')return phase(0);
  runMode(mode,null,finish);
@@ -135,7 +135,7 @@ function finish(){const c=CUR;endSession();hideToast();if(!c)return home();
 function mProf(el,done){const ks=CUR.skills;let i=0;
  el.innerHTML='<div id="pa"></div><div id="chatbox"></div>';chatUI($('#chatbox'));const pa=$('#pa');
  function theory(){if(i>=ks.length)return end();const s=SK[ks[i]];
-  const llibre=i===0&&S.sessio.explicacio&&(S.sessio.skills||[]).includes(ks[0]);   // «Del teu llibre» només als temes de la sessió preparada (no a una lliçó qualsevol)
+  const llibre=i===0&&!CUR.lliure&&S.sessio.explicacio&&(S.sessio.skills||[]).includes(ks[0]);   // «Del teu llibre» només als temes de la sessió preparada (no a una lliçó qualsevol)
   const extra=llibre?`<div class="fb info" style="white-space:pre-line"><b>Del teu llibre:</b> ${esc(S.sessio.explicacio)}</div>`:'';
   const pb=()=>setBar(ks[i],ks.map((_,j)=>j<i?"ok":j===i?"cur":""),`Tema ${i+1} de ${ks.length}`);pb();
   pa.innerHTML=`<div class="card">${exLbl(ks[i])}<h2 style="margin:6px 0 0">${s.nom}</h2><div class="owl" style="margin-top:16px"><div class="ic">${OWL(44)}</div><div class="bub">${s.teoria.map(t=>`<p>${t}</p>`).join('')}${extra}</div></div>${s.fig?`<div class="fig" style="margin-top:16px">${s.fig()}</div>`:''}
